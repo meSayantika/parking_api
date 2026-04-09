@@ -1,0 +1,430 @@
+<style>
+ .exclbutton {
+    margin-left: 15px;
+    color: #246024;
+    font-size: 14px;
+    font-weight: 500;
+ }
+ .exclbutton:hover {
+    color: #1f6b1f; /* brighter green on hover */
+    cursor: pointer;
+ }
+ .textcolor{
+    color: black;
+ }   
+   
+ #goTopBtn, #goDownBtn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 999;
+    background-color: #8a4286;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    display: none;
+    box-shadow: 0px 3px 6px rgba(0,0,0,0.3);
+}
+
+#goTopBtn {
+    bottom: 90px;
+}
+
+/* Bottom button appears above top button */
+#goDownBtn {
+    bottom: 30px;
+}
+
+#goTopBtn:hover, #goDownBtn:hover {
+    background-color: #8a4286;
+}
+</style>
+<div class="container-fluid">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">
+                    <%= title %>
+                </h4>
+                <div class="row dateCalenderField">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="frm_dt">From Date</label>
+                            <input type="date" id="frm_dt" name="frm_dt" class="form-control" required="">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="to_dt">To Date</label>
+                            <input type="date" id="to_dt" name="to_dt" class="form-control" required="">
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="to_dt">Select Shift</label>
+                            <!-- <input type="date" id="to_dt" name="to_dt" class="form-control" required=""> -->
+
+                            <select name="shift_id" id="shift_id" class="form-control" required="">
+
+                                <option value="">Select Shift</option>"
+                                <% shiftData.msg.forEach(function(item,index) {  %>
+                                <option value="<%= item.shift_id %>"><%= item.shift_name %> (<%= item.f_time %>-<%= item.t_time %>)</option>
+                                <% }) %>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-3">
+                        <label for="pay_mode" class="text-dark"><b>Pay Mode:</b></label>
+                        <select name="pay_mode" class="form-control" id="pay_mode">
+                          <option value="">Select Pay Mode</option>
+                          <option value="C">CASH</option>
+                          <option value="U">UPI</option>
+                          <option value="A">All</option>
+                        </select>
+                      </div>
+                    <div class="col-md-2 searchBtnDataWis">
+                        <button type="button" class="btn waves-effect waves-light btn-rounded btn-outline-primary" id="btnSubmit">Search</button>
+                    </div>
+                </div>
+                <!-- <div class="card-body" id="resultDiv"> -->
+                    <div class="dateWiseDataTable" id="resultDiv">
+                    <h4 class="card-title">
+                        <center>
+                            <span id="searchCred"></span>
+                        </center>
+                    </h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="cust-datatable">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Operator Name</th>
+                                    <th scope="col">MC Srl.No.</th>
+                                    <th scope="col">Count</th>
+                                    <th scope="col">Base Amount</th>
+                                    <th scope="col">Advance Amount</th>
+                                    <th scope="col">CGST</th>
+                                    <th scope="col">SGST</th>
+                                    <th scope="col">IGST</th>
+                                    <th scope="col">Paid Amount</th>
+                                    <th scope="col">Net Amount</th>
+                                    <th scope="col">Mode</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                            </tbody>
+
+                            <tfoot>
+                                <tr>
+                                    <td scope="col" colspan="3">Total</td>
+                                    <td scope="col" id="tot_cnt"><b>0</b></td>
+                                    <td scope="col" id="tot_base"><b>0</b></td>
+                                    <td scope="col" id="tot_advance"><b>0</b></td>
+                                    <td scope="col" id="tot_cgst"><b>0</b></td>
+                                    <td scope="col" id="tot_sgst"><b>0</b></td>
+                                    <td scope="col" id="tot_igst"><b>0</b></td>
+                                    <td scope="col" id="tot_paid"><b>0</b></td>
+                                    <td scope="col" id="tot_amt"><b>0</b></td>
+                                    <td scope="col" id="mode"><b></b></td>
+                                </tr>   
+                                <!-- <tr style="display: none;">
+                                    <td scope="col" colspan="2">Total UPI</td>
+                                    <td scope="col" class="text-left" id="tot_upi" colspan="14"></td>
+                                </tr>
+                                <tr style="display: none;">
+                                    <td scope="col" colspan="2">Total Cash</td>
+                                    <td scope="col" class="text-left" id="tot_cash" colspan="14"></td>
+                                </tr>  -->
+                                 <tr id="upiRow" style="display: none;">
+                                    <!-- <td scope="col" colspan="2">Total UPI</td> -->
+                                    <td colspan="14" class="text-left"><b>Total UPI: </b><span id="tot_upi"></span></td>
+                                </tr>
+                                <tr  id="cashRow" style="display: none;">
+                                    <!-- <td scope="col" colspan="2">Total Cash</td> -->
+                                    <td colspan="14" class="text-left"><b>Total Cash: </b><span id="tot_cash"></span></td>
+                                </tr> 
+                            </tfoot>
+                        </table>
+
+                        <a href="#" class="printBtnDate" onclick="printDiv()"><i class="fa fa-print"></i> Print</a>
+                        <a href="#" class="exclbutton" onclick="downloadExcel()"><i class="fa fa-file-excel"></i> Excel</a>
+                    </div>
+                </div>
+                  <button id="goTopBtn" title="Go to Top">
+                  <i class="fa fa-arrow-up"></i>
+                </button>
+                <button id="goTopBtn" title="Go to Top">
+                  <i class="fa fa-arrow-down"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="https://raw.githubusercontent.com/phstc/jquery-dateFormat/master/dist/dateFormat.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#resultDiv').hide()
+        })
+    </script>
+    <script>
+        $('#btnSubmit').on('click', function(){
+            var frm_dt = $('#frm_dt').val()
+            var to_dt = $('#to_dt').val()
+            var shift_id = $('#shift_id').val()
+            var pay_mode = $('#pay_mode').val()
+            
+            if(frm_dt != '' && to_dt != '' && shift_id != '' && pay_mode != ''){
+                $.ajax({
+                    method: "POST",
+                    url: "/report/shift_wise_repo",
+                    data: { frm_dt, to_dt,shift_id, pay_mode },
+                    dataType: "html",
+                    beforeSend: function () {
+                        $(".preloader").fadeIn();
+                    },
+                    success: function (result) {
+                        var res = JSON.parse(result);
+                        var net_amt_tot = 0;
+                        var base_amt_tot = 0;
+                        var advance_amt_tot = 0;
+                        var cgst_amt_tot = 0;
+                        var sgst_amt_tot = 0;
+                        var igst_amt_tot = 0;
+                        var paid_amt_tot = 0;
+                        var cnt_tot = 0;
+                        var total_amt_tot = 0;
+                        var tot_amt_tot = 0;
+                        var tot_upi = 0, tot_cash = 0;
+                        $('#tot_upi').text('');
+                        $('#tot_cash').text('');
+                        $('#resultDiv').show()
+                        $('#resultDiv table tbody').empty()
+                        // console.log(res)
+                        if(res.suc > 0){
+                            if(res.msg.length > 0){
+                                $('#searchCred').text(`Shift Wise Report from ${createDate(frm_dt)} to ${createDate(to_dt)}`)
+                                let i = 1;
+                                for(let dt of res.msg){
+                                    base_amt_tot += Number(dt.base_amt)
+                                    advance_amt_tot += Number(dt.advance_amt)
+                                    cgst_amt_tot += Number(dt.cgst)
+                                    sgst_amt_tot += Number(dt.sgst)
+                                    igst_amt_tot += Number(dt.igst)
+                                    paid_amt_tot += Number(dt.paid_amt)
+                                    total_amt_tot = (Number(dt.paid_amt) + Number(dt.advance_amt))
+                                    net_amt_tot = (Number(dt.advance_amt) + Number(dt.paid_amt))
+                                    tot_amt_tot += Number(total_amt_tot)
+                                    cnt_tot += Number(dt.tot_vehi)
+
+                                    if(dt.pay_mode == 'C')
+                                        tot_cash += total_amt_tot
+
+                                    if(dt.pay_mode == 'U')
+                                        tot_upi += total_amt_tot 
+
+                                    $('#resultDiv table tbody').append(`
+                                    <tr>
+                                        <td class="textcolor">${i}</td>
+                                        <td class="textcolor">${dt.opratorName}</td>
+                                        <td class="textcolor">${dt.mc_srl_no_out}</td>
+                                        <td class="textcolor">${dt.tot_vehi}</td>
+                                        <td class="textcolor">${Number(dt.base_amt) > 0 ? Number(dt.base_amt).toFixed(2) : dt.base_amt}</td>
+                                        <td class="textcolor">${Number(dt.advance_amt) > 0 ? Number(dt.advance_amt).toFixed(2) : dt.advance_amt}</td>
+                                        <td class="textcolor">${Number(dt.cgst) > 0 ? Number(dt.cgst).toFixed(2) : dt.cgst}</td>
+                                        <td class="textcolor">${Number(dt.sgst) > 0 ? Number(dt.sgst).toFixed(2) : dt.sgst}</td>
+                                        <td class="textcolor">${Number(dt.igst) > 0 ? Number(dt.igst).toFixed(2) : dt.igst}</td>
+                                        <td class="textcolor">${dt.paid_amt}</td>
+                                        <td class="textcolor">${total_amt_tot}</td>
+                                        <td class="textcolor">${dt.pay_mode == 'U' ? 'UPI' : dt.pay_mode == 'C' ? 'CASH' : ''}</td>
+                                    </tr>
+                                    `)
+                                    i++
+                                }
+                                $('#tot_base').text(Number(base_amt_tot) > 0 ? Number(base_amt_tot).toFixed(2) : base_amt_tot)
+                                $('#tot_advance').text(Number(advance_amt_tot) > 0 ? Number(advance_amt_tot).toFixed(2) : advance_amt_tot)
+                                $('#tot_cgst').text(Number(cgst_amt_tot) > 0 ? Number(cgst_amt_tot).toFixed(2) : cgst_amt_tot)
+                                $('#tot_sgst').text(Number(sgst_amt_tot) > 0 ? Number(sgst_amt_tot).toFixed(2) : sgst_amt_tot)
+                                $('#tot_igst').text(Number(igst_amt_tot) > 0 ? Number(igst_amt_tot).toFixed(2) : igst_amt_tot)
+                                $('#tot_paid').text(paid_amt_tot)
+                                $('#tot_amt').text(tot_amt_tot)
+                                $('#tot_cnt').text(cnt_tot)
+
+                                if(pay_mode == 'A'){
+                                    // $('#tot_upi').parent().show()
+                                    // $('#tot_cash').parent().show()
+                                    $('#upiRow').show()
+                                    $('#cashRow').show()
+                                    $('#tot_upi').text(tot_upi)
+                                    $('#tot_cash').text(tot_cash)
+                                }else{
+                                    // $('#tot_upi').parent().hide()
+                                    // $('#tot_cash').parent().hide()
+                                     $('#upiRow').hide()
+                                    $('#cashRow').hide()
+                                    $('#tot_upi').text('')
+                                    $('#tot_cash').text('')
+                                }
+                            }else{
+                                $('#resultDiv table tbody').append('<tr><td colspan="11" class="text-center text-danger">No Data Found</td></tr>')
+                                $('#tot_base').text(Number(base_amt_tot) > 0 ? Number(base_amt_tot).toFixed(2) : base_amt_tot)
+                                $('#tot_advance').text(Number(advance_amt_tot) > 0 ? Number(advance_amt_tot).toFixed(2) : advance_amt_tot)
+                                $('#tot_cgst').text(Number(cgst_amt_tot) > 0 ? Number(cgst_amt_tot).toFixed(2) : cgst_amt_tot)
+                                $('#tot_sgst').text(Number(sgst_amt_tot) > 0 ? Number(sgst_amt_tot).toFixed(2) : sgst_amt_tot)
+                                $('#tot_igst').text(Number(igst_amt_tot) > 0 ? Number(igst_amt_tot).toFixed(2) : igst_amt_tot)
+                                $('#tot_paid').text(paid_amt_tot)
+                                $('#tot_amt').text(tot_amt_tot)
+                                $('#tot_cnt').text(cnt_tot)
+                            }
+                        }
+                    },
+                    complete: function () {
+                        $(".preloader").fadeOut();
+                    }
+                })
+            }
+        })
+    </script>
+
+<script>
+    function printDiv() {
+
+        var divToPrint = document.getElementById('resultDiv');
+
+        var WindowObject = window.open('', 'Print-Window');
+        WindowObject.document.open();
+        WindowObject.document.writeln('<!DOCTYPE html>');
+        WindowObject.document.writeln('<html><head><title></title><style type="text/css">');
+
+
+        WindowObject.document.writeln('@media print { .center { text-align: center;}' +
+            '                                         .inline { display: inline; }' +
+            '                                         .underline { text-decoration: underline; }' +
+            '                                         .left { margin-left: 315px;} ' +
+            '                                         .right { margin-right: 375px; display: inline; }' +
+            '                                          table { border-collapse: collapse; font-size: 10px;}' +
+            '                                          th, td { border: 1px solid black; border-collapse: collapse; padding: 6px; font-family: Arial, Helvetica, sans-serif;}' +
+            '                                           th, td {text-align: left;}' +
+            '.table .thead-dark th {color: #fff; background-color: #1c2d41;}'+
+            ' tfoot{font-weight: 700; color: #000;}'+
+            ' .printBtnDate{display: none;}'+ '.exclbutton { display: none; }' +
+            '                                         .border { border: 1px solid black; } ' +
+            '                                         .bottom { bottom: 5px; width: 100%; position: fixed ' +
+            '                                       ' +
+            '                                   } } </style>');
+        WindowObject.document.writeln('</head><body onload="window.print()">');
+        WindowObject.document.writeln(divToPrint.innerHTML);
+        WindowObject.document.writeln('</body></html>');
+        WindowObject.document.close();
+        setTimeout(function () {
+            WindowObject.close();
+        }, 2);
+
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+<script>
+function downloadExcel() {
+    // Get the table element
+    var table = document.querySelector("#cust-datatable");
+
+    if (!table) {
+        alert("No data available to export!");
+        return;
+    }
+
+    // Convert table to worksheet
+    var workbook = XLSX.utils.book_new();
+    var rows = [];
+
+    // var worksheet = XLSX.utils.table_to_sheet(table);
+
+    //  // GET TOTALS FROM HTML
+    // var totUpi = document.getElementById("tot_upi").innerText || "0";
+    // var totCash = document.getElementById("tot_cash").innerText || "0";
+
+    // // FIND LAST ROW OF EXCEL
+    // var lastRow = Object.keys(worksheet).length; 
+
+    // STEP 1: Read table rows normally (NO QUOTES)
+    table.querySelectorAll("tr").forEach(tr => {
+        let row = [];
+        tr.querySelectorAll("th, td").forEach((cell) => {
+            row.push(cell.innerText.trim());
+        });
+        rows.push(row);
+    });
+
+    // STEP 2: Convert to sheet
+    var worksheet = XLSX.utils.aoa_to_sheet(rows);
+
+    // STEP 3: Force specific columns to TEXT format (NO auto conversion)
+    Object.keys(worksheet).forEach(key => {
+        if (key.startsWith("!")) return; // skip metadata
+
+        let cell = worksheet[key];
+        if (!cell || !cell.v) return;
+
+        let col = key.replace(/[0-9]/g, ""); // get column letter(s)
+
+        // Receipt No. → column B
+        if (col === "B") {
+            cell.t = "s";        // force as text
+        }
+
+        // DateTime In → column C
+        if (col === "C") {
+            cell.t = "s";        // force as text
+        }
+
+        // DateTime Out → column G
+        if (col === "G") {
+            cell.t = "s";
+        }
+    });
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Shift Wise Report");
+
+    // Download Excel file
+    XLSX.writeFile(workbook, "Shift_Wise_Report.xlsx");
+}
+</script>
+
+<script>
+// Show button on scroll
+window.onscroll = function () {
+    const topBtn = document.getElementById("goTopBtn");
+    const downBtn = document.getElementById("goDownBtn");
+
+    if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+        topBtn.style.display = "block";
+    } else {
+        topBtn.style.display = "none";
+    }
+
+    // Show bottom button only if NOT already at bottom
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+        downBtn.style.display = "none";
+    } else {
+        downBtn.style.display = "block";
+    }
+};
+
+// Scroll to top
+document.getElementById("goTopBtn").onclick = function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+// Scroll to bottom
+document.getElementById("goDownBtn").onclick = function () {
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+};
+</script>

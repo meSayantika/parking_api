@@ -1,0 +1,137 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="card col-12">
+            <div class="card-body">
+                <div class="titleSec">
+                    <h2 class="text-dark"><i class="fa fa-arrow-circle-left" aria-hidden="true" id="back"
+                            style="cursor: pointer;">&nbsp;Vehicle Rate Edit Details</i></h2>
+                </div>
+                <form action="/rate/edit_save_vehicle_rate" id="myForm" method="post">
+                    <input type="hidden" id="sl_no" name="sl_no" value="<%= data.sl_no %>">
+
+                    <div class="row mt-4">
+                        <div class="form-group col-4">
+                            <label for="cust_id" class="text-dark"><b>Customer Name:</b></label>
+                            <select name="cust_id" class="form-control" id="cust_id" disabled>
+                                <option value="">Select Customer Name</option>
+                                <option value="<%= data.customer_id %>" <%=user.user_data.customer_id==data.customer_id
+                                    ? 'selected' : '' %>><%= data.customer_name %>
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                              <label for="rate_type"><b style="color: black;">Rate Type:</b></label>
+                              <select name="rate_type" class="form-control" id="rate_type">
+                                <option value="<%= user.user_data.dev_mod=='D' ? 'H' : 'F' %>">
+                                  <%= user.user_data.dev_mod=='D' ? 'Hourly' : 'Fixed' %>
+                                </option>
+                              </select>
+                            </div>
+                          </div>
+                         
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <label for="vehicle_id" class="text-dark"><b>Vehicle Name</b></label>
+                             <input type="text" class="form-control" id="vehicle_id" name="vehicle_id" value="<%= data.vehicle_name %>" disabled>
+                            </div>
+                          </div>
+
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <label for="frm_hr" class="text-dark"><b>From Hour</b></label>
+                             <input type="number"  class="form-control" id="frm_hr" name="frm_hr" value="<%= data.from_hour %>">
+                            </div>
+                          </div>
+              
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <label for="to_hr" class="text-dark"><b>To Hour</b></label>
+                             <input type="number" class="form-control" id="to_hr" name="to_hr" value="<%= data.to_hour %>">
+                            </div>
+                          </div>
+              
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <label for="park_fee" class="text-dark"><b>Parking Fee</b></label>
+                             <input type="text" class="form-control" id="park_fee" name="park_fee" value="<%= data.vehicle_rate %>">
+                            </div>
+                          </div>
+
+                          <% if (user.user_data.dev_mod == 'D') { %>
+                           <div class="col-md-4">
+                          <div class="form-group">
+                          <label for="flag"><b style="color: black;">Flag:</b></label>
+                          <select name="flag" class="form-control" id="flag">
+                            <option value="">Select Flag</option>
+                            <option value="O" <%= data.night_day_flag === 'O' ? 'selected' : '' %>>Old Rate</option>
+                            <option value="N" <%= data.night_day_flag === 'N' ? 'selected' : '' %>>New Rate</option>
+                          </select>
+                          </div>
+                          </div>
+                          <% } %>
+                        </div>
+                       <div class="row mt-2">
+    <div class="form-group col-md-6">
+        <input type="submit" value="SUBMIT" class="btn btn-primary" id="submitBtn"
+            style="margin-left: 25vw; border-radius: 5px; padding: 4px 12px; font-size: 0.85rem; width: auto;" disabled/>
+    </div>
+</div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+                    $("#back").click(function () {
+                        window.location.href = "/rate/vehicle_rate_dtls";
+                    });
+    });
+</script>
+
+<script>
+$(document).ready(function () {
+
+    // Back Button
+    $("#back").click(function () {
+        window.location.href = "/rate/vehicle_rate_dtls";
+    });
+
+    // 1️⃣ Capture Initial Values (read EXACT values from the page)
+    const initialValues = {
+        rate_type: $("#rate_type").val(),
+        frm_hr: $("#frm_hr").val(),
+        to_hr: $("#to_hr").val(),
+        park_fee: $("#park_fee").val(),
+        flag: $("#flag").length ? $("#flag").val() : null // only if exists
+    };
+
+    console.log("Initial Values:", initialValues);
+
+    // 2️⃣ Function to detect changes
+    function checkForChanges() {
+        let changed = false;
+
+        if ($("#rate_type").val() !== initialValues.rate_type) changed = true;
+        if ($("#frm_hr").val() !== initialValues.frm_hr) changed = true;
+        if ($("#to_hr").val() !== initialValues.to_hr) changed = true;
+        if ($("#park_fee").val() !== initialValues.park_fee) changed = true;
+
+        // Only check FLAG if exists
+        if ($("#flag").length && $("#flag").val() !== initialValues.flag) changed = true;
+
+        $("#submitBtn").prop("disabled", !changed);
+    }
+
+    // 3️⃣ Bind event listeners for all editable fields
+    $("#rate_type").on("change", checkForChanges);
+    $("#frm_hr").on("input", checkForChanges);
+    $("#to_hr").on("input", checkForChanges);
+    $("#park_fee").on("input", checkForChanges);
+    $("#flag").on("change", checkForChanges);
+
+});
+</script>
