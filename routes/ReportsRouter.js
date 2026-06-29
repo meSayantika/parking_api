@@ -106,8 +106,12 @@ reportRouter.post(
       AND e.user_id=f.user_id 
       AND a.car_out_flag='Y'
       AND b.date_time_out BETWEEN '${data.frm_dt}' AND '${data.to_dt}'
-      AND a.customer_id='${custId}'
     `;
+
+    if (!req.session.user.user_data.is_superadmin) {
+      baseWhere += ` AND a.customer_id='${custId}' `;
+    }
+
 
     //    let baseWhere = `
     //  b.date_time_out BETWEEN '${data.frm_dt}' AND '${data.to_dt}'
@@ -385,8 +389,12 @@ reportRouter.post(
       AND e.user_id = f.user_id 
       AND a.car_out_flag = 'Y'
       AND b.date_time_out BETWEEN '${data.frm_dt}' AND '${data.to_dt}'
-      AND a.customer_id = '${custId}'
     `;
+
+    if (!req.session.user.user_data.is_superadmin) {
+      whr += ` AND a.customer_id = '${custId}' `;
+    }
+
 
     if (data.pay_mode !== "A") {
       whr += ` AND c.pay_mode = '${data.pay_mode}'`;
@@ -475,8 +483,13 @@ reportRouter.post("/get_unbilled_report", AuthCheckedMW, async (req, res) => {
         JOIN md_user e  ON a.user_id_in=e.id 
         JOIN md_operator f ON e.user_id=f.user_id  
         LEFT JOIN td_receipt g ON a.receipt_no = g.receipt_no`,
-    whr = `a.car_out_flag = 'N' AND a.date_time_in BETWEEN '${data.frm_dt}' AND '${data.to_dt}' AND a.customer_id = '${custId}'`,
+    whr = `a.car_out_flag = 'N' AND a.date_time_in BETWEEN '${data.frm_dt}' AND '${data.to_dt}'`,
     order = "ORDER BY a.receipt_no";
+
+  if (!req.session.user.user_data.is_superadmin) {
+    whr += ` AND a.customer_id = '${custId}' `;
+  }
+
   var res_dt = await db_Select(select, table_name, whr, order);
   res.send(res_dt);
 });
@@ -513,18 +526,45 @@ reportRouter.post(
   "/get_veh_wise_report_new",
   AuthCheckedMW,
   async (req, res) => {
-    var custId = req.session.user.user_data.customer_id,
-      userType = req.session.user.user_data.user_type;
-
+    var custId = req.session.user.user_data.customer_id;
     var data = req.body;
+    const start = parseInt(data.start) || 0;
+    const length = parseInt(data.length) || 10;
+    const isExport = data.export === 'true';
+
     var select = `d.vehicle_name vehicleType, COUNT(b.receipt_no) tot_vehi, SUM(c.paid_amt) paid_amt, SUM(c.advance_amt) advance_amt, SUM(c.base_amt) base_amt,SUM(c.cgst) cgst, SUM(c.sgst) sgst, SUM(c.igst) igst`,
       table_name =
         "td_vehicle_in a, td_vehicle_out b, td_receipt c, md_vehicle d",
-      whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.car_out_flag = 'Y' AND b.date_time_out BETWEEN '${data.frm_dt}' AND '${data.to_dt}' AND a.customer_id = '${custId}'`,
-      order = "GROUP BY a.vehicle_id,d.vehicle_name";
+      whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.car_out_flag = 'Y' AND b.date_time_out BETWEEN '${data.frm_dt}' AND '${data.to_dt}'`;
+
+    if (!req.session.user.user_data.is_superadmin) {
+      whr += ` AND a.customer_id = '${custId}' `;
+    }
+
+    const countQuery = await db_Select("COUNT(DISTINCT a.vehicle_id) as count", table_name, whr, null);
+    const recordsTotal = countQuery.suc > 0 ? countQuery.msg[0].count : 0;
+
+    let order = "GROUP BY a.vehicle_id,d.vehicle_name";
+    if (!isExport) {
+        order += ` LIMIT ${start}, ${length}`;
+    }
     var res_dt = await db_Select(select, table_name, whr, order);
-    // console.log(res_dt);
-    res.send(res_dt);
+
+    var totalSelect = `COUNT(b.receipt_no) tot_vehi, SUM(c.paid_amt) paid_amt, SUM(c.advance_amt) advance_amt, SUM(c.base_amt) base_amt, SUM(c.cgst) cgst, SUM(c.sgst) sgst, SUM(c.igst) igst`;
+    var totals_dt = await db_Select(totalSelect, table_name, whr, null);
+    var totals = totals_dt.suc > 0 ? totals_dt.msg[0] : { tot_vehi: 0, paid_amt: 0, advance_amt: 0, base_amt: 0, cgst: 0, sgst: 0, igst: 0 };
+
+    if (isExport) {
+        res.send(res_dt);
+    } else {
+        res.json({
+            draw: parseInt(data.draw) || 1,
+            recordsTotal: recordsTotal,
+            recordsFiltered: recordsTotal,
+            data: res_dt.suc > 0 ? res_dt.msg : [],
+            totals: totals
+        });
+    }
   }
 );
 
@@ -560,18 +600,45 @@ reportRouter.post(
   "/get_dev_wise_report_new",
   AuthCheckedMW,
   async (req, res) => {
-    var custId = req.session.user.user_data.customer_id,
-      userType = req.session.user.user_data.user_type;
-
+    var custId = req.session.user.user_data.customer_id;
     var data = req.body;
+    const start = parseInt(data.start) || 0;
+    const length = parseInt(data.length) || 10;
+    const isExport = data.export === 'true';
+
     var select = `b.device_id mc_srl_no_out,COUNT(b.receipt_no) tot_vehi, SUM(c.paid_amt) paid_amt, SUM(c.advance_amt) advance_amt,SUM(c.base_amt) base_amt, SUM(c.cgst) cgst, SUM(c.sgst) sgst, SUM(c.igst) igst`,
       table_name =
         "td_vehicle_in a, td_vehicle_out b, td_receipt c",
-      whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.car_out_flag = 'Y' AND b.date_time_out BETWEEN '${data.frm_dt}' AND '${data.to_dt}' AND a.customer_id = '${custId}'`,
-      order = "GROUP BY b.device_id";
+      whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.car_out_flag = 'Y' AND b.date_time_out BETWEEN '${data.frm_dt}' AND '${data.to_dt}'`;
+
+    if (!req.session.user.user_data.is_superadmin) {
+      whr += ` AND a.customer_id = '${custId}' `;
+    }
+
+    const countQuery = await db_Select("COUNT(DISTINCT b.device_id) as count", table_name, whr, null);
+    const recordsTotal = countQuery.suc > 0 ? countQuery.msg[0].count : 0;
+
+    let order = "GROUP BY b.device_id";
+    if (!isExport) {
+        order += ` LIMIT ${start}, ${length}`;
+    }
     var res_dt = await db_Select(select, table_name, whr, order);
-    // console.log(res_dt);
-    res.send(res_dt);
+
+    var totalSelect = `COUNT(b.receipt_no) tot_vehi, SUM(c.paid_amt) paid_amt, SUM(c.advance_amt) advance_amt, SUM(c.base_amt) base_amt, SUM(c.cgst) cgst, SUM(c.sgst) sgst, SUM(c.igst) igst`;
+    var totals_dt = await db_Select(totalSelect, table_name, whr, null);
+    var totals = totals_dt.suc > 0 ? totals_dt.msg[0] : { tot_vehi: 0, paid_amt: 0, advance_amt: 0, base_amt: 0, cgst: 0, sgst: 0, igst: 0 };
+
+    if (isExport) {
+        res.send(res_dt);
+    } else {
+        res.json({
+            draw: parseInt(data.draw) || 1,
+            recordsTotal: recordsTotal,
+            recordsFiltered: recordsTotal,
+            data: res_dt.suc > 0 ? res_dt.msg : [],
+            totals: totals
+        });
+    }
   }
 );
 
@@ -608,10 +675,12 @@ reportRouter.post(
   "/get_operator_wise_repo_new",
   AuthCheckedMW,
   async (req, res) => {
-    var custId = req.session.user.user_data.customer_id,
-      userType = req.session.user.user_data.user_type;
-
+    var custId = req.session.user.user_data.customer_id;
     var data = req.body;
+    const start = parseInt(data.start) || 0;
+    const length = parseInt(data.length) || 10;
+    const isExport = data.export === 'true';
+
     var select = `a.device_id mc_srl_no_out,e.operator_name opratorName,g.vehicle_name vehicleType,
        COUNT(a.receipt_no) tot_vehi,SUM(b.paid_amt) paid_amt,SUM(b.advance_amt) AS advance_amt,
        SUM(b.base_amt) base_amt,SUM(b.cgst) cgst,SUM(b.sgst) sgst, SUM(b.igst) igst`,
@@ -621,20 +690,43 @@ reportRouter.post(
              AND d.user_id    = e.user_id
              AND a.receipt_no = f.receipt_no
              AND f.vehicle_id = g.vehicle_id
-             AND a.date_time_out BETWEEN '${data.frm_dt}' AND '${data.to_dt}' 
-             AND f.customer_id = '${custId}'`;
-    order = `GROUP BY a.device_id,e.operator_name,g.vehicle_name
-             ORDER BY opratorName`;
+             AND a.date_time_out BETWEEN '${data.frm_dt}' AND '${data.to_dt}'`;
+    
+    if (!req.session.user.user_data.is_superadmin) {
+      whr += ` AND f.customer_id = '${custId}' `;
+    }
+
+    const countQuery = await db_Select("COUNT(DISTINCT CONCAT(a.device_id, '-', e.operator_name, '-', g.vehicle_name)) as count", table_name, whr, null);
+    const recordsTotal = countQuery.suc > 0 ? countQuery.msg[0].count : 0;
+
+    let order = `GROUP BY a.device_id,e.operator_name,g.vehicle_name ORDER BY opratorName`;
+    if (!isExport) {
+        order += ` LIMIT ${start}, ${length}`;
+    }
     var res_dt = await db_Select(select, table_name, whr, order);
-    // console.log(res_dt);
-    res.send(res_dt);
+
+    var totalSelect = `COUNT(a.receipt_no) tot_vehi, SUM(b.paid_amt) paid_amt, SUM(b.advance_amt) advance_amt, SUM(b.base_amt) base_amt, SUM(b.cgst) cgst, SUM(b.sgst) sgst, SUM(b.igst) igst`;
+    var totals_dt = await db_Select(totalSelect, table_name, whr, null);
+    var totals = totals_dt.suc > 0 ? totals_dt.msg[0] : { tot_vehi: 0, paid_amt: 0, advance_amt: 0, base_amt: 0, cgst: 0, sgst: 0, igst: 0 };
+
+    if (isExport) {
+        res.send(res_dt);
+    } else {
+        res.json({
+            draw: parseInt(data.draw) || 1,
+            recordsTotal: recordsTotal,
+            recordsFiltered: recordsTotal,
+            data: res_dt.suc > 0 ? res_dt.msg : [],
+            totals: totals
+        });
+    }
   }
 );
 
 reportRouter.get("/combine_repo_new", AuthCheckedMW, async (req, res) => {
   var custId = req.session.user.user_data.customer_id,
-    combineData = await db_Select("vehicle_id , customer_id, vehicle_name, vehicle_icon","md_vehicle",`customer_id=${custId}`,
-    );
+    combineData = await db_Select("vehicle_id , customer_id, vehicle_name, vehicle_icon","md_vehicle", req.session.user.user_data.is_superadmin ? null : `customer_id=${custId}`);
+
   var data = {
     title: "Combine Report (Vehicle)",
     page_path: "reports/combine_report_new",
@@ -645,27 +737,53 @@ reportRouter.get("/combine_repo_new", AuthCheckedMW, async (req, res) => {
 });
 
 reportRouter.post("/get_combine_repo_new",  AuthCheckedMW,async (req, res) => {
-      var custId = req.session.user.user_data.customer_id,
-        userType = req.session.user.user_data.user_type;
-  
+      var custId = req.session.user.user_data.customer_id;
       var data = req.body;
+      const start = parseInt(data.start) || 0;
+      const length = parseInt(data.length) || 10;
+      const isExport = data.export === 'true';
+
       var select = `f.operator_name, a.device_id,sum(c.advance_amt)advance_amt,sum(c.paid_amt)paid_amt,SUM(c.base_amt) base_amt,SUM(c.cgst) cgst, SUM(c.sgst) sgst, SUM(c.igst) igst`,
         table_name = "td_vehicle_in a,md_vehicle b,td_receipt c,td_vehicle_out d,md_user e,md_operator f",
         whr = `a.vehicle_id = b.vehicle_id and a.receipt_no = c.receipt_no
         and   a.receipt_no = d.receipt_no and c.user_id = e.id
-        and   e.user_id = f.user_id and a.customer_id = '${custId}'
+        and   e.user_id = f.user_id
         and   a.vehicle_id = '${data.vehicle_id}' and d.date_time_out between '${data.frm_dt}' and '${data.to_dt}'`
-        order = "Group BY f.operator_name,a.device_id";
+
+      if (!req.session.user.user_data.is_superadmin) {
+        whr += ` AND a.customer_id = '${custId}' `;
+      }
+
+      const countQuery = await db_Select("COUNT(DISTINCT CONCAT(f.operator_name, '-', a.device_id)) as count", table_name, whr, null);
+      const recordsTotal = countQuery.suc > 0 ? countQuery.msg[0].count : 0;
+
+      let order = "GROUP BY f.operator_name,a.device_id";
+      if (!isExport) {
+          order += ` LIMIT ${start}, ${length}`;
+      }
       var res_dt = await db_Select(select, table_name, whr, order);
-      console.log(res_dt);
-      res.send(res_dt);
+
+      var totalSelect = `SUM(c.paid_amt) paid_amt, SUM(c.advance_amt) advance_amt, SUM(c.base_amt) base_amt, SUM(c.cgst) cgst, SUM(c.sgst) sgst, SUM(c.igst) igst`;
+      var totals_dt = await db_Select(totalSelect, table_name, whr, null);
+      var totals = totals_dt.suc > 0 ? totals_dt.msg[0] : { paid_amt: 0, advance_amt: 0, base_amt: 0, cgst: 0, sgst: 0, igst: 0 };
+
+      if (isExport) {
+          res.send(res_dt);
+      } else {
+          res.json({
+              draw: parseInt(data.draw) || 1,
+              recordsTotal: recordsTotal,
+              recordsFiltered: recordsTotal,
+              data: res_dt.suc > 0 ? res_dt.msg : [],
+              totals: totals
+          });
+      }
     }
   );
 
   reportRouter.get("/combine_repo_dev_new", AuthCheckedMW, async (req, res) => {
     var custId = req.session.user.user_data.customer_id,
-      combineData_dev = await db_Select("*","md_setting",`customer_id=${custId}`,
-      );
+      combineData_dev = await db_Select("*","md_setting", req.session.user.user_data.is_superadmin ? null : `customer_id=${custId}`);
     var data = {
       title: "Combine Report (Device)",
       page_path: "reports/combine_report_dev_new",
@@ -699,23 +817,53 @@ reportRouter.post("/get_combine_repo_new",  AuthCheckedMW,async (req, res) => {
 
 
   reportRouter.post("/get_combine_repo_dev_new",  AuthCheckedMW,async (req, res) => {
-    var custId = req.session.user.user_data.customer_id,
-      userType = req.session.user.user_data.user_type;
-
+    var custId = req.session.user.user_data.customer_id;
     var data = req.body;
+    const start = parseInt(data.start) || 0;
+    const length = parseInt(data.length) || 10;
+    const isExport = data.export === 'true';
+
     var select = `f.operator_name, d.device_id, b.vehicle_name vehicleType, SUM(c.advance_amt)advance_amt, SUM(c.paid_amt)paid_amt,SUM(c.base_amt) base_amt,SUM(c.cgst) cgst, SUM(c.sgst) sgst, SUM(c.igst) igst`,
       table_name = `td_vehicle_in a JOIN md_vehicle b ON a.vehicle_id = b.vehicle_id
                     JOIN td_receipt c ON a.receipt_no = c.receipt_no
                     JOIN td_vehicle_out d ON a.receipt_no = d.receipt_no
                     JOIN md_user e ON c.user_id = e.id
                     JOIN md_operator f ON e.user_id = f.user_id`,
-      whr = `a.customer_id = '${custId}'
-            and d.device_id = '${data.device_id}' 
-            and d.date_time_out between '${data.frm_dt}' and '${data.to_dt}'`
-      order = "Group BY f.operator_name,d.device_id,b.vehicle_name";
+      whr = ` d.date_time_out between '${data.frm_dt}' and '${data.to_dt}'`;
+      
+    if (data.device_id) {
+       whr += ` AND d.device_id = '${data.device_id}'`;
+    }
+
+    if (!req.session.user.user_data.is_superadmin) {
+      whr = `a.customer_id = '${custId}' and ` + whr;
+    }
+
+    const countQuery = await db_Select("COUNT(DISTINCT CONCAT(f.operator_name, '-', d.device_id, '-', b.vehicle_name)) as count", table_name, whr, null);
+    const recordsTotal = countQuery.suc > 0 ? countQuery.msg[0].count : 0;
+
+    let order = "Group BY f.operator_name,d.device_id,b.vehicle_name";
+    if (!isExport) {
+        order += ` LIMIT ${start}, ${length}`;
+    }
+    
     var res_dt = await db_Select(select, table_name, whr, order);
-    // console.log(res_dt);
-    res.send(res_dt);
+
+    var totalSelect = `SUM(c.paid_amt) paid_amt, SUM(c.advance_amt) advance_amt, SUM(c.base_amt) base_amt, SUM(c.cgst) cgst, SUM(c.sgst) sgst, SUM(c.igst) igst`;
+    var totals_dt = await db_Select(totalSelect, table_name, whr, null);
+    var totals = totals_dt.suc > 0 ? totals_dt.msg[0] : { paid_amt: 0, advance_amt: 0, base_amt: 0, cgst: 0, sgst: 0, igst: 0 };
+
+    if (isExport) {
+        res.send(res_dt);
+    } else {
+        res.json({
+            draw: parseInt(data.draw) || 1,
+            recordsTotal: recordsTotal,
+            recordsFiltered: recordsTotal,
+            data: res_dt.suc > 0 ? res_dt.msg : [],
+            totals: totals
+        });
+    }
   }
 );
 
@@ -758,8 +906,13 @@ reportRouter.post(
     var select = `b.device_id mc_srl_no_out, d.vehicle_name vehicleType, COUNT(b.receipt_no) tot_vehi, SUM(c.paid_amt) paid_amt, SUM(c.advance_amt) advance_amt,SUM(c.base_amt) base_amt,SUM(c.cgst) cgst, SUM(c.sgst) sgst,  SUM(c.igst) igst, f.operator_name opratorName`,
       table_name =
         "td_vehicle_in a, td_vehicle_out b, td_receipt c, md_vehicle d, md_user e, md_operator f",
-      whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.user_id=f.user_id AND a.car_out_flag = 'Y' AND b.date_time_out BETWEEN '${data.frm_dt}' AND '${data.to_dt}' AND a.customer_id = '${custId}'`,
+      whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.user_id=f.user_id AND a.car_out_flag = 'Y' AND b.date_time_out BETWEEN '${data.frm_dt}' AND '${data.to_dt}'`,
       order = "GROUP BY a.user_id_in,b.device_id,d.vehicle_name,f.operator_name";
+
+    if (!req.session.user.user_data.is_superadmin) {
+      whr += ` AND a.customer_id = '${custId}' `;
+    }
+
     var res_dt = await db_Select(select, table_name, whr, order);
     res.send(res_dt);
   }
@@ -770,9 +923,10 @@ reportRouter.get("/shift_wise_repo", AuthCheckedMW, async (req, res) => {
     shiftData = await db_Select(
       "shift_id, shift_name, f_time, t_time",
       "md_shift",
-      `customer_id=${custId}`,
+      req.session.user.user_data.is_superadmin ? null : `customer_id=${custId}`,
       "ORDER BY f_time"
     );
+
   // console.log(shiftData)
 
   var data = {
@@ -803,16 +957,26 @@ reportRouter.post("/shift_wise_repo", AuthCheckedMW, async (req, res) => {
   var select = `b.device_id mc_srl_no_out, d.vehicle_name vehicleType, COUNT(b.receipt_no) tot_vehi, SUM(c.paid_amt) paid_amt, SUM(c.advance_amt) advance_amt, SUM(c.base_amt) base_amt, c.pay_mode,SUM(c.cgst) cgst,SUM(c.sgst) sgst, SUM(c.igst) igst,f.operator_name opratorName`,
     table_name =
       "td_vehicle_in a, td_vehicle_out b, td_receipt c, md_vehicle d, md_user e, md_operator f",
-    whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.user_id=f.user_id AND a.car_out_flag = 'Y' AND DATE(b.date_time_out) BETWEEN '${data.frm_dt}' AND '${data.to_dt}' AND TIME(b.date_time_out) BETWEEN '${ftime}' AND '${ttime}' AND a.customer_id = '${custId}'`,
+    whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.user_id=f.user_id AND a.car_out_flag = 'Y' AND DATE(b.date_time_out) BETWEEN '${data.frm_dt}' AND '${data.to_dt}' AND TIME(b.date_time_out) BETWEEN '${ftime}' AND '${ttime}'`,
     order = "GROUP BY a.user_id_in,c.pay_mode,b.device_id,d.vehicle_name,f.operator_name";
+
+  if (!req.session.user.user_data.is_superadmin) {
+    whr += ` AND a.customer_id = '${custId}' `;
+  }
+
   var res_dt = await db_Select(select, table_name, whr, order);
   res.send(res_dt);
   }else {
     var select = `b.device_id mc_srl_no_out, d.vehicle_name vehicleType, COUNT(b.receipt_no) tot_vehi, SUM(c.paid_amt) paid_amt, SUM(c.advance_amt) advance_amt, SUM(c.base_amt) base_amt, c.pay_mode,SUM(c.cgst) cgst,SUM(c.sgst) sgst, SUM(c.igst) igst,f.operator_name opratorName`,
     table_name =
       "td_vehicle_in a, td_vehicle_out b, td_receipt c, md_vehicle d, md_user e, md_operator f",
-    whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.user_id=f.user_id AND a.car_out_flag = 'Y' AND DATE(b.date_time_out) BETWEEN '${data.frm_dt}' AND '${data.to_dt}' AND TIME(b.date_time_out) BETWEEN '${ftime}' AND '${ttime}' AND a.customer_id = '${custId}' AND c.pay_mode = '${data.pay_mode}'`,
+    whr = `a.receipt_no=b.receipt_no AND a.receipt_no=c.receipt_no AND a.vehicle_id=d.vehicle_id AND a.user_id_in=e.id AND e.user_id=f.user_id AND a.car_out_flag = 'Y' AND DATE(b.date_time_out) BETWEEN '${data.frm_dt}' AND '${data.to_dt}' AND TIME(b.date_time_out) BETWEEN '${ftime}' AND '${ttime}' AND c.pay_mode = '${data.pay_mode}'`,
     order = "GROUP BY a.user_id_in,b.device_id,d.vehicle_name,c.pay_mode,f.operator_name";
+
+  if (!req.session.user.user_data.is_superadmin) {
+    whr += ` AND a.customer_id = '${custId}' `;
+  }
+
   var res_dt = await db_Select(select, table_name, whr, order);
   res.send(res_dt);
   }

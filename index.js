@@ -13,6 +13,7 @@ const { Api: v9Api } = require('./routes/V9/Api.routes');
 const { Api: v10Api } = require('./routes/V10/Api.routes');
 const { Api: v11Api } = require('./routes/V11/Api.routes');
 const { Api: v12Api } = require('./routes/V12/Api.routes');
+const { Api: v13Api } = require('./routes/V13/Api.routes');
 
 const { Customer } = require('./routes/Customer.routes');
 const { reportRouter } = require('./routes/ReportsRouter');
@@ -28,11 +29,11 @@ const logger = require('./model/LoggerModel');
 const { gstRouter } = require('./routes/gstRouter');
 
 const app = express(),
-    session = require('express-session'),
-	MemoryStore = require('memorystore')(session),
-    flash = require('connect-flash'),
-    path = require('path'),
-    port = process.env.PORT || 3002;
+  session = require('express-session'),
+  MemoryStore = require('memorystore')(session),
+  flash = require('connect-flash'),
+  path = require('path'),
+  port = process.env.PORT || 3002;
 
 
 
@@ -46,18 +47,18 @@ app.use("views", express.static(path.join(__dirname, "views")));
 
 // SESSION
 app.use(
-    session({
-      secret: "PARKING_ONLINE",//project name secretKey
-      resave: false,
-      saveUninitialized: false,
-      cookie: {
-        maxAge: 36000000,//time 1000 h
-      },
-		store: new MemoryStore({
-		  checkPeriod: 86400000, // prune expired entries every 24h
-		}),
-    })
-  );
+  session({
+    secret: "PARKING_ONLINE",//project name secretKey
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 36000000,//time 1000 h
+    },
+    store: new MemoryStore({
+      checkPeriod: 86400000, // prune expired entries every 24h
+    }),
+  })
+);
 // END
 
 app.use((req, res, next) => {
@@ -69,20 +70,20 @@ app.use((req, res, next) => {
 // Global error handling middleware
 app.use((err, req, res, next) => {
   logger.error(err); // Log the error
-	next();
+  next();
   // res.send('Internal Server Error');
 });
 
 
 
 app.use(flash());
-var sessionFlash = function(req, res, next) {
-    res.locals.currentUser = req.user;
-    res.locals.error = req.flash('error');
-    res.locals.info = req.flash('info');
-    res.locals.warning = req.flash('warning');
-    res.locals.success = req.flash('success');
-    next();
+var sessionFlash = function (req, res, next) {
+  res.locals.currentUser = req.user;
+  res.locals.error = req.flash('error');
+  res.locals.info = req.flash('info');
+  res.locals.warning = req.flash('warning');
+  res.locals.success = req.flash('success');
+  next();
 }
 app.use(sessionFlash)
 
@@ -90,7 +91,7 @@ app.use(sessionFlash)
 app.set('view engine', 'ejs');
 
 app.get('/customer', (req, res) => {
-    res.send('Hello World');
+  res.send('Hello World');
 });
 
 //app.use('/api', Api);
@@ -105,24 +106,25 @@ app.use('/v9/api', v9Api);
 app.use('/v10/api', v10Api);
 app.use('/v11/api', v11Api);
 app.use('/v12/api', v12Api);
+app.use('/v13/api', v13Api);
 
 app.use('/', Customer);
 
 // MODIFY 09/01/2024 SUBHAM
 app.use('/report', reportRouter)
 
-app.use('/header',Header_footerRouter)
-app.use('/device',DeviceRouter)
+app.use('/header', Header_footerRouter)
+app.use('/device', DeviceRouter)
 // app.use('/customer',Customer_settingRouter)
-app.use('/operator',Manage_operatorRouter)
+app.use('/operator', Manage_operatorRouter)
 
-app.use('/shift',ShiftRouter)
+app.use('/shift', ShiftRouter)
 
-app.use('/vehicle',vehicleRouter)
+app.use('/vehicle', vehicleRouter)
 
-app.use('/rate',vehicle_rateRouter)
+app.use('/rate', vehicle_rateRouter)
 
-app.use('/gst',gstRouter)
+app.use('/gst', gstRouter)
 
 app.use('/superadmin', SuperAdminRouter)
 
@@ -138,7 +140,7 @@ app.get('/api/error', (req, res, next) => {
 });
 
 
-app.get('*', function(req, res){
+app.get('*', function (req, res) {
   res.render('auth/error_404')
   // res.redirect('/auth')
   // res.send('what???', 404);
@@ -146,11 +148,11 @@ app.get('*', function(req, res){
 
 
 app.listen(port, (err) => {
-    if (err){
-      logger.error(err);
-      throw new Error(err)
-    }
-    console.table([
-        { "Server": "Running","Port": port }
-    ]);
+  if (err) {
+    logger.error(err);
+    throw new Error(err)
+  }
+  console.table([
+    { "Server": "Running", "Port": port }
+  ]);
 });

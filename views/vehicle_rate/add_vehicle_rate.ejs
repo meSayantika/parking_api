@@ -1,149 +1,150 @@
-<div class="container-fluid">
-  <div class="col-sm-12 col-md-12 col-lg-12">
-    <div class="card">
-      <div class="card-body">
-        <div class="titleSec">
-          <button type="button" class="btn btn-primary" id="myBtn"
-            style="float: inline-end;border-radius: 6px;width: 6vw;cursor: pointer;">Add</button>
-        </div>
-        <div class="row mt-4">
-          <h4 class="text-dark"><i data-feather="settings" class="feather-icon"></i>&nbsp;<b>Attach Vehicle Rate</b>
-          </h4>
-        </div>
-        <div class="row mt-3">
-          <div class="form-group col-md-4">
-            <label for="rate_type"><b style="color: black;">Rate Type:</b></label>
-            <select name="rate_type" class="form-control" id="rate_type" required>
-              <option value="<%= user.user_data.dev_mod=='D' ? 'H' : 'F' %>">
-                <%= user.user_data.dev_mod=='D' ? 'Hourly' : 'Fixed' %>
-              </option>
-            </select>
+<link href="/template/dist/css/vehicle-page.css" rel="stylesheet">
+
+<style>
+    /* Specific adjustment for Sl No margin */
+    .show_data th:first-child, .show_data td:first-child {
+        padding-left: 20px !important;
+    }
+</style>
+
+<div class="veh-page-wrapper">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card veh-card">
+          <div class="card-body">
+
+            <!-- HEADER -->
+            <div class="veh-header">
+              <div class="veh-title-group">
+                <div class="veh-icon-badge" style="display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; color: white; line-height: 1;">
+                  ₹
+                </div>
+                <h3 class="veh-page-title">Manage Vehicle Rate</h3>
+              </div>
+              <button type="button" class="veh-add-btn" id="myBtn">
+                <i data-feather="plus" style="width:15px;height:15px;stroke:currentColor;"></i> Add Vehicle Rate
+              </button>
+            </div>
+
+            <!-- FILTER SECTION -->
+            <div class="veh-filter-sec mt-3">
+              <div class="row align-items-end mb-2">
+                <div class="col-md-4 veh-form-group mb-0">
+                  <label class="veh-label"><i data-feather="percent" style="width:14px;height:14px;margin-right:4px;"></i> Rate Type</label>
+                  <input type="text" class="veh-input" value="<%= user.user_data.dev_mod=='D' ? 'Hourly' : 'Fixed' %>" readonly style="background-color: var(--gray-50); cursor: not-allowed;">
+                  <input type="hidden" id="rate_type" value="<%= user.user_data.dev_mod=='D' ? 'H' : 'F' %>">
+                </div>
+                <div class="col-md-4 veh-form-group mb-0">
+                  <label class="veh-label"><i data-feather="truck" style="width:14px;height:14px;margin-right:4px;"></i> Vehicle Name</label>
+                  <select name="veh_id" class="veh-select" id="veh_id" required>
+                    <option value="">Select Vehicle Name</option>
+                    <% data.forEach(dt => { %>
+                      <option value="<%= dt.vehicle_id %>"><%= dt.vehicle_name %></option>
+                    <% })%>
+                  </select>
+                </div>
+                <div class="col-md-4" style="padding-top: 26px;">
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <button type="button" class="veh-submit-btn" id="submitBtn" style="width: auto; height: 48px; padding: 0 25px;">
+                      <i data-feather="search" style="width:16px;height:16px;margin-right:6px;"></i> Fetch Details
+                    </button>
+                    <a href="/rate/vehicle_rate_dtls" class="veh-refresh-btn" title="Refresh List" style="height: 48px; width: 48px;">
+                      <i data-feather="refresh-cw"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <input type="hidden" id="cust_id" name="cust_id" value="<%= data.customer_id %>">
+            </div>
+
+            <!-- TABLE CONTENT -->
+            <div class="veh-table-wrap mt-4">
+              <table id="example" class="table veh-table no-wrap show_data">
+                <thead>
+                  <tr>
+                    <th class="text-center">Sl. No.</th>
+                    <th class="text-center">From Hour</th>
+                    <th class="text-center">To Hour</th>
+                    <th class="text-center">Parking Fee</th>
+                    <% if (user.user_data.dev_mod == 'D') { %>
+                    <th class="text-center">Flag</th>
+                    <% } %>   
+                    <th class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Content dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+
           </div>
-          <div class="form-group col-md-4">
-            <label for="veh_id"><b style="color: black;">Vehicle Name:</b></label>
-            <select name="veh_id" class="form-control" id="veh_id" required>
-              <option value="">Select Vehicle Name</option>
-              <% data.forEach(dt => { %>
-                <option value="<%= dt.vehicle_id %>"><%= dt.vehicle_name %></option>
-              <% })%>
-            </select>
-          </div>
-          <input type="hidden" id="cust_id" name="cust_id" value="<%= data.customer_id %>">
-          <div class="form-group col-md-4" style="margin-top: 30px;">
-            <button type="submit" class="btn btn-primary" style="border-radius: 5px;" id="submitBtn">Submit</button>
-          </div>
-        </div>
-        <div class="table-responsive">
-          <table id="example" class="table table-striped table-bordered show_data" style="width:100%">
-            <thead>
-              <tr>
-                <th class="text-dark text-center">Sl. No.</th>
-                <th class="text-dark text-center">From Hour</th>
-                <th class="text-dark text-center">To Hour</th>
-                <th class="text-dark text-center">Parking Fee</th>
-                <% if (user.user_data.dev_mod == 'D') { %>
-                <th class="text-dark text-center">Flag</th>
-                <% } %>   
-                <th class="text-dark text-center">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td colspan="6" class="text-danger text-center">No Data Found</td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="modal fade" id="myModal">
-  <div class="modal-dialog modal-xl">
+<!-- Modal -->
+<div class="modal fade loc-modal" id="myModal">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <!-- Modal Header -->
       <div class="modal-header">
-        <h3 class="modal-title text-dark"><i data-feather="plus-circle" class="feather-icon"></i>&nbsp;<b>Add Vehicle Rate</b>
-        </h3>
-        <button type="button" class="close" data-dismiss="modal">
-          &times;
-        </button>
+        <h4 class="modal-title"><i data-feather="plus-circle" style="width:20px;height:20px;"></i><b> Add Vehicle Rate</b></h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
 
       <!-- Modal body -->
       <div class="modal-body">
         <form action="/rate/add_save_vehicle_rate" method="post" id="myForm">
           <div class="row">
-            <div class="form-group col-md-4">
-              <label for="cust_id" class="text-dark"><b>Customer Name:</b></label>
-              <select name="cust_id" class="form-control" id="cust_id">
-                <option value="<%=user.user_data.customer_id %>">
-                  <%= user.user_data.customer_name %>
-                </option>
-              </select>
+            <div class="col-md-6 veh-form-group">
+              <label class="veh-label">Rate Type</label>
+              <input type="text" class="veh-input" value="<%= user.user_data.dev_mod=='D' ? 'Hourly' : 'Fixed' %>" readonly style="background-color: var(--gray-50);">
+              <input type="hidden" name="rate_type" value="<%= user.user_data.dev_mod=='D' ? 'H' : 'F' %>">
             </div>
-
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="rate_type"><b style="color: black;">Rate Type:</b></label>
-                <select name="rate_type" class="form-control" id="rate_type" required>
-                  <option value="<%= user.user_data.dev_mod=='D' ? 'H' : 'F' %>">
-                    <%= user.user_data.dev_mod=='D' ? 'Hourly' : 'Fixed' %>
-                  </option>
-                </select>
-              </div>
-            </div>
-
-
-            <div class="form-group col-md-4">
-              <label for="veh_id"><b style="color: black;">Vehicle Name:</b></label>
-              <select name="veh_id" class="form-control" id="veh_id" required>
-                <option value="">Select Vehicle Name</option>
+            <div class="col-md-6 veh-form-group">
+              <label class="veh-label">Vehicle Name</label>
+              <select name="veh_id" class="veh-select modal-select" required>
+                <option value="">Select Vehicle</option>
                 <% data.forEach(dt => { %>
                   <option value="<%= dt.vehicle_id %>"><%= dt.vehicle_name %></option>
                 <% })%>
               </select>
             </div>
-
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="frm_hr" class="text-dark"><b>From Hour</b></label>
-               <input type="number" class="form-control" id="frm_hr" name="frm_hr" value="00">
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="to_hr" class="text-dark"><b>To Hour</b></label>
-               <input type="number" class="form-control" id="to_hr" name="to_hr" value="00">
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="park_fee" class="text-dark"><b>Parking Fee</b></label>
-               <input type="text" class="form-control" id="park_fee" name="park_fee" placeholder="Enter Parking Fee...." required>
-              </div>
-            </div>
-
-             <% if (user.user_data.dev_mod == 'D') { %>
-              <div class="form-group col-md-4">
-              <label for="flag"><b style="color: black;">Flag:</b></label>
-              <select name="flag" class="form-control" id="flag" required>
-                <option value="">Select Flag</option>
-                  <option value="O">Old Rate</option>
-                  <option value="N">New rate</option>
-              </select>
-            </div>
-            <% } %>   
-
           </div>
-          <div class="row mt-3">
-            <div class="form-group col-md-3">
-              <input type="submit" value="SUBMIT" class="btn btn-primary "
-                style="margin-left: 38vw;border-radius: 6px;" />
+
+          <div class="row">
+            <div class="col-md-4 veh-form-group">
+              <label class="veh-label">From Hour</label>
+              <input type="number" class="veh-input" name="frm_hr" value="0" min="0">
             </div>
+            <div class="col-md-4 veh-form-group">
+              <label class="veh-label">To Hour</label>
+              <input type="number" class="veh-input" name="to_hr" value="0" min="0">
+            </div>
+            <div class="col-md-4 veh-form-group">
+              <label class="veh-label">Parking Fee (₹)</label>
+              <input type="text" class="veh-input" name="park_fee" placeholder="0.00" required>
+            </div>
+          </div>
+
+          <% if (user.user_data.dev_mod == 'D') { %>
+          <div class="veh-form-group">
+            <label class="veh-label">Rate Flag</label>
+            <select name="flag" class="veh-select modal-select" required>
+              <option value="">Select Flag</option>
+              <option value="O">Old Rate</option>
+              <option value="N">New Rate</option>
+              <option value="C">Custom</option>
+            </select>
+          </div>
+          <% } %>
+
+          <div class="text-center mt-2">
+            <button type="submit" class="veh-submit-btn" style="width: auto; padding: 10px 40px;">Save Rate Configuration</button>
           </div>
         </form>
       </div>
@@ -153,100 +154,92 @@
 
 <script>
   $(document).ready(function () {
+    // Feather Icons
+    if (typeof feather !== 'undefined') {
+        feather.replace();
+    }
+
+    // Initialize Select2
+    $('.veh-select').select2({
+      width: '100%'
+    });
+
+    // Modal Handling
     $("#myBtn").click(function () {
-      $("#myModal").modal();
-      // $("#myBtn").hide()
+      $("#myModal").modal('show');
     });
-  });
-</script>
 
-<script>
-  $('#rate_type').change(function () {
-    var rate_type = $(this).val();
-
-    $.ajax({
-      type: "POST",
-      url: "/rate/get_vehicle_id",
-      data: { rate_type: rate_type },
-      success: function (response) {
-        // console.log(response.SUCCESS.branchData.msg)
-        $('#veh_id').empty();
-        $('#veh_id').append(`<option value="">Select Vehicle Id</option>`)
-
-        response.SUCCESS.vech_id.msg.forEach(function (resData) {
-          $('#veh_id').append('<option value="' + resData.vehicle_id + '">' + resData.vehicle_id + '</option>');
-        });
-
-      },
-      error: function (error) {
-        console.log(error);
-        //   tbody.empty();
-      },
+    $('#myModal').on('shown.bs.modal', function() {
+      $('.modal-select', this).select2({
+        width: '100%',
+        dropdownParent: $('#myModal')
+      });
     });
-  });
 
-</script>
-
-<script>
-  $('#submitBtn').click(function () {
-    var veh_id = $('#veh_id').val();
-    var rate_type = $('#rate_type').val();
-
-    var tbody = $(".show_data tbody");
-    $.ajax({
-      type: "GET",
-      url: "/rate/vehicle_details",
-      data: { veh_id: veh_id, rate_type: rate_type },
-      success: function (response) {
-        tbody.empty();
-        if (response.suc > 0 && response.msg.length > 0) {
-          response.msg.forEach(function (item, index) {
-            var row =
-              "<tr>" +
-              "<td class='text-dark text-center'>" +
-              (index + 1) +
-              "</td>" +
-              "<td class='text-dark text-center'>" +
-              item.from_hour +
-              "</td>" +
-              "<td class='text-dark text-center'>" +
-              item.to_hour +
-              "</td>" +
-              "<td class='text-dark text-center'>" +
-              item.vehicle_rate +
-            //   "</td>" +
-            // "<td class='text-dark text-center'>" +
-            //   (item.night_day_flag === "O"
-            //   ? "<span class='badge bg-warning'>Old Rate</span>"
-            //   : "<span class='badge bg-success'>New Rate</span>") +
-            //   "</td>"+
-            "</td>" +
-           <% if (user.user_data.dev_mod == 'D') { %>
-            "<td class='text-dark text-center'>" +
-            (item.night_day_flag === "O"
-            ? "<span class='badge bg-warning'>Old Rate</span>"
-            : "<span class='badge bg-success'>New Rate</span>") +
-            "</td>" +
-             <% } %>
-              "<td class='text-center'><a href='/rate/edit_vehicle_rate_details?customer_id=" + item.customer_id + "&sl_no=" + item.sl_no + "' class='btn btn-info' style='border-radius:5px'><i class='fa fa-edit'></i></a></td>" +
-              "</tr>";
-            tbody.append(row);
-          });
-        } else {
-          $('.show_data tbody').append(`
-              <tr>
-                <td colspan="5" class="text-danger text-center">No data found</td>
-              </tr>
-            `)
+    // DataTable Initialization
+    var dataTable = $('#example').DataTable({
+        pageLength: 10,
+        lengthMenu: [10, 25, 50, 100],
+        ordering: false,
+        responsive: true,
+        autoWidth: false,
+        language: {
+            search: "Search Rate:",
+            lengthMenu: "Show _MENU_ entries",
+            info: "Showing _START_ to _END_ of _TOTAL_ entries",
+            paginate: { previous: "Prev", next: "Next" }
+        },
+        drawCallback: function() {
+            if (typeof feather !== 'undefined') feather.replace();
         }
-
-      },
-      error: function (error) {
-        // console.log(error);
-        tbody.empty();
-
-      },
     });
 
+    // Fetch Logic
+    $('#submitBtn').click(function () {
+      var veh_id = $('#veh_id').val();
+      var rate_type = $('#rate_type').val();
+
+      if(!veh_id) {
+          alert('Please select a vehicle first');
+          return;
+      }
+
+      $.ajax({
+        type: "GET",
+        url: "/rate/vehicle_details",
+        data: { veh_id: veh_id, rate_type: rate_type },
+        success: function (response) {
+          dataTable.clear().draw();
+          if (response.suc > 0 && response.msg.length > 0) {
+            response.msg.forEach(function (item, index) {
+              var flagHtml = '';
+              <% if (user.user_data.dev_mod == 'D') { %>
+              flagHtml = `<span class="badge ${item.night_day_flag === 'O' ? 'badge-warning' : item.night_day_flag === 'C' ? 'badge-success' : 'badge-primary'}" style="padding: 5px 10px; border-radius: 20px;">
+                ${item.night_day_flag === 'O' ? 'Old Rate' : item.night_day_flag === 'C' ? 'Custom' : 'New Rate'}
+              </span>`;
+              <% } %>
+
+              var actionHtml = `<a href="/rate/edit_vehicle_rate_details?customer_id=${item.customer_id}&sl_no=${item.sl_no}" class="action-btn-edit" title="Edit Rate">
+                <i class="fa fa-edit"></i>
+              </a>`;
+
+              dataTable.row.add([
+                index + 1,
+                item.from_hour,
+                item.to_hour,
+                `<span style="font-weight: 600; color: var(--green-600);">₹ ${item.vehicle_rate}</span>`,
+                <% if (user.user_data.dev_mod == 'D') { %> flagHtml, <% } %>
+                actionHtml
+              ]).draw(false);
+            });
+          } else {
+             // DataTable handles empty message automatically, or we can add a row
+          }
+        },
+        error: function (error) {
+          alert('Error fetching data.');
+        }
+      });
+    });
   });
 </script>

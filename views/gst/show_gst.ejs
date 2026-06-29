@@ -1,193 +1,223 @@
-<div class="container-fluid">
-    <div class="row">
-      <div class="card col-12">
-        <div class="card-body">
-          <div class="titleSec mt-3">
-            <button type="button" class="btn btn-primary" id="myBtn"
-              style="float: inline-end;border-radius: 6px;width: 7vw;">Add GST</button>
-          </div>
-          <div class="row mt-5">
-            <h4 class="text-dark"><i data-feather="tag" class="feather-icon"></i>&nbsp;<b>Manage GST</b></h2>
-          </div>
-          <div class="table-responsive mt-3">
-            <table id="example" class="table table-striped table-bordered show_data" style="width:100%">
-              <thead>
-                <tr>
-                  <th class="text-dark text-center">Sl. No.</th>
-                  <th class="text-dark text-center">GST No.</th>
-                  <th class="text-dark text-center">GST Flag</th>
-                  <th class="text-dark text-center">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% if(data.msg && data.msg.length> 0) { %>
-                  <% data.msg.forEach(function(item,index) { %>
-                    <tr>
-                      <td class="text-center">
-                        <%=(index+1)%>
-                      </td>
-                      <td class="text-center">
-                        <%=item.gst_number %>
-                      </td>
-                      <td class="text-center">
-                        <span class="<%=(item.gst_flag=='Y')?'badge badge-success':'badge badge-danger'%>"
-                          style="font-size: 16px;">
-                          <%=(item.gst_flag=='Y')?"Active":"Deactive"%>
-                        </span>
-                      </td>
-                      <td class="text-center">
-                        <a href="/gst/gst_edit?customer_id=<%=item.customer_id%>&&gst_id=<%= item.gst_id%>"
-                          class="btn btn-info" style="border-radius: 5px;"><i class="fa fa-edit"></i></a>
-                      </td>
-                    </tr>
-                    <% }); %>
-                      <% } else { %>
-                        <tr>
-                          <td colspan="4" class="text-danger text-center">No data available</td>
-                        </tr>
-                        <% } %>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
-    rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
-  
-  <div class="modal fade" id="myModal">
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h3 class="modal-title text-dark"><i data-feather="user-plus" class="feather-icon"></i>&nbsp;&nbsp;<b>Add
-              GST</b>
-          </h3>
-          <button type="button" class="close" data-dismiss="modal">
-            &times;
-          </button>
-        </div>
-  
-        <!-- Modal body -->
-        <div class="modal-body">
-          
-          <form action="/gst/save_add_gst" method="post" id="myForm">
-             <div class="form-group col-3">
-          <label class="text-dark"><b>GST Type:</b></label><br>
+<link href="/template/dist/css/operator-page.css" rel="stylesheet">
 
-          <label class="mr-3">
-            <input type="radio" name="gst_type" value="CS" checked onclick="toggleGSTType()"> CGST/SGST
-          </label>
+<!-- DataTables CSS/JS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
-          <label>
-            <input type="radio" name="gst_type" value="I" onclick="toggleGSTType()"> IGST
-            </label>
-          </div>
-            <div class="row">
-              <div class="form-group col-3">
-                <label for="gst_num" class="text-dark"><b>GST Number:</b></label>
-                <input type="text" class="form-control" name="gst_num" id="gst_num" value=""
-                  placeholder="Enter GST Number">
-              </div>
-              <div class="form-group col-3">
-                <label for="total_gst" class="text-dark"><b>Total GST:</b></label>
-                <select name="total_gst" class="form-control" id="total_gst">
-                  <option value="">Select Total GST</option>
-                  <option value="0">0%</option>
-                  <option value="5">5%</option>
-                  <option value="12">12%</option>
-                  <option value="18">18%</option>
-                  <option value="28">28%</option>
-                </select>
-              </div>
-              <div class="form-group col-3"  id="cgstDiv">
-                <label for="cgst" class="text-dark"><b>CGST:</b></label>
-                <input type="text" class="form-control" name="cgst" id="cgst" value="" placeholder="Enter CGST" readonly>
-              </div>
-  
-              <div class="form-group col-3" id="sgstDiv">
-                <label for="sgst" class="text-dark"><b>SGST:</b></label>
-                <input type="text" class="form-control" name="sgst" id="sgst" value="" placeholder="Enter SGST" readonly>
-              </div>
+<div class="op-page-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card op-card">
+                    <div class="card-body">
 
-              <div class="form-group col-3" id="igstDiv" style="display:none;">
-                <label for="igst" class="text-dark"><b>IGST:</b></label>
-                <input type="text" class="form-control" name="igst" id="igst" value="" placeholder="Enter IGST" readonly>
-              </div>
+                        <!-- HEADER -->
+                        <div class="op-header">
+                            <div class="op-title-group">
+                                <div class="op-icon-badge">
+                                    <i data-feather="tag"></i>
+                                </div>
+                                <h3 class="op-page-title">Manage GST</h3>
+                            </div>
+                            <button type="button" class="op-add-btn" id="myBtn">
+                                <i data-feather="plus" style="width:15px;height:15px;stroke:currentColor;"></i> Add GST
+                            </button>
+                        </div>
+
+                        <!-- TABLE CONTENT -->
+                        <div class="op-table-wrap mt-3">
+                            <table id="example" class="table op-table no-wrap display">
+                                <thead>
+                                    <tr>
+                                        <th>Sl. No.</th>
+                                        <th>GST No.</th>
+                                        <th>GST Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% if(data.msg && data.msg.length> 0) { %>
+                                        <% data.msg.forEach(function(item,index) { %>
+                                            <tr>
+                                                <td><%=(index+1)%></td>
+                                                <td style="font-weight: 600; color: var(--gray-800);">
+                                                    <code><%=item.gst_number %></code>
+                                                </td>
+                                                <td>
+                                                    <span class="badge <%=(item.gst_flag=='Y')?'badge-success':'badge-danger'%>"
+                                                        style="font-size: 0.8rem; padding: 5px 12px; border-radius: 20px;">
+                                                        <%=(item.gst_flag=='Y')?"Active":"Deactive"%>
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <a href="/gst/gst_edit?customer_id=<%=item.customer_id%>&&gst_id=<%= item.gst_id%>"
+                                                        class="action-btn-edit" title="Edit GST">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <% }); %>
+                                    <% } else { %>
+                                        <tr>
+                                            <td colspan="4" style="color: var(--danger); font-weight: 500; padding: 30px; text-align: center;">No GST data available</td>
+                                        </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
             </div>
-            <div class="row mt-3">
-              <div class="form-group col-md-3">
-                <input type="submit" value="SUBMIT" class="btn btn-primary"
-                  style="margin-left: 38vw;border-radius: 5px;" />
-              </div>
-            </div>
-          </form>
         </div>
-  
-      </div>
     </div>
-  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade loc-modal" id="myModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title"><i data-feather="plus-circle" style="width:20px;height:20px;"></i><b> Add GST</b></h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form action="/gst/save_add_gst" method="post" id="myForm">
+                    
+                    <div class="op-form-group">
+                        <label class="op-label">GST Category</label>
+                        <div class="d-flex align-items-center gap-4 mt-2">
+                            <label class="d-flex align-items-center gap-2 mb-0" style="cursor: pointer;">
+                                <input type="radio" name="gst_type" value="CS" checked onclick="toggleGSTType()"> 
+                                <span style="font-size: 0.9rem; margin-left: 6px;">CGST / SGST</span>
+                            </label>
+                            <label class="d-flex align-items-center gap-2 mb-0 ml-4" style="cursor: pointer;">
+                                <input type="radio" name="gst_type" value="I" onclick="toggleGSTType()"> 
+                                <span style="font-size: 0.9rem; margin-left: 6px;">IGST</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-6 op-form-group">
+                            <label class="op-label">GST Number</label>
+                            <input type="text" class="op-input" name="gst_num" id="gst_num" placeholder="Enter Registration GSTIN" required>
+                        </div>
+                        <div class="col-md-6 op-form-group">
+                            <label class="op-label">Total GST Rate (%)</label>
+                            <select name="total_gst" class="op-input op-select" id="total_gst" required>
+                                <option value="">Select Rate</option>
+                                <option value="0">0%</option>
+                                <option value="5">5%</option>
+                                <option value="12">12%</option>
+                                <option value="18">18%</option>
+                                <option value="28">28%</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 op-form-group" id="cgstDiv">
+                            <label class="op-label">CGST Component</label>
+                            <input type="text" class="op-input" name="cgst" id="cgst" value="" placeholder="Automatic" readonly style="background-color: var(--gray-100);">
+                        </div>
+                        <div class="col-md-4 op-form-group" id="sgstDiv">
+                            <label class="op-label">SGST Component</label>
+                            <input type="text" class="op-input" name="sgst" id="sgst" value="" placeholder="Automatic" readonly style="background-color: var(--gray-100);">
+                        </div>
+                        <div class="col-md-4 op-form-group" id="igstDiv" style="display:none;">
+                            <label class="op-label">IGST Component</label>
+                            <input type="text" class="op-input" name="igst" id="igst" value="" placeholder="Automatic" readonly style="background-color: var(--gray-100);">
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-2">
+                        <button type="submit" class="op-submit-btn" style="width: auto; padding: 10px 40px;">Save GST Config</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
-  function toggleGSTType() {
-    const gstType = document.querySelector('input[name="gst_type"]:checked').value;
-    const totalGST = parseFloat(document.getElementById('total_gst').value) || 0;
+    function toggleGSTType() {
+        const gstType = document.querySelector('input[name="gst_type"]:checked').value;
+        const totalGST = parseFloat(document.getElementById('total_gst').value) || 0;
 
-    if (gstType === "CS") {
-      document.getElementById('cgstDiv').style.display = "block";
-      document.getElementById('sgstDiv').style.display = "block";
-      document.getElementById('igstDiv').style.display = "none";
-
-      document.getElementById('cgst').value = (totalGST / 2) + "%";
-      document.getElementById('sgst').value = (totalGST / 2) + "%";
-      document.getElementById('igst').value = "";
-
-    } else {
-      document.getElementById('cgstDiv').style.display = "none";
-      document.getElementById('sgstDiv').style.display = "none";
-      document.getElementById('igstDiv').style.display = "block";
-
-      document.getElementById('igst').value = totalGST + "%";
-      document.getElementById('cgst').value = "";
-      document.getElementById('sgst').value = "";
+        if (gstType === "CS") {
+            $("#cgstDiv").show();
+            $("#sgstDiv").show();
+            $("#igstDiv").hide();
+            document.getElementById('cgst').value = (totalGST / 2) + "%";
+            document.getElementById('sgst').value = (totalGST / 2) + "%";
+            document.getElementById('igst').value = "";
+        } else {
+            $("#cgstDiv").hide();
+            $("#sgstDiv").hide();
+            $("#igstDiv").show();
+            document.getElementById('igst').value = totalGST + "%";
+            document.getElementById('cgst').value = "";
+            document.getElementById('sgst').value = "";
+        }
     }
-  }
 
-  // Ensure DOM is loaded
-  document.addEventListener("DOMContentLoaded", function () {
-     toggleGSTType();
-    document.getElementById('total_gst').addEventListener('change', toggleGSTType);
-  });
-</script>
-  
-
-  <script>
     $(document).ready(function () {
-      $("#myBtn").click(function () {
-        $("#myModal").modal();
-      });
-    });
-  </script>
+        // Feather Icons
+        if (typeof feather !== 'undefined') {
+            feather.replace();
+        }
 
-<script>
-  $(document).ready(function () {
-    $('#total_gst').change(function () {
-      const gstValue = $(this).val();
+        // Show Modal
+        $("#myBtn").click(function () {
+            $("#myModal").modal('show');
+        });
 
-      if (gstValue) {
-        const gst = gstValue / 2;
-        $('#cgst').val(gst + '%');
-        $('#sgst').val(gst + '%');
-      } else {
-        $('#cgst').val('');
-        $('#sgst').val('');
-      }
+        // Initialize Select2
+        $('.op-select').select2({
+            width: '100%'
+        });
+
+        // Modal compatibility
+        $('#myModal').on('shown.bs.modal', function() {
+            $('.op-select', this).select2({
+                width: '100%',
+                dropdownParent: $('#myModal')
+            });
+        });
+
+        // DataTable Initialization matching Operator section
+        $('#example').DataTable({
+            pageLength: 10,
+            lengthMenu: [10, 25, 50, 100],
+            ordering: false,
+            responsive: true,
+            autoWidth: false,
+            language: {
+                search: "Search GST:",
+                lengthMenu: "Show _MENU_ entries",
+                info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                paginate: {
+                    previous: "Prev",
+                    next: "Next"
+                }
+            },
+            drawCallback: function() {
+                var api = this.api();
+                var start = api.page.info().start;
+                api.column(0, {page:'current'}).nodes().each(function(cell, i) {
+                    cell.innerHTML = start + i + 1;
+                });
+                if (typeof feather !== 'undefined') {
+                    feather.replace();
+                }
+            }
+        });
+
+        // Link change event
+        $('#total_gst').on('change', toggleGSTType);
     });
-  });
 </script>
-
-
-

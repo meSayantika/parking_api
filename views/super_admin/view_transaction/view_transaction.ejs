@@ -1,218 +1,472 @@
-<div class="container-fluid">
-    <div class="row">
-      <div class="col-12">
-        <div class="card">
-          <div class="card-body">
-            <h3 class="card-title"><i class="fas fa-eye text-dark"></i> View Transactions</h3>
-            <div class="row mt-4 dateCalenderField">
-                <div class="col-md-3">
-                    <div class="form-group text-dark">
-                        <label for="frm_dt">From Date</label>
-                        <input type="datetime-local" id="frm_dt" name="frm_dt" class="form-control" required="">
+<link href="/template/dist/css/view_transcation.css" rel="stylesheet">
+
+<div class="trans-page-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card trans-card">
+                    <div class="card-body">
+
+                        <!-- HEADER -->
+                        <div class="trans-header">
+                            <div class="trans-title-group">
+                                <div class="trans-icon-badge">
+                                    <i data-feather="database"></i>
+                                </div>
+                                <h3 class="trans-page-title">Transaction History</h3>
+                            </div>
+                        </div>
+
+                        <!-- FILTERS -->
+                        <div class="trans-filter-sec mt-4">
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <div class="d-flex align-items-center" style="gap: 20px;">
+                                        <label class="trans-label mb-0" style="color: var(--gray-800);">Select
+                                            Option:</label>
+                                        <div class="custom-control custom-radio"
+                                            style="display: flex; align-items: center; gap: 8px;">
+                                            <input type="radio" id="reportType1" name="report_type" value="1" checked
+                                                style="width: 18px; height: 18px; accent-color: var(--green-600);">
+                                            <label for="reportType1"
+                                                style="margin: 0; font-weight: 600; color: var(--gray-700); cursor: pointer;">This
+                                                Month</label>
+                                        </div>
+                                        <div class="custom-control custom-radio"
+                                            style="display: flex; align-items: center; gap: 8px;">
+                                            <input type="radio" id="reportType2" name="report_type" value="2"
+                                                style="width: 18px; height: 18px; accent-color: var(--green-600);">
+                                            <label for="reportType2"
+                                                style="margin: 0; font-weight: 600; color: var(--gray-700); cursor: pointer;">Previous
+                                                Month</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row align-items-end">
+                                <div class="col-md-3">
+                                    <div class="trans-form-group">
+                                        <label class="trans-label" for="frm_dt">From Date</label>
+                                        <input type="datetime-local" id="frm_dt" name="frm_dt" class="trans-input"
+                                            required="">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="trans-form-group">
+                                        <label class="trans-label" for="to_dt">To Date</label>
+                                        <input type="datetime-local" id="to_dt" name="to_dt" class="trans-input"
+                                            required="">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="trans-form-group">
+                                        <label class="trans-label" for="cust_id">Customer Name</label>
+                                        <select name="cust_id" class="trans-select" id="cust_id">
+                                            <option value="">Select an option</option>
+                                            <% customer.forEach(dt=> { %>
+                                                <option value="<%= dt.customer_id %>">
+                                                    <%= dt.customer_name %>
+                                                </option>
+                                                <% }) %>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="trans-search-btn" id="btnSubmit">
+                                        <i class="fas fa-search" style="font-size: 15px; margin-right: 8px;"></i> Search
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RESULTS -->
+                        <div class="dateWiseDataTable" id="resultDiv" style="display:none;">
+                            <div class="text-center">
+                                <h4 class="report-summary-title" id="searchCred"></h4>
+                            </div>
+
+                            <div class="d-flex justify-content-end mb-3" style="gap: 10px;">
+                                <a href="javascript:void(0)" class="trans-print-btn d-flex align-items-center"
+                                    onclick="downloadCSV()">
+                                    <i data-feather="download" style="width:16px;height:16px; margin-right: 5px;"></i>
+                                    Download Report
+                                </a>
+                                <a href="javascript:void(0)" class="trans-print-btn d-flex align-items-center"
+                                    onclick="printDiv()">
+                                    <i data-feather="printer" style="width:16px;height:16px; margin-right: 5px;"></i>
+                                    Print Report
+                                </a>
+                            </div>
+
+                            <div class="trans-table-wrap">
+                                <table class="trans-table" id="transTable">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Receipt No</th>
+                                            <th>Operator</th>
+                                            <th>Vehicle</th>
+                                            <th>Veh. Number</th>
+                                            <th>Device ID</th>
+                                            <th class="text-center">CGST</th>
+                                            <th class="text-center">SGST</th>
+                                            <th class="text-center">IGST</th>
+                                            <th class="text-center">Advance</th>
+                                            <th class="text-center">Paid</th>
+                                            <th class="text-center">Net Amount</th>
+                                            <th class="text-center">Pay Mode</th>
+                                            <th>In Time</th>
+                                            <th>Out Time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Dynamic Content -->
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="6" class="text-left"
+                                                style="font-weight: bold; padding-left: 15px !important;">Pagewise Total
+                                            </td>
+                                            <td id="tot_cgst" class="text-center" style="font-weight: bold;">0</td>
+                                            <td id="tot_sgst" class="text-center" style="font-weight: bold;">0</td>
+                                            <td id="tot_igst" class="text-center" style="font-weight: bold;">0</td>
+                                            <td id="tot_advance" class="text-center" style="font-weight: bold;">0</td>
+                                            <td id="tot_paid" class="text-center" style="font-weight: bold;">0</td>
+                                            <td id="tot_amt" class="text-center"
+                                                style="color: var(--green-700); font-weight: 800;">0</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="15" class="text-left"
+                                                style="font-weight: bold; padding-left: 15px !important; border-top: 1px solid #dee2e6;">
+                                                Grand Total UPI / Online: <span id="total_online_summary"
+                                                    style="margin-left: 5px; color: var(--gray-800);">0.00</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="15" class="text-left"
+                                                style="font-weight: bold; padding-left: 15px !important;">
+                                                Grand Total Cash: <span id="total_cash_summary"
+                                                    style="margin-left: 5px; color: var(--gray-800);">0.00</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="15" class="text-left"
+                                                style="font-weight: bold; padding-left: 15px !important;">
+                                                Overall Grand Total: <span id="overall_grand_summary"
+                                                    style="margin-left: 5px; color: var(--gray-800);">0.00</span>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+
+
+
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="form-group text-dark">
-                        <label for="to_dt">To Date</label>
-                        <input type="datetime-local" id="to_dt" name="to_dt" class="form-control" required="">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group text-dark">
-                        <label for="cust_id">Select Customer</label>
-                        <select name="cust_id" class="form-control" id="cust_id">
-                            <option value="">Select Customer Name</option>
-                            <% customer.forEach(dt => { %>
-                              <option value="<%= dt.customer_id %>"><%= dt.customer_name %></option>
-                              <% }) %>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-2 searchBtnDataWis">
-                    <button type="button" class="btn waves-effect waves-light btn-rounded btn-outline-primary"
-                        id="btnSubmit">Search</button>
-                </div>
             </div>
-
-            <div class="dateWiseDataTable" id="resultDiv">
-                <h4 class="card-title">
-                    <center>
-                        <span id="searchCred"></span>
-                    </center>
-                </h4>
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th scope="col">#</th>
-                                    <th scope="col">Receipt No</th>
-                                    <th scope="col">Operator Name</th>
-                                    <th scope="col">Vehicle Name</th>
-                                    <th scope="col">Vehicle Number</th>
-                                    <th scope="col">Device ID</th>
-                                    <th scope="col">CGST</th>
-                                    <th scope="col">SGST</th>
-                                    <!-- <th scope="col">Base Amount</th> -->
-                                    <th scope="col">Advance Amount</th>
-                                    <th scope="col">Paid Amount</th>
-                                    <th scope="col">Net Amount</th>
-                                    <th scope="col">Date Time In</th>
-                                    <th scope="col">Date Time Out</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                           
-                        </tbody>
-
-                        <tfoot>
-                            <tr>
-                                <td scope="col" colspan="6">Total</td>
-                                <td scope="col" id="tot_cgst"><b>0</b></td>
-                                <td scope="col" id="tot_sgst"><b>0</b></td>
-                                <!-- <td scope="col" id="tot_base"><b>0</b></td> -->
-                                <td scope="col" id="tot_advance"><b>0</b></td>
-                                <td scope="col" id="tot_paid"><b>0</b></td>
-                                <td scope="col" id="tot_amt"><b>0</b></td>
-                                <td scope="col"></td>
-                                <td scope="col"></td>
-                                
-                            </tr>   
-                        </tfoot>
-                    </table>
-
-                    <a href="#" class="printBtnDate" onclick="printDiv()"><i class="fa fa-print"></i> Print</a>
-                </div>
-            </div>
-            </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
+</div>
 
-  <script>
-    $(document).ready(function(){
-        $('#resultDiv').hide()
-    })
-</script>
+<!-- Scroll Buttons -->
+<div class="scroll-btn-container" id="scrollBtns" style="display: none;">
+    <button class="scroll-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Go to Top">
+        <i data-feather="arrow-up"></i>
+    </button>
+    <button class="scroll-btn" onclick="window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'})"
+        title="Go to Bottom">
+        <i data-feather="arrow-down"></i>
+    </button>
+</div>
 
-<script>
-    $('#btnSubmit').on('click', function(){
-        var frm_dt = $('#frm_dt').val()
-        var to_dt = $('#to_dt').val()
-        var cust_id = $('#cust_id').val()
-        
-        if(frm_dt != '' && to_dt != '' && cust_id != ''){
-            $.ajax({
-                method: "POST",
-                url: "/superadmin/show_view_trans",
-                data: { frm_dt, to_dt, cust_id },
-                dataType: "html",
-                beforeSend: function () {
-                    $(".preloader").fadeIn();
-                },
-                success: function (result) {
-                    var res = JSON.parse(result);
-                    var net_amt_tot = 0;
-                    var advance_amt_tot = 0;
-                    var paid_amt_tot = 0;
-                    // var base_amt_tot = 0;
-                    var cgst_tot = 0;
-                    var sgst_tot = 0;
-                    var tot_amt_tot = 0;
-                    $('#resultDiv').show()
-                    $('#resultDiv table tbody').empty()
-                    // console.log(res)
-                    if(res.suc > 0){
-                        if(res.msg.length > 0){
-                            $('#searchCred').text(`View Transaction Report from ${createDate(frm_dt)} to ${createDate(to_dt)}`)
-                            let i = 1;
-                            for(let dt of res.msg){
-                                advance_amt_tot += dt.advance_amt
-                                paid_amt_tot += dt.paid_amt
-                                // base_amt_tot += dt.base_amt
-                                net_amt_tot = (dt.advance_amt + dt.paid_amt)
-                                tot_amt_tot += net_amt_tot
-                                cgst_tot += dt.cgst
-                                sgst_tot += dt.sgst
-                                $('#resultDiv table tbody').append(`
-                                <tr>
-                                    <td>${i}</td>
-                                    <td>${dt.receipt_no}</td>
-                                    <td>${dt.operator_name}</td>
-                                    <td>${dt.vehicle_name}</td>
-                                    <td>${dt.vehicle_no}</td>
-                                    <td>${dt.device_id}</td>
-                                    <td>${dt.cgst}</td>
-                                    <td>${dt.sgst}</td>
-                                    <td>${dt.advance_amt}</td>
-                                    <td>${dt.paid_amt}</td>
-                                    <td>${net_amt_tot}</td>
-                                    <td>${createDateTime(dt.date_time_in)}</td>
-                                    <td>${createDateTime(dt.date_time_out)}</td>
-                                </tr>
-                                `)
-                                i++
-                            }
-                            $('#tot_cgst').text(cgst_tot)
-                            $('#tot_sgst').text(sgst_tot)
-                            // $('#tot_base').text(base_amt_tot)
-                            $('#tot_advance').text(advance_amt_tot)
-                            $('#tot_paid').text(paid_amt_tot)
-                            $('#tot_amt').text(tot_amt_tot)
-                           
-                        }else{
-                            $('#resultDiv table tbody').append('<tr><td colspan="13" class="text-center text-danger">No Data Found</td></tr>')
-                            $('#tot_cgst').text(cgst_tot)
-                            $('#tot_sgst').text(sgst_tot)
-                            // $('#tot_base').text(base_amt_tot)
-                            $('#tot_advance').text(advance_amt_tot)
-                            $('#tot_paid').text(paid_amt_tot)
-                            $('#tot_amt').text(tot_amt_tot)
-                        }
-                    }
-                },
-                complete: function () {
-                    $(".preloader").fadeOut();
-                }
-            })
+<style>
+    .scroll-btn-container {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 999;
+    }
+
+    .scroll-btn {
+        width: 45px;
+        height: 45px;
+        border-radius: 8px;
+        background-color: var(--green-600, #059669);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .scroll-btn:hover {
+        background-color: var(--green-700, #047857);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .scroll-btn svg {
+        width: 20px;
+        height: 20px;
+        stroke-width: 2.5;
+    }
+
+    @media print {
+        .scroll-btn-container {
+            display: none !important;
         }
-    })
-</script>
+    }
+</style>
 
 <script>
+    let globalTransactionData = [];
+    $(document).ready(function () {
+        // Initialize Feather Icons
+        if (typeof feather !== 'undefined') {
+            feather.replace();
+        }
+
+        // Initialize Select2
+        $('.trans-select').select2({
+            placeholder: 'Select an option',
+            width: '100%'
+        });
+
+        $('#btnSubmit').on('click', function () {
+            var report_type = $('input[name="report_type"]:checked').val();
+            var frm_dt = $('#frm_dt').val();
+            var to_dt = $('#to_dt').val();
+            var cust_id = $('#cust_id').val();
+
+            if (!report_type) {
+                alert("Please select an option from the radio buttons above.");
+                return;
+            }
+
+            if (frm_dt != '' && to_dt != '' && cust_id != '') {
+                $.ajax({
+                    method: "POST",
+                    url: "/superadmin/show_view_trans",
+                    data: { frm_dt, to_dt, cust_id, report_type },
+                    dataType: "html",
+                    beforeSend: function () {
+                        $(".preloader").fadeIn();
+                    },
+                    success: function (result) {
+                        var res = JSON.parse(result);
+                        var net_amt_tot = 0;
+                        var advance_amt_tot = 0;
+                        var paid_amt_tot = 0;
+                        var cgst_tot = 0;
+                        var sgst_tot = 0;
+                        var igst_tot = 0;
+                        var tot_amt_tot = 0;
+                        var total_cash_sum = 0;
+                        var total_online_sum = 0;
+
+                        $('#resultDiv').show();
+                        $('#scrollBtns').show();
+
+                        // Destroy existing DataTable if it exists
+                        if ($.fn.DataTable.isDataTable('#transTable')) {
+                            $('#transTable').DataTable().destroy();
+                        }
+
+                        $('#transTable tbody').empty();
+                        globalTransactionData = [];
+
+                        if (res.suc > 0) {
+                            if (res.msg.length > 0) {
+                                globalTransactionData = res.msg;
+                                $('#searchCred').text(`Transaction Summary Report On ${createDate(frm_dt)} — ${createDate(to_dt)}`);
+                                let i = 1;
+                                for (let dt of res.msg) {
+                                    let current_net = (parseFloat(dt.advance_amt) || 0) + (parseFloat(dt.paid_amt) || 0);
+                                    advance_amt_tot += parseFloat(dt.advance_amt) || 0;
+                                    paid_amt_tot += parseFloat(dt.paid_amt) || 0;
+                                    tot_amt_tot += current_net;
+                                    cgst_tot += parseFloat(dt.cgst) || 0;
+                                    sgst_tot += parseFloat(dt.sgst) || 0;
+                                    igst_tot += parseFloat(dt.igst) || 0;
+
+                                    if (dt.pay_mode === 'C' || dt.pay_mode === '1' || !dt.pay_mode) {
+                                        total_cash_sum += current_net;
+                                    } else {
+                                        total_online_sum += current_net;
+                                    }
+
+                                    $('#transTable tbody').append(`
+                                    <tr>
+                                        <td>${i}</td>
+                                        <td style="font-weight:600; color:var(--gray-800);">${dt.receipt_no}</td>
+                                        <td>${dt.operator_name}</td>
+                                        <td>${dt.vehicle_name}</td>
+                                        <td><span class="badge badge-light text-dark" style="border:1px solid var(--gray-200);">${dt.vehicle_no}</span></td>
+                                        <td><small style="color: #ef4444; font-weight: 600;">${dt.device_id}</small></td>
+                                        <td class="text-center">${dt.cgst}</td>
+                                        <td class="text-center">${dt.sgst}</td>
+                                        <td class="text-center">${dt.igst || 0}</td>
+                                        <td class="text-center">${dt.advance_amt}</td>
+                                        <td class="text-center">${dt.paid_amt}</td>
+                                        <td class="text-center" style="font-weight:700; color:var(--green-700);">${current_net.toFixed(2)}</td>
+                                        <td class="text-center"><span class="badge badge-${dt.pay_mode == 'C' || dt.pay_mode == '1' || !dt.pay_mode ? 'success' : dt.pay_mode == 'U' || dt.pay_mode == 'O' || dt.pay_mode == '2' ? 'primary' : 'secondary'}">${dt.pay_mode == 'C' || dt.pay_mode == '1' ? 'Cash' : dt.pay_mode == 'U' ? 'UPI' : dt.pay_mode == 'O' || dt.pay_mode == '2' ? 'Online' : (dt.pay_mode || 'Cash')}</span></td>
+                                        <td><small>${createDateTime(dt.date_time_in)}</small></td>
+                                        <td><small>${createDateTime(dt.date_time_out)}</small></td>
+                                    </tr>
+                                    `);
+                                    i++;
+                                }
+                                // Show Summary
+                                $('#total_cash_summary').text(total_cash_sum.toFixed(2));
+                                $('#total_online_summary').text(total_online_sum.toFixed(2));
+                                $('#overall_grand_summary').text(tot_amt_tot.toFixed(2));
+
+                                // Initialize DataTable after populating rows
+                                $('#transTable').DataTable({
+                                    "paging": true,
+                                    "lengthChange": true,
+                                    "searching": true,
+                                    "ordering": true,
+                                    "info": true,
+                                    "autoWidth": false,
+                                    "responsive": true,
+                                    "pageLength": 10,
+                                    "dom": '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+                                    "footerCallback": function (row, data, start, end, display) {
+                                        var api = this.api();
+                                        var intVal = function (i) {
+                                            return typeof i === 'string' ?
+                                                i.replace(/[\$,]/g, '') * 1 :
+                                                typeof i === 'number' ?
+                                                    i : 0;
+                                        };
+
+                                        // Calculate total over current page for each column
+                                        var colsToSum = [6, 7, 8, 9, 10, 11];
+                                        colsToSum.forEach(function (colIndex) {
+                                            var pageTotal = api
+                                                .column(colIndex, { page: 'current' })
+                                                .data()
+                                                .reduce(function (a, b) {
+                                                    var val = typeof b === 'string' ? b.replace(/<[^>]*>?/gm, '') : b;
+                                                    return intVal(a) + intVal(val);
+                                                }, 0);
+
+                                            $(api.column(colIndex).footer()).html(pageTotal.toFixed(2));
+                                        });
+                                    }
+                                });
+
+                            } else {
+                                $('#transTable tbody').append('<tr><td colspan="15" style="padding:40px; color:var(--danger); font-weight:600;">No transactions found for the selected period</td></tr>');
+                                $('#tot_cgst, #tot_sgst, #tot_igst, #tot_advance, #tot_paid, #tot_amt').text('0.00');
+                                $('#total_cash_summary, #total_online_summary, #overall_grand_summary').text('0.00');
+                                $('#scrollBtns').hide();
+                            }
+                        }
+                    },
+                    complete: function () {
+                        $(".preloader").fadeOut();
+                        // Re-run feather icons for any new elements
+                        if (typeof feather !== 'undefined') feather.replace();
+                    }
+                });
+            } else {
+                alert("Please select all fields");
+            }
+        });
+    });
+
+    function downloadCSV() {
+        if (!globalTransactionData || globalTransactionData.length === 0) {
+            alert('No data available to download.');
+            return;
+        }
+
+        let csv = "Receipt No,Operator,Vehicle,Veh. Number,Device ID,CGST,SGST,IGST,Advance,Paid,Net Amount,Pay Mode,In Time,Out Time\n";
+
+        let total_cgst = 0, total_sgst = 0, total_igst = 0, total_advance = 0, total_paid = 0, total_net = 0;
+        let total_cash = 0, total_online = 0;
+
+        globalTransactionData.forEach(dt => {
+            let current_net = (parseFloat(dt.advance_amt) || 0) + (parseFloat(dt.paid_amt) || 0);
+            let payModeStr = dt.pay_mode == 'C' || dt.pay_mode == '1' ? 'Cash' : dt.pay_mode == 'U' ? 'UPI' : dt.pay_mode == 'O' || dt.pay_mode == '2' ? 'Online' : (dt.pay_mode || 'Cash');
+
+            total_cgst += parseFloat(dt.cgst) || 0;
+            total_sgst += parseFloat(dt.sgst) || 0;
+            total_igst += parseFloat(dt.igst) || 0;
+            total_advance += parseFloat(dt.advance_amt) || 0;
+            total_paid += parseFloat(dt.paid_amt) || 0;
+            total_net += current_net;
+
+            if (payModeStr === 'Cash') total_cash += current_net;
+            else total_online += current_net;
+
+            let row = [
+                dt.receipt_no,
+                dt.operator_name,
+                dt.vehicle_name,
+                dt.vehicle_no,
+                dt.device_id,
+                dt.cgst,
+                dt.sgst,
+                dt.igst || 0,
+                dt.advance_amt,
+                dt.paid_amt,
+                current_net.toFixed(2),
+                payModeStr,
+                createDateTime(dt.date_time_in),
+                createDateTime(dt.date_time_out)
+            ].map(col => `"${String(col).replace(/"/g, '""')}"`).join(",");
+
+            csv += row + "\n";
+        });
+
+        csv += `\n"","","","","Grand Total","${total_cgst.toFixed(2)}","${total_sgst.toFixed(2)}","${total_igst.toFixed(2)}","${total_advance.toFixed(2)}","${total_paid.toFixed(2)}","${total_net.toFixed(2)}","","",""\n`;
+        csv += `"Grand Total UPI / Online:","","","","","","","","","","${total_online.toFixed(2)}","","",""\n`;
+        csv += `"Grand Total Cash:","","","","","","","","","","${total_cash.toFixed(2)}","","",""\n`;
+        csv += `"Overall Grand Total:","","","","","","","","","","${total_net.toFixed(2)}","","",""\n`;
+
+        let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        let link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "Transaction_Report_" + new Date().toISOString().slice(0, 10) + ".csv";
+        link.style.display = "none";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
     function printDiv() {
-
+        // Destroy DataTable temporary for printing to show all rows if needed, or just print current view
         var divToPrint = document.getElementById('resultDiv');
-
         var WindowObject = window.open('', 'Print-Window');
         WindowObject.document.open();
         WindowObject.document.writeln('<!DOCTYPE html>');
-        WindowObject.document.writeln('<html><head><title></title><style type="text/css">');
-
-
-        WindowObject.document.writeln('@media print { .center { text-align: center;}' +
-            '                                         .inline { display: inline; }' +
-            '                                         .underline { text-decoration: underline; }' +
-            '                                         .left { margin-left: 315px;} ' +
-            '                                         .right { margin-right: 375px; display: inline; }' +
-            '                                          table { border-collapse: collapse; font-size: 10px;}' +
-            '                                          th, td { border: 1px solid black; border-collapse: collapse; padding: 6px; font-family: Arial, Helvetica, sans-serif;}' +
-            '                                           th, td {text-align: left;}' +
-            '.table .thead-dark th {color: #fff; background-color: #1c2d41;}'+
-            ' tfoot{font-weight: 700; color: #000;}'+
-            ' .printBtnDate{display: none;}'+
-            '                                         .border { border: 1px solid black; } ' +
-            '                                         .bottom { bottom: 5px; width: 100%; position: fixed ' +
-            '                                       ' +
-            '                                   } } </style>');
-        WindowObject.document.writeln('</head><body onload="window.print()">');
+        WindowObject.document.writeln('<html><head><title>Transaction Report</title><style type="text/css">');
+        WindowObject.document.writeln('@media print { ' +
+            'table { border-collapse: collapse; width: 100%; font-size: 10px; margin-top: 20px; }' +
+            'th, td { border: 1px solid #ddd; padding: 6px; text-align: center; }' +
+            'th { background-color: #059669 !important; color: white !important; -webkit-print-color-adjust: exact; }' +
+            '.report-summary-title { display: block; text-align: center; color: #059669; font-size: 16px; font-weight: bold; margin-bottom: 20px; }' +
+            '.trans-print-btn, .dataTables_length, .dataTables_filter, .dataTables_info, .dataTables_paginate { display: none !important; }' +
+            'tfoot { font-weight: bold; background: #f9fafb; }' +
+            '} </style>');
+        WindowObject.document.writeln('</head><body onload="window.print();window.close()">');
         WindowObject.document.writeln(divToPrint.innerHTML);
         WindowObject.document.writeln('</body></html>');
         WindowObject.document.close();
-        // setTimeout(function () {
-        //     WindowObject.close();
-        // }, 10);
-
     }
 </script>

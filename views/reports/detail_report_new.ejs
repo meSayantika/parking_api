@@ -1,279 +1,314 @@
+<link href="/template/dist/css/operator-page.css" rel="stylesheet">
 <style>
-.form-check{
-    margin-right:50px;
-}
- .exclbutton {
-    margin-left: 15px;
-    color: #246024;
-    font-size: 14px;
-    font-weight: 500;
- }
- .exclbutton:hover {
-    color: #1f6b1f; /* brighter green on hover */
-    cursor: pointer;
-}
- .textcolor{
-    color: black;
- } 
-
-#goTopBtn, #goDownBtn {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    z-index: 999;
-    background-color: #8a4286;
-    color: white;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    display: none;
-    box-shadow: 0px 3px 6px rgba(0,0,0,0.3);
-}
-
-#goTopBtn {
-    bottom: 90px;
-}
-
-/* Bottom button appears above top button */
-#goDownBtn {
-    bottom: 30px;
-}
-
-#goTopBtn:hover, #goDownBtn:hover {
-    background-color: #8a4286;
-}
-.exclbutton1 {
-       float: right;
-    color: #093809;
-    font-size: 15px;
-    font-weight: 500;
-    background-color: white;
-    border-color: #175217;
-}
- .exclbutton1:hover {
-    background-color: #326632; /* brighter green on hover */
-    cursor: pointer;
-}
-#pageLoader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255,255,255,0.85);
-    backdrop-filter: blur(3px);
-    display: none;
-    z-index: 9999;
-}
-
-.loader {
-    width: 120px;
-    height: 40px;
-    margin: 20% auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.circle {
-    width: 20px;
-    height: 20px;
-    background: #4CAF50;
-    border-radius: 50%;
-    animation: bounce 0.6s infinite alternate;
-}
-
-.circle:nth-child(2) {
-    animation-delay: 0.2s;
-}
-
-.circle:nth-child(3) {
-    animation-delay: 0.4s;
-}
-
-@keyframes bounce {
-    to {
-        transform: translateY(-20px);
-        background: #2e7d32;
+    /* ---- Scroll buttons ---- */
+    #goTopBtn,
+    #goDownBtn,
+    #goLeftBtn,
+    #goRightBtn {
+        position: fixed;
+        z-index: 999;
+        background-color: var(--green-600);
+        color: white;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        display: none;
+        box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.3);
     }
-}
-
-.shadow {
-    width: 20px;
-    height: 4px;
-    background: #bbb;
-    border-radius: 50%;
-    filter: blur(2px);
-    animation: shadow 0.6s infinite alternate;
-}
-
-.shadow:nth-child(5) {
-    animation-delay: 0.2s;
-}
-
-.shadow:nth-child(6) {
-    animation-delay: 0.4s;
-}
-
-@keyframes shadow {
-    to {
-        transform: scale(0.7);
-        background: #999;
+    #goTopBtn { bottom: 90px; right: 90px; }
+    #goDownBtn { bottom: 30px; right: 90px; }
+    #goLeftBtn { bottom: 30px; right: 150px; }
+    #goRightBtn { bottom: 30px; right: 30px; }
+    #goTopBtn:hover, #goDownBtn:hover, #goLeftBtn:hover, #goRightBtn:hover {
+        background-color: var(--green-700);
     }
-}
-</style>    
-<div class="container-fluid">
-    <div class="col-sm-12 col-md-12 col-lg-12">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">
-                    <%= title %>
-                </h4>
-                    <div class="row mb-4">
-    <div class="col-md-12 text-center">
-        <label class="text-dark font-weight-bold">Select Period</label>
 
-        <div class="mt-2">
-            <label class="mr-4">
-                <input type="radio" name="month_filter" value="this_month">
-                This Month
-            </label>
+    /* ---- Pagination Overrides ---- */
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        color: var(--gray-700) !important;
+        background: var(--white) !important;
+        border: 1px solid var(--gray-200) !important;
+        padding: 2px 8px !important;
+        margin: 0 2px !important;
+        border-radius: 4px !important;
+        cursor: pointer !important;
+        font-size: 0.7rem !important;
+        display: inline-block !important;
+        line-height: 1.1 !important;
+    }
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        background: var(--green-50) !important;
+        color: var(--green-600) !important;
+        border-color: var(--green-200) !important;
+    }
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+        background: var(--green-600) !important;
+        color: white !important;
+        border-color: var(--green-600) !important;
+        font-weight: bold !important;
+    }
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover {
+        opacity: 0.5 !important;
+        cursor: not-allowed !important;
+        background: var(--gray-50) !important;
+        color: var(--gray-400) !important;
+    }
+    .dataTables_wrapper .dataTables_info {
+        font-size: 0.85rem !important;
+        color: var(--gray-600) !important;
+        padding-top: 10px !important;
+    }
 
-            <label>
-                <input type="radio" name="month_filter" value="prev_month">
-                Previous Month
-            </label>
-        </div>
-    </div>
-</div>
-                <div class="row dateCalenderField">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="frm_dt">From Date</label>
-                            <input type="datetime-local" id="frm_dt" name="frm_dt" class="form-control" required="">
+    /* ---- Page Loader ---- */
+    #pageLoader {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(255,255,255,0.85);
+        backdrop-filter: blur(3px);
+        display: none;
+        z-index: 9999;
+    }
+    .loader {
+        width: 120px; height: 40px;
+        margin: 20% auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .circle {
+        width: 20px; height: 20px;
+        background: var(--green-500);
+        border-radius: 50%;
+        animation: bounce 0.6s infinite alternate;
+    }
+    .circle:nth-child(2) { animation-delay: 0.2s; }
+    .circle:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+        to { transform: translateY(-20px); background: var(--green-700); }
+    }
+    .shadow {
+        width: 20px; height: 4px;
+        background: #bbb;
+        border-radius: 50%;
+        filter: blur(2px);
+        animation: shadow 0.6s infinite alternate;
+    }
+    .shadow:nth-child(5) { animation-delay: 0.2s; }
+    .shadow:nth-child(6) { animation-delay: 0.4s; }
+    @keyframes shadow {
+        to { transform: scale(0.7); background: #999; }
+    }
+
+    /* ---- Print: hide layout chrome ---- */
+    @media print {
+        .left-sidebar, .topbar, .page-breadcrumb, .footer, nav,
+        #goTopBtn, #goDownBtn, .op-filter-sec, .op-header,
+        .printBtnDate, .exclbutton, .exclbutton1,
+        .dataTables_length, .dataTables_filter,
+        .dataTables_paginate, .dataTables_info,
+        #btnExcel { display: none !important; }
+        .page-wrapper, .container-fluid, .op-page-wrapper,
+        .op-card, .card-body, .op-table-wrap {
+            padding: 0 !important; margin: 0 !important;
+            border: none !important; box-shadow: none !important;
+            width: 100% !important;
+        }
+        .op-table th {
+            color: #fff !important;
+            background-color: #1c2d41 !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        body { margin: 0 !important; padding: 0 !important; }
+    }
+
+    /* ---- DataTable toolbar row: Show entries left, Download All right ---- */
+    .dt-top-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .dataTables_length {
+        margin-bottom: 0 !important;
+    }
+    #btnExcel {
+        padding: 8px 18px;
+        font-size: 0.82rem;
+    }
+
+    /* ---- Search button matches input height ---- */
+    #btnSubmit.op-submit-btn {
+        width: 100%;
+        padding: 11px 20px;
+        height: auto;
+    }
+</style>
+
+<div class="op-page-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card op-card">
+                    <div class="card-body">
+
+                        <!-- HEADER -->
+                        <div class="op-header">
+                            <div class="op-title-group">
+                                <div class="op-icon-badge">
+                                    <i data-feather="file-text"></i>
+                                </div>
+                                <h3 class="op-page-title">
+                                    <%= title %>
+                                </h3>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="to_dt">To Date</label>
-                            <input type="datetime-local" id="to_dt" name="to_dt" class="form-control" required="">
+
+                        <!-- FILTER SECTION -->
+                        <div class="op-filter-sec">
+                            <!-- Period Radio -->
+                            <div class="row mb-3">
+                                <div class="col-md-12 text-center">
+                                    <label class="op-label mb-2">Select Period</label>
+                                    <div class="d-flex justify-content-center" style="gap: 30px;">
+                                        <label style="display:flex;align-items:center;gap:8px;font-size:0.88rem;color:var(--gray-700);cursor:pointer;">
+                                            <input type="radio" name="month_filter" value="this_month" style="accent-color:var(--green-600);width:16px;height:16px;">
+                                            This Month
+                                        </label>
+                                        <label style="display:flex;align-items:center;gap:8px;font-size:0.88rem;color:var(--gray-700);cursor:pointer;">
+                                            <input type="radio" name="month_filter" value="prev_month" style="accent-color:var(--green-600);width:16px;height:16px;">
+                                            Previous Month
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Date + Pay Mode + Search -->
+                            <div class="row align-items-center">
+                                <div class="col-md-3 op-form-group mb-0">
+                                    <label class="op-label" for="frm_dt">From Date</label>
+                                    <input type="datetime-local" id="frm_dt" name="frm_dt" class="op-input" required="">
+                                </div>
+                                <div class="col-md-3 op-form-group mb-0">
+                                    <label class="op-label" for="to_dt">To Date</label>
+                                    <input type="datetime-local" id="to_dt" name="to_dt" class="op-input" required="">
+                                </div>
+                                <div class="col-md-3 op-form-group mb-0">
+                                    <label class="op-label" for="pay_mode">Pay Mode</label>
+                                    <select name="pay_mode" class="op-input op-select" id="pay_mode">
+                                        <option value="">Select Pay Mode</option>
+                                        <option value="C">CASH</option>
+                                        <option value="U">UPI</option>
+                                        <option value="A">All</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3" style="margin-top: 26px;">
+                                    <button type="button" class="op-submit-btn w-100" id="btnSubmit">
+                                        <i data-feather="search" style="width:15px;height:15px;margin-right:6px;"></i> Search
+                                    </button>
+                                </div>
+                            </div>
+
+
                         </div>
-                    </div>
-                    <div class="form-group col-4">
-                        <label for="pay_mode" class="text-dark"><b>Pay Mode:</b></label>
-                        <select name="pay_mode" class="form-control" id="pay_mode">
-                          <option value="">Select Pay Mode</option>
-                          <option value="C">CASH</option>
-                          <option value="U">UPI</option>
-                          <option value="A">All</option>
-                        </select>
-                      </div>
-                </div>
-                <div class="row">
-                      <div class="col-md-3 searchBtnDataWis" style="margin-left: 28vw;">
-                        <button type="button" class="btn waves-effect waves-light btn-rounded btn-outline-primary" id="btnSubmit">Search</button>
-                    </div>
-                </div>
-                <!-- <div class="card-body" id="resultDiv"> -->
-                    <div class="dateWiseDataTable" id="resultDiv" style="display: block !important;">
-                    <h4 class="card-title">
-                        <center>
-                            <span id="searchCred"></span>
-                        </center>
-                    </h4>
-                  <div class="d-flex justify-content-end mb-2">
-                    <!-- <button onclick="printAllTable()" class="btn btn-primary">Print All</button> -->
-                    <button class="btn btn-success btn-sm exclbutton1" id="btnExcel">
-                    <i class="fa fa-file-excel"></i> &nbsp; Download All Data
-                   </button>
-                  </div>
-                    <div class="table-responsive">
-                        <table class="table" id="cust-datatable">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Receipt No.</th>
-                                    <th scope="col">Date Time In</th>
-                                    <th scope="col">Machine Sl. No. In</th>
-                                    <th scope="col">Vehicle Type</th>
-                                    <th scope="col">Vehicle No.</th>
-                                    <th scope="col">Date Time Out</th>
-                                    <th scope="col">Duration</th>
-                                    <th scope="col">Machine Sl. No. Out</th>
-                                    <th scope="col">Base Amount</th>
-                                    <th scope="col">Advance Amount</th>
-                                    <th scope="col">CGST</th>
-                                    <th scope="col">SGST</th>
-                                    <th scope="col">IGST</th>
-                                    <th scope="col">Gross Amount</th>
-                                    <th scope="col">Net Amount</th>
-                                    <th scope="col">Mode</th>
-                                    <th scope="col">Operator Name</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                
-                            </tbody>
 
-                            <tfoot>
-                                <tr>
-                                    <td scope="col" colspan="9">Pagewise Total</td>
-                                    <td scope="col" id="base_amt"><b>0</b></td>
-                                    <td scope="col" id="advance_amt"><b>0</b></td>
-                                    <td scope="col" id="cgst"><b>0</b></td>
-                                    <td scope="col" id="sgst"><b>0</b></td>
-                                    <td scope="col" id="igst"><b>0</b></td>
-                                    <td scope="col" id="paid_amt"><b>0</b></td>
-                                    <td scope="col" id="tot_amt"><b>0</b></td>
-                                    <td scope="col" id="mode"><b></b></td>
-                                    <td></td>
-                                </tr>
-                                <!-- <tr style="display: none;">
-                                    <td scope="col" colspan="2">Total UPI</td>
-                                    <td scope="col" class="text-left" id="tot_upi" colspan="17"></td>
-                                </tr>
-                                <tr style="display: none;">
-                                    <td scope="col" colspan="2">Total Cash</td>
-                                    <td scope="col" class="text-left" id="tot_cash" colspan="17"></td>
-                                </tr>  -->
-                                <tr id="upiRow" style="display: none;">
-                                <td colspan="18" class="text-left"><b>Grand Total UPI: </b><span id="tot_upi"></span></td>
-                                </tr>
+                        <!-- TABLE CONTENT -->
+                        <div class="op-table-wrap mt-2 dateWiseDataTable" id="resultDiv" style="display:block !important;">
+                            <h4 class="card-title mb-2 mt-2">
+                                <center>
+                                    <span id="searchCred" style="font-weight:600;color:var(--gray-800);display:inline-block;"></span>
+                                </center>
+                            </h4>
+                            <div class="table-responsive">
+                                <table class="table op-table table-bordered" id="cust-datatable">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Receipt No.</th>
+                                            <th scope="col">Date Time In</th>
+                                            <th scope="col">Machine Sl. No. In</th>
+                                            <th scope="col">Vehicle Type</th>
+                                            <th scope="col">Vehicle No.</th>
+                                            <th scope="col">Date Time Out</th>
+                                            <th scope="col">Duration</th>
+                                            <th scope="col">Machine Sl. No. Out</th>
+                                            <th scope="col">Base Amount</th>
+                                            <th scope="col">Advance Amount</th>
+                                            <th scope="col">CGST</th>
+                                            <th scope="col">SGST</th>
+                                            <th scope="col">IGST</th>
+                                            <th scope="col">Gross Amount</th>
+                                            <th scope="col">Net Amount</th>
+                                            <th scope="col">Mode</th>
+                                            <th scope="col">Operator Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
 
-                                <tr id="cashRow" style="display: none;">
-                                <td colspan="18" class="text-left"><b>Grand Total Cash: </b><span id="tot_cash"></span></td>
-                                </tr>
-                            </tfoot>
-                        </table>
+                                    <tfoot>
+                                        <tr>
+                                            <td scope="col" colspan="9" style="font-weight:700;text-align:center;">Pagewise Total</td>
+                                            <td scope="col" id="base_amt" style="font-weight:700;color:var(--green-600);text-align:center;"><b>0</b></td>
+                                            <td scope="col" id="advance_amt" style="font-weight:700;color:var(--green-600);text-align:center;"><b>0</b></td>
+                                            <td scope="col" id="cgst" style="font-weight:700;color:var(--green-600);text-align:center;"><b>0</b></td>
+                                            <td scope="col" id="sgst" style="font-weight:700;color:var(--green-600);text-align:center;"><b>0</b></td>
+                                            <td scope="col" id="igst" style="font-weight:700;color:var(--green-600);text-align:center;"><b>0</b></td>
+                                            <td scope="col" id="paid_amt" style="font-weight:700;color:var(--green-600);text-align:center;"><b>0</b></td>
+                                            <td scope="col" id="tot_amt" style="font-weight:700;color:var(--green-600);text-align:center;"><b>0</b></td>
+                                            <td scope="col" id="mode"><b></b></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr id="upiRow" style="display:none;">
+                                            <td colspan="18" style="text-align:left;"><b>Grand Total UPI: </b><span id="tot_upi"></span></td>
+                                        </tr>
+                                        <tr id="cashRow" style="display:none;">
+                                            <td colspan="18" style="text-align:left;"><b>Grand Total Cash: </b><span id="tot_cash"></span></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
 
-                        <a href="#" class="printBtnDate" onclick="printDiv()"><i class="fa fa-print"></i> Print</a>
-                         <!-- <a href="#" class="exclbutton" onclick="downloadExcel()">
-                       <i class="fa fa-file-excel"></i> Excel
-                       </a> -->
-                         <!-- <button class="btn btn-success btn-sm px-4 shadow-sm no-print" onclick="downloadExcel()">
-                       <i class="fa fa-file-excel me-2"></i> Excel
-                       </button> -->
+                                <div class="mt-1 d-flex justify-content-between align-items-center">
+                                    <a href="#" class="op-add-btn printBtnDate" onclick="printDiv()" style="background:linear-gradient(135deg, var(--green-500), white);color:var(--gray-800);box-shadow:none;border:1px solid var(--green-500);text-decoration:none;">
+                                        <i data-feather="printer" style="width:15px;height:15px;margin-right:4px;"></i> Print
+                                    </a>
+                                    <button type="button" id="btnExcel" class="op-add-btn" style="padding:8px 18px;font-size:0.82rem;">
+                                        <i data-feather="download" style="width:14px;height:14px;margin-right:5px;"></i> Download All Data
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
-                <button id="goTopBtn" title="Go to Top">
-                  <i class="fa fa-arrow-up"></i>
-                </button>
-                <button id="goDownBtn" title="Go to Top">
-                  <i class="fa fa-arrow-down"></i>
-                </button>
             </div>
         </div>
     </div>
+</div>
+
+<button id="goTopBtn" title="Go to Top"><i class="fa fa-arrow-up"></i></button>
+<button id="goDownBtn" title="Go to Bottom"><i class="fa fa-arrow-down"></i></button>
+<button id="goLeftBtn" title="Scroll Left"><i class="fa fa-arrow-left"></i></button>
+<button id="goRightBtn" title="Scroll Right"><i class="fa fa-arrow-right"></i></button>
+</div>
 </div>
 
     <script src="https://raw.githubusercontent.com/phstc/jquery-dateFormat/master/dist/dateFormat.min.js"></script>
 
      <script>
         $(document).ready(function(){
-            $('#resultDiv').hide()
-        })
+            $('#resultDiv').hide();
+            if ($.fn.select2) {
+                $('.op-select').select2({
+                    width: '100%'
+                });
+            }
+        });
     </script>
 
     <!-- <script>
@@ -585,7 +620,10 @@ $('#btnSubmit').on('click', function () {
     var pay_mode = $('#pay_mode').val();
     var period  = $('input[name="month_filter"]:checked').val();
 
-    if (frm_dt !== '' && to_dt !== '' && pay_mode !== '' && period !== '') {
+    if (frm_dt !== '' && to_dt !== '' && pay_mode !== '' && period !== undefined) {
+
+        // Set date range header
+        $('#searchCred').text('Detail Report from ' + createDate(frm_dt) + ' to ' + createDate(to_dt));
 
         if (table) {
             table.destroy();     // destroy previous instance
@@ -600,6 +638,23 @@ $('#btnSubmit').on('click', function () {
     searching: false,
     lengthChange: true,
     pageLength: 50,
+    initComplete: function () {
+        // Place Download All button on the RIGHT of Show entries row
+        var $lengthDiv = $('#cust-datatable_length');
+        var $wrapper = $lengthDiv.parent();
+
+        // Style wrapper as flex row: left = Show entries, right = Download All
+        $wrapper.css({
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '8px',
+            flexWrap: 'wrap',
+            gap: '8px'
+        });
+
+        feather.replace();
+    },
     ajax: {
         url: "/report/get_details_report_new",
         type: "POST",
@@ -703,6 +758,8 @@ $('#btnSubmit').on('click', function () {
         // });
 
         $('#resultDiv').show();
+        feather.replace();
+        window.dispatchEvent(new Event('scroll'));
     }
 });
 
@@ -751,6 +808,7 @@ function printDiv() {
             .printBtnDate { display: none; }
             .exclbutton { display: none; }
             .exclbutton1 { display: none; }
+            #btnExcel { display: none !important; }
             .border { border: 1px solid black; }
             .bottom { bottom: 5px; width: 100%; position: fixed; }
 
@@ -1304,6 +1362,10 @@ function generateExcel(data) {
 window.onscroll = function () {
     const topBtn = document.getElementById("goTopBtn");
     const downBtn = document.getElementById("goDownBtn");
+    const leftBtn = document.getElementById("goLeftBtn");
+    const rightBtn = document.getElementById("goRightBtn");
+
+    const isDataVisible = document.getElementById("resultDiv") && document.getElementById("resultDiv").style.display !== "none";
 
     if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
         topBtn.style.display = "block";
@@ -1315,8 +1377,12 @@ window.onscroll = function () {
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
         downBtn.style.display = "none";
     } else {
-        downBtn.style.display = "block";
+        downBtn.style.display = isDataVisible ? "block" : "none";
     }
+
+    // Show horizontal scroll buttons only if data is visible
+    if (leftBtn) leftBtn.style.display = isDataVisible ? "block" : "none";
+    if (rightBtn) rightBtn.style.display = isDataVisible ? "block" : "none";
 };
 
 // Scroll to top
@@ -1327,5 +1393,19 @@ document.getElementById("goTopBtn").onclick = function () {
 // Scroll to bottom
 document.getElementById("goDownBtn").onclick = function () {
     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+};
+
+// Scroll Left
+document.getElementById("goLeftBtn").onclick = function () {
+    const tbl = document.querySelector('.table-responsive');
+    if (tbl) tbl.scrollBy({ left: -300, behavior: 'smooth' });
+    else window.scrollBy({ left: -300, behavior: 'smooth' });
+};
+
+// Scroll Right
+document.getElementById("goRightBtn").onclick = function () {
+    const tbl = document.querySelector('.table-responsive');
+    if (tbl) tbl.scrollBy({ left: 300, behavior: 'smooth' });
+    else window.scrollBy({ left: 300, behavior: 'smooth' });
 };
 </script>

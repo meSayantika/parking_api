@@ -1,0 +1,247 @@
+/* ============================================================
+   SUPERADMIN LOGIN — PROFESSIONAL GREEN & WHITE DESIGN
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --green-50: #ecfdf5;
+    --green-100: #d1fae5;
+    --green-200: #a7f3d0;
+    --green-500: #10b981;
+    --green-600: #059669;
+    --green-700: #047857;
+    --green-800: #065f46;
+    --white: #ffffff;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --danger: #ef4444;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+    --shadow-lg: 0 25px 70px rgba(0, 0, 0, 0.07);
+    --shadow-green: 0 4px 14px rgba(16, 185, 129, 0.25);
+    --radius: 12px;
+    --radius-sm: 8px;
+}
+
+body {
+    font-family: 'Inter', sans-serif !important;
+    background-color: #dad8d8f6 !important;
+    /* Premium clean slate white */
+}
+
+.content {
+    background-color: transparent !important;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 3rem 0;
+}
+
+.contents {
+    background: var(--white) !important;
+    padding: 2.8rem !important; /* Reduced from 3.5rem for a better fit */
+    border-radius: 24px !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06) !important;
+    border: none !important;
+    max-width: 480px; /* Constrain the card width for a better feel */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.mb-4 h3 {
+    font-weight: 800;
+    color: var(--gray-900);
+    font-size: 2.1rem;
+    letter-spacing: -1px;
+    margin-bottom: 0.2rem;
+}
+
+.text-muted {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--gray-500) !important;
+}
+
+/* Remove template gray boxes and fix width */
+.form-group,
+.content .contents .form-group {
+    background: transparent !important;
+    padding: 0 !important;
+    margin-bottom: 24px !important;
+    width: 100% !important;
+    position: relative !important;
+    border: none !important;
+    overflow: visible !important;
+    /* Prevent labels from being clipped */
+}
+
+/* Force standard, non-jumping labels at ALL TIMES */
+.form-group label,
+.form-group.field--not-empty label,
+.form-group.first label,
+.form-group.last label,
+.content .contents .form-group label {
+    display: block !important;
+    position: static !important;
+    font-weight: 600 !important;
+    font-size: 0.88rem !important;
+    color: var(--gray-700) !important;
+    margin-bottom: 8px !important;
+    transform: none !important;
+    -webkit-transform: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    background: transparent !important;
+    top: auto !important;
+    left: auto !important;
+    margin-top: 0 !important;
+    transition: none !important;
+}
+
+/* Fix width shrinking bug - ensure stable input size */
+.form-control,
+.form-group.field--not-empty .form-control,
+.content .contents .form-control {
+    display: block !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    height: 54px !important;
+    background: var(--gray-50) !important;
+    border: 1.5px solid var(--gray-200) !important;
+    border-radius: 12px !important;
+    padding: 12px 18px !important;
+    font-size: 0.95rem !important;
+    font-weight: 500 !important;
+    color: var(--gray-900) !important;
+    transition: all 0.2s ease !important;
+    box-shadow: none !important;
+    position: relative !important;
+    top: auto !important;
+}
+
+.form-control:focus {
+    background: #fff !important;
+    border-color: var(--green-500) !important;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1) !important;
+    outline: none !important;
+}
+
+.btn-success {
+    display: block !important;
+    width: 100% !important;
+    height: 54px !important;
+    background: linear-gradient(135deg, var(--green-500), var(--green-600)) !important;
+    border: none !important;
+    border-radius: 12px !important;
+    font-weight: 700 !important;
+    font-size: 1.05rem !important;
+    letter-spacing: 0.4px !important;
+    box-shadow: 0 8px 15px rgba(16, 185, 129, 0.2) !important;
+    transition: all 0.3s ease !important;
+    margin-top: 1.5rem;
+    color: #fff !important;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, var(--green-600), var(--green-700)) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(16, 185, 129, 0.25) !important;
+}
+
+/* Checkbox Styling — Perfected with Icomoon Icon */
+.control {
+    position: relative;
+    padding-left: 30px !important;
+    cursor: pointer;
+    font-weight: 500 !important;
+    user-select: none;
+    font-size: 0.88rem;
+    color: var(--gray-600);
+    display: inline-flex;
+    align-items: center;
+    min-height: 20px;
+    margin-bottom: 25px !important;
+}
+
+.control input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.control__indicator {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    height: 20px;
+    width: 20px;
+    background: var(--gray-200);
+    border: 1px solid var(--gray-300);
+    border-radius: 6px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.control:hover input~.control__indicator {
+    background: var(--gray-300);
+    border-color: var(--gray-400);
+}
+
+.control input:checked~.control__indicator {
+    background: var(--green-600) !important;
+    border-color: var(--green-600) !important;
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.25);
+}
+
+.control__indicator:after {
+    font-family: 'icomoon';
+    /* Use the template's icon font */
+    content: '\e5ca';
+    /* The checkmark character */
+    position: absolute;
+    display: none;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.control input:checked~.control__indicator:after {
+    display: block;
+}
+
+/* Fix Lottie/Car - Sophisticated Balance */
+.col-md-6 lottie-player {
+    max-width: 480px !important;
+    margin: 0 auto !important;
+    transform: scale(1.05);
+    filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.04));
+    opacity: 0;
+    animation: locFadeIn 0.8s ease forwards 0.2s;
+}
+
+
+@keyframes locFadeIn {
+    to {
+        opacity: 1;
+        transform: scale(1.08);
+    }
+}
+
+@media (max-width: 991px) {
+    .contents {
+        padding: 3rem !important;
+    }
+}

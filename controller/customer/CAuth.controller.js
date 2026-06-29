@@ -43,38 +43,29 @@ const login_post = async (req, res) => {
         }
         const user_id = value.username,
             password = value.password;
-        var whr = `user_id='${user_id}' AND user_type IN ('S', 'C') AND allow_flag='Y'`;
-        let res_dt = await db_Select('password,user_type', "md_user", whr, null);
-        delete res_dt.sql;
-        if((res_dt.msg).length==1){
-        if (res_dt.msg[0] && await bcrypt.compare(password, res_dt.msg[0].password)) {
+        const table_name = "md_user a,md_customer b,md_seller c,md_locations d";
+        const whr = `a.customer_id=b.customer_id AND a.seller_id=c.seller_id AND b.location_id=d.location_id AND a.user_id='${user_id}' AND a.user_type='C' AND a.allow_flag='Y'`;
+        const selectData = "a.password,a.user_type, a.id, a.device_id, a.user_id, c.*, b.*, d.*";
 
-            if (res_dt.msg[0].user_type == 'C') {
-                var table_name = "md_user a,md_customer b,md_seller c,md_locations d",
-                    whrDAta = `a.customer_id=b.customer_id AND a.seller_id=c.seller_id AND b.location_id= d.location_id AND a.user_id='${user_id}' AND a.allow_flag='Y'`,
-                    selectData = "a.user_type, a.id, a.device_id, a.user_id, c.*, b.*, d.*";
-            }
-            let user_data = await db_Select(selectData, table_name, whrDAta, null);
-            delete user_data.sql;
-            if((user_data.msg).length==1){
-                const datetime = dateFormat(new Date(), "dd/mm/yyyy hh:MM:ss")
+        let user_data = await db_Select(selectData, table_name, whr, null);
+        delete user_data.sql;
+
+        if ((user_data.msg).length == 1) {
+            if (user_data.msg[0] && await bcrypt.compare(password, user_data.msg[0].password)) {
+                const datetime = dateFormat(new Date(), "dd/mm/yyyy hh:MM:ss");
                 user_data = user_data.msg[0];
+                delete user_data.password;
                 req.session['user'] = { user_data, datetime }
                 req.flash('success', "Login successful");
                 res.redirect('/');
-            }else{
-                req.flash('error', "User not found");
+            } else {
+                req.flash('error', "Password Not Matched");
                 res.redirect('/login');
             }
         } else {
-            req.flash('error', "Password Not Matched");
+            req.flash('error', "User Not Found");
             res.redirect('/login');
         }
-
-    } else {
-        req.flash('error', "User Not Found");
-        res.redirect('/login');
-    }
     } catch (err) {
         req.flash('error', err);
         res.redirect('/login');
@@ -105,18 +96,30 @@ const super_admin_login_post = async (req, res) => {
         var userData = await db_Select("sl_no,user_id,password,user_name,user_mobile_no,last_login,created_by,created_at", 'md_super_admin', whr, null)
         if ((userData.msg).length == 1) {
             if (await bcrypt.compare(value.password, userData.msg[0].password)) {
-                try{
-                    await db_Insert('md_super_admin',`last_login='${datetime}',updated_by='SSS',updated_at='${datetime}'`,null,`user_id='${value.user_id}'`,1)
-                    userData = userData.msg[0];
-                    // console.log(userData);
-                    req.session['user'] = { userData, datetime }
-                    req.flash('success', "Login successful");
-                    res.redirect('/superadmin_dashboard');
-                }catch(err){
-                //    console.log(err);
-                   req.flash('danger', err);
-                   res.redirect('/superadmin_login');
+                userData = userData.msg[0];
+                delete userData.password;
+                req.session['user'] = {
+                    userData,
+                    user_data: {
+                        is_superadmin: true,
+                        user_type: 'S',
+                        customer_id: null,
+                        user_name: userData.user_name
+                    },
+                    datetime
                 }
+                req.flash('success', "Login successful");
+
+                // Update last login without blocking the user's redirect.
+                db_Insert(
+                    'md_super_admin',
+                    `last_login='${datetime}',updated_by='SSS',updated_at='${datetime}'`,
+                    null,
+                    `user_id='${value.user_id}'`,
+                    1
+                ).catch((updateErr) => logger.error(updateErr));
+
+                res.redirect('/superadmin_dashboard');
                
             } else {
                 req.flash('danger', "Please check your userid or password");

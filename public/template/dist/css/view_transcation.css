@@ -1,0 +1,550 @@
+/* ============================================================
+   VIEW TRANSACTION PAGE — PREMIUM WHITE & GREEN DESIGN
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ---------- Variables ---------- */
+:root {
+  --trans-green: #059669;
+  --green-50: #ecfdf5;
+  --green-100: #d1fae5;
+  --green-200: #a7f3d0;
+  --green-500: #10b981;
+  --green-600: #059669;
+  --green-700: #047857;
+  --green-800: #065f46;
+  --white: #ffffff;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  --danger: #ef4444;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+  --shadow-green: 0 4px 14px rgba(16, 185, 129, 0.25);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+.trans-page-wrapper {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  padding: 24px 20px 40px;
+  background: var(--gray-100);
+  min-height: 100vh;
+}
+
+@keyframes transSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- Card ---------- */
+.trans-card {
+  background: var(--white);
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  animation: transSlideUp 0.4s ease both;
+  position: relative;
+}
+
+.trans-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--green-500), var(--green-600));
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.trans-card .card-body {
+  padding: 28px 30px 30px;
+}
+
+/* ---------- Header ---------- */
+.trans-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.trans-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.trans-icon-badge {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--green-500), var(--green-600));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-green);
+}
+
+.trans-icon-badge i,
+.trans-icon-badge svg {
+  color: #fff !important;
+  width: 20px;
+  height: 20px;
+  stroke: #fff;
+}
+
+.trans-page-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+
+/* ---------- Filter Section ---------- */
+.trans-filter-sec {
+  background: var(--gray-50);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 30px;
+  border: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---------- Buttons ---------- */
+.trans-search-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 25px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--green-500), var(--green-600));
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-green);
+  letter-spacing: 0.3px;
+  height: 45px;
+}
+
+.trans-search-btn:hover {
+  background: linear-gradient(135deg, var(--green-600), var(--green-700));
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+  transform: translateY(-1px);
+}
+
+.trans-print-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--green-700);
+  background: var(--green-50);
+  border: 1px solid var(--green-200);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none !important;
+}
+
+.trans-print-btn:hover {
+  background: var(--green-600);
+  color: #fff;
+  border-color: var(--green-600);
+  transform: translateY(-1px);
+}
+
+/* ---------- Table ---------- */
+.trans-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--gray-200);
+  margin-top: 20px;
+}
+
+.trans-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.trans-table thead th {
+  background: var(--green-600);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 14px 15px;
+  border: none;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.trans-table tbody td {
+  padding: 12px 15px;
+  font-size: 0.85rem;
+  color: var(--gray-700);
+  border-bottom: 1px solid var(--gray-100);
+  text-align: center;
+  vertical-align: middle;
+}
+
+.trans-table tbody tr:hover {
+  background: var(--green-50);
+}
+
+.trans-table tfoot td {
+  padding: 14px 15px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--gray-900);
+  background: var(--gray-50);
+  border-top: 2px solid var(--gray-200);
+}
+
+/* ---------- Form ---------- */
+.trans-form-group {
+  margin-bottom: 0;
+}
+
+.trans-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: 8px;
+  /* text-transform: uppercase; */
+  /* letter-spacing: 0.5px; */
+}
+
+.trans-input,
+.trans-select {
+  width: 100%;
+  padding: 0 15px;
+  border-radius: 8px;
+  border: 1.5px solid var(--gray-200);
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  background: var(--white);
+  color: var(--gray-800);
+  height: 45px;
+}
+
+.trans-input:focus,
+.trans-select:focus {
+  outline: none !important;
+  border-color: var(--green-600) !important;
+  box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.15) !important;
+}
+
+.report-summary-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--green-700);
+  margin-bottom: 20px;
+  padding: 10px;
+  background: var(--green-50);
+  border-radius: 8px;
+  display: inline-block;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 992px) {
+  .trans-filter-sec .row>div {
+    margin-bottom: 15px;
+  }
+
+  .trans-search-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ============================================================
+   DATATABLE OVERRIDES — green theme
+   ============================================================ */
+.trans-page-wrapper .dataTables_wrapper {
+  color: var(--gray-500) !important;
+  font-size: 0.8rem;
+  padding-top: 0;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+.trans-page-wrapper .dataTables_wrapper .dataTables_length,
+.trans-page-wrapper .dataTables_wrapper .dataTables_filter {
+  margin-top: 25px !important;
+  margin-bottom: 25px !important;
+  padding: 0 20px !important;
+  /* Added space from both sides */
+}
+
+.trans-page-wrapper .dataTables_wrapper .dataTables_length label,
+.trans-page-wrapper .dataTables_wrapper .dataTables_filter label {
+  color: var(--gray-600) !important;
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-bottom: 0;
+}
+
+/* Specific cell spacing for Receipt No and others */
+.trans-table thead th:nth-child(2),
+.trans-table tbody td:nth-child(2) {
+  padding-left: 25px !important;
+  padding-right: 25px !important;
+}
+
+.trans-page-wrapper .dataTables_wrapper select,
+.trans-page-wrapper .dataTables_wrapper input[type="search"] {
+  background: var(--white) !important;
+  border: 1.5px solid var(--gray-200) !important;
+  color: var(--gray-800) !important;
+  border-radius: 8px !important;
+  padding: 6px 12px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.trans-page-wrapper .dataTables_wrapper select:focus,
+.trans-page-wrapper .dataTables_wrapper input[type="search"]:focus {
+  border-color: var(--green-500) !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
+}
+
+/* Pagination - Green Theme */
+.trans-page-wrapper .dataTables_wrapper .dataTables_paginate {
+  padding: 20px !important;
+}
+
+.trans-page-wrapper .dataTables_wrapper .dataTables_paginate .pagination .page-item .page-link {
+  color: var(--gray-700) !important;
+  background-color: var(--white) !important;
+  border-color: var(--gray-200) !important;
+  transition: all 0.2s ease;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin: 0 2px;
+  border-radius: 6px !important;
+}
+
+.trans-page-wrapper .dataTables_wrapper .dataTables_paginate .pagination .page-item .page-link:hover {
+  color: var(--green-700) !important;
+  background-color: var(--green-50) !important;
+  border-color: var(--green-200) !important;
+}
+
+.trans-page-wrapper .dataTables_wrapper .dataTables_paginate .pagination .page-item.active .page-link,
+.trans-page-wrapper .dataTables_wrapper .dataTables_paginate .pagination .page-item.active .page-link:hover {
+  color: var(--white) !important;
+  background-color: var(--green-600) !important;
+  border-color: var(--green-600) !important;
+  box-shadow: 0 4px 10px rgba(5, 150, 105, 0.25);
+  font-weight: 700;
+}
+
+.trans-page-wrapper .dataTables_wrapper .dataTables_paginate .pagination .page-item.disabled .page-link {
+  color: var(--gray-400) !important;
+  background-color: var(--gray-50) !important;
+  border-color: var(--gray-200) !important;
+}
+
+/* ============================================================
+   SIDEBAR — premium overrides (matches customer-page)
+   ============================================================ */
+.left-sidebar,
+.left-sidebar .scroll-sidebar {
+  background: var(--white) !important;
+}
+
+.left-sidebar {
+  border-right: 1px solid var(--gray-200) !important;
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.02) !important;
+}
+
+/* Default link state */
+.sidebar-link {
+  color: var(--gray-600) !important;
+  border-radius: 8px !important;
+  margin: 4px 12px !important;
+  padding: 10px 15px !important;
+  transition: all 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  background: transparent !important;
+}
+
+.sidebar-link i,
+.sidebar-link span {
+  color: inherit !important;
+  background: transparent !important;
+}
+
+.sidebar-link:hover {
+  background: var(--green-50) !important;
+  color: var(--green-600) !important;
+}
+
+/* Active / selected state — green gradient */
+.sidebar-item.selected>.sidebar-link,
+.sidebar-item.active>.sidebar-link,
+.sidebar-item.selected .sidebar-link.active,
+.sidebar-link.active {
+  background: linear-gradient(135deg, var(--green-500), var(--green-600)) !important;
+  color: var(--white) !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25) !important;
+}
+
+/* Force white text/icons on active */
+.sidebar-item.selected>.sidebar-link i,
+.sidebar-item.selected>.sidebar-link span,
+.sidebar-item.active>.sidebar-link i,
+.sidebar-item.active>.sidebar-link span,
+.sidebar-link.active i,
+.sidebar-link.active span {
+  color: var(--white) !important;
+  background: transparent !important;
+}
+
+.sidebar-link i {
+  color: var(--gray-500) !important;
+  width: 18px;
+  height: 18px;
+  margin-right: 10px !important;
+}
+
+.list-divider {
+  border-top: 1px solid var(--gray-100) !important;
+  margin: 15px 0 !important;
+  padding: 0 !important;
+}
+
+.nav-small-cap {
+  color: var(--gray-400) !important;
+  font-size: 0.7rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  margin-top: 20px !important;
+  padding: 0 25px !important;
+}
+
+/* Fix for text-dark overrides in HTML */
+.sidebar-link .text-dark,
+.sidebar-link i.text-dark {
+  color: inherit !important;
+}
+
+/* ============================================================
+   SELECT2 CUSTOM STYLING — Premium Green Theme
+   ============================================================ */
+.select2-container--default .select2-selection--single {
+  background: var(--white) !important;
+  border: 1.5px solid var(--gray-200) !important;
+  border-radius: 8px !important;
+  height: 45px !important;
+  display: flex !important;
+  align-items: center !important;
+  transition: all 0.2s ease !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.select2-container--default .select2-selection--single:focus,
+.select2-container--default.select2-container--open .select2-selection--single {
+  border-color: var(--green-600) !important;
+  box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.15) !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  color: var(--gray-800) !important;
+  font-size: 0.9rem !important;
+  padding-left: 15px !important;
+  font-weight: 400 !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+  border-color: var(--gray-600) transparent transparent transparent !important;
+}
+
+.select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+  border-color: transparent transparent var(--gray-600) transparent !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+  height: 44px !important;
+  right: 10px !important;
+}
+
+.select2-dropdown {
+  border: 1px solid var(--green-200) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+  overflow: hidden !important;
+  z-index: 9999 !important;
+}
+
+.select2-results__option {
+  padding: 10px 15px !important;
+  font-size: 0.88rem !important;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected],
+.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+  background: linear-gradient(135deg, var(--green-500), var(--green-600)) !important;
+  color: #ffffff !important;
+}
+
+.select2-container--default .select2-results__option[aria-selected=true] {
+  background-color: var(--green-700) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+/* While clicking/active state */
+.select2-results__option:active {
+  background-color: var(--green-800) !important;
+  color: #ffffff !important;
+}
+
+.select2-search--dropdown {
+  padding: 10px !important;
+}
+
+.select2-search--dropdown .select2-search__field {
+  border: 1px solid var(--gray-200) !important;
+  border-radius: 6px !important;
+  padding: 8px 12px !important;
+  outline: none !important;
+}
+
+.select2-search--dropdown .select2-search__field:focus {
+  border-color: var(--green-500) !important;
+}

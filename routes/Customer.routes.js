@@ -1,6 +1,6 @@
 const express = require('express');
 const { test, login, login_post, super_admin_login, super_admin_login_post } = require('../controller/customer/CAuth.controller');
-const { dashboard, blank, superadmin_dashboard } = require('../controller/customer/Dashboard.controller');
+const { dashboard, blank, superadmin_dashboard, project_dashboard } = require('../controller/customer/Dashboard.controller');
 const { AuthCheckedMW, LoginCheckedMW, logout, LoginSuperCheckedMW, AuthSuperCheckedMW, super_admin_logout } = require('../middleware/AuthChecked.middleware');
 const { vehicle, operator_add, operator_add_post, password_change, save_report_password, report_pwd, location_name, seller_location_name, my_profile_save, password, change_report_flag, mode_name, super_admin_password } = require('../controller/customer/Master_cust.controller');
 
@@ -18,6 +18,7 @@ Customer.get('/superadmin_logout',super_admin_logout);
 Customer.post('/superadmin_password',AuthCheckedMW,super_admin_password);
 
 Customer.get('/superadmin_dashboard',AuthSuperCheckedMW,superadmin_dashboard)
+Customer.get('/superadmin/project_dashboard', AuthSuperCheckedMW, project_dashboard);
 
 Customer.get('/',AuthCheckedMW,dashboard);
 

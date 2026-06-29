@@ -1,193 +1,153 @@
-<div class="container-fluid">
-    <div class="row">
-      <div class="card col-12">
-        <div class="card-body">
-          <div class="titleSec">
-             <h2 class="text-dark"><i class="fa fa-arrow-circle-left" aria-hidden="true" id="back" style="cursor: pointer;">&nbsp;GST Edit Details</i></h2>
-          </div> 
-          <form action="/gst/save_edit_gst" id="myForm" method="post">
-            <input type="hidden" name="gst_id" value="<%= data.msg[0].gst_id %>">
+<link href="/template/dist/css/operator-page.css" rel="stylesheet">
 
-            <div class="row mt-4">
-            <div class="form-group col-5">
-          <label class="text-dark"><b>GST Type:</b></label><br>
+<div class="op-page-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card op-card">
+                    <div class="card-body">
 
-         <label class="mr-3">
-  <input type="radio" name="gst_type" value="CS"
-    <%= data.msg[0].gst_mode === 'CS' ? 'checked' : '' %> onclick="toggleGSTType()"> CGST/SGST
-  </label>
+                        <!-- HEADER -->
+                        <div class="op-header">
+                            <div class="op-title-group">
+                                <div class="op-icon-badge ml-2">
+                                    <i data-feather="edit-3"></i>
+                                </div>
+                                 <button type="button" class="op-back-btn" id="back" title="Go Back">
+                                    <i data-feather="arrow-left"></i>
+                                </button>
+                                <h3 class="op-edit-title">Edit GST Configuration</h3>
+                            </div>
+                        </div>
 
-<label>
-  <input type="radio" name="gst_type" value="I" <%= data.msg[0].gst_mode === 'I' ? 'checked' : '' %> onclick="toggleGSTType()"> IGST
-</label>
-          </div>
-          </div>
-          <div class="row mt-4">
-            <div class="form-group col-3">
-                <label for="gst_num" class="text-dark"><b>GST Number:</b></label>
-                <input type="text" class="form-control" name="gst_num" id="gst_num" value="<%=data.msg[0].gst_number %>" placeholder="Enter GST Number">
-              </div>
-              <div class="form-group col-3">
-                <label for="total_gst" class="text-dark"><b>Total GST:</b></label>
-                <select name="total_gst" class="form-control" id="total_gst">
-                  <option value="0" <%= data.msg[0].total_gst=='0.00' ? 'selected' : '' %>>0%</option>
-                  <option value="5" <%= data.msg[0].total_gst=='5.00' ? 'selected' : '' %>>5%</option>
-                  <option value="12" <%= data.msg[0].total_gst=='12.00' ? 'selected' : '' %>>12%</option>
-                  <option value="18" <%= data.msg[0].total_gst=='18.00' ? 'selected' : '' %>>18%</option>
-                  <option value="28" <%= data.msg[0].total_gst=='28.00' ? 'selected' : '' %>>28%</option>
-              </select>
-              </div>
-              <div class="form-group col-3" id="cgstDiv">
-                  <label for="cgst" class="text-dark"><b>CGST:</b></label>
-                  <input type="text" class="form-control" name="cgst" id="cgst" value="<%= data.msg[0].cgst %>" placeholder="Enter CGST" readonly>
+                        <!-- FORM CONTENT -->
+                        <form action="/gst/save_edit_gst" id="myForm" method="post" class="mt-4">
+                            <input type="hidden" name="gst_id" value="<%= data.msg[0].gst_id %>">
+
+                            <div class="op-form-group">
+                                <label class="op-label">GST Category</label>
+                                <div class="d-flex align-items-center gap-4 mt-2">
+                                    <label class="d-flex align-items-center gap-2 mb-0" style="cursor: pointer;">
+                                        <input type="radio" name="gst_type" value="CS" <%= data.msg[0].gst_mode === 'CS' ? 'checked' : '' %> onclick="toggleGSTType()"> 
+                                        <span style="font-size: 0.9rem; margin-left: 6px;">CGST / SGST</span>
+                                    </label>
+                                    <label class="d-flex align-items-center gap-2 mb-0 ml-4" style="cursor: pointer;">
+                                        <input type="radio" name="gst_type" value="I" <%= data.msg[0].gst_mode === 'I' ? 'checked' : '' %> onclick="toggleGSTType()"> 
+                                        <span style="font-size: 0.9rem; margin-left: 6px;">IGST</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="row mt-3">
+                                <div class="col-md-6 op-form-group">
+                                    <label class="op-label">GST Number</label>
+                                    <input type="text" class="op-input" name="gst_num" id="gst_num" value="<%=data.msg[0].gst_number %>" placeholder="Enter Registration GSTIN" required>
+                                </div>
+                                <div class="col-md-6 op-form-group">
+                                    <label class="op-label">Total GST Rate (%)</label>
+                                    <select name="total_gst" class="op-input op-select" id="total_gst" required>
+                                        <option value="0" <%= data.msg[0].total_gst=='0.00' ? 'selected' : '' %>>0%</option>
+                                        <option value="5" <%= data.msg[0].total_gst=='5.00' ? 'selected' : '' %>>5%</option>
+                                        <option value="12" <%= data.msg[0].total_gst=='12.00' ? 'selected' : '' %>>12%</option>
+                                        <option value="18" <%= data.msg[0].total_gst=='18.00' ? 'selected' : '' %>>18%</option>
+                                        <option value="28" <%= data.msg[0].total_gst=='28.00' ? 'selected' : '' %>>28%</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 op-form-group" id="cgstDiv">
+                                    <label class="op-label">CGST Component</label>
+                                    <input type="text" class="op-input" name="cgst" id="cgst" value="<%= data.msg[0].cgst %>" placeholder="Automatic" readonly style="background-color: var(--gray-100);">
+                                </div>
+                                <div class="col-md-4 op-form-group" id="sgstDiv">
+                                    <label class="op-label">SGST Component</label>
+                                    <input type="text" class="op-input" name="sgst" id="sgst" value="<%= data.msg[0].sgst %>" placeholder="Automatic" readonly style="background-color: var(--gray-100);">
+                                </div>
+                                <div class="col-md-4 op-form-group" id="igstDiv" style="display:none;">
+                                    <label class="op-label">IGST Component</label>
+                                    <input type="text" class="op-input" name="igst" id="igst" value="<%= data.msg[0].igst %>" placeholder="Automatic" readonly style="background-color: var(--gray-100);">
+                                </div>
+                            </div>
+
+                            <div class="text-center mt-2">
+                                <button type="submit" id="submitBtn" class="op-submit-btn" style="width: auto; padding: 10px 40px;" disabled>Update GST Details</button>
+                            </div>
+                        </form>
+
+                    </div>
                 </div>
-  
-                <div class="form-group col-3" id="sgstDiv">
-                  <label for="sgst" class="text-dark"><b>SGST:</b></label>
-                  <input type="text" class="form-control" name="sgst" id="sgst" value="<%= data.msg[0].sgst %>" placeholder="Enter SGST" readonly>
-                </div>
-
-                 <div class="form-group col-3" id="igstDiv" style="display:none;">
-                  <label for="igst" class="text-dark"><b>IGST:</b></label>
-                  <input type="text" class="form-control" name="igst" id="igst" value="<%= data.msg[0].igst %>" placeholder="Enter IGST" readonly>
-                </div>
-          </div>
-          <div class="row mt-4">
-            <div class="form-group col-md-3">
-                <input
-                  type="submit"
-                  value="SUBMIT"
-                  id="submitBtn"
-                  class="btn btn-primary btn-block" style="margin-left: 25vw;" disabled
-                />
-              </div>
-          </div>
-          </form>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-
- <script>
-function toggleGSTType() {
-  const gstType = document.querySelector('input[name="gst_type"]:checked').value;
-  const totalGST = parseFloat(document.getElementById('total_gst').value) || 0;
-
-  if (gstType === "CS") {
-    document.getElementById('cgstDiv').style.display = "block";
-    document.getElementById('sgstDiv').style.display = "block";
-    document.getElementById('igstDiv').style.display = "none";
-
-    document.getElementById('cgst').value = (totalGST / 2) + "%";
-    document.getElementById('sgst').value = (totalGST / 2) + "%";
-    document.getElementById('igst').value = "";
-
-  } else {
-    document.getElementById('cgstDiv').style.display = "none";
-    document.getElementById('sgstDiv').style.display = "none";
-    document.getElementById('igstDiv').style.display = "block";
-
-    document.getElementById('igst').value = totalGST + "%";
-    document.getElementById('cgst').value = "";
-    document.getElementById('sgst').value = "";
-  }
-}
-
-// Run on load
-document.addEventListener("DOMContentLoaded", function () {
-  toggleGSTType();
-  document.getElementById('total_gst').addEventListener('change', toggleGSTType);
-});
-</script>
-
-  <script>
-    $(document).ready(function () {
-      $("#back").click(function () {
-        window.location.href = "/gst/show_gst";
-      });
-    });
-  </script>
-
-<!-- <script>
-  $(document).ready(function () {
-    $('#total_gst').change(function () {
-      const gstValue = $(this).val();
-
-      if (gstValue) {
-        const gst = gstValue / 2;
-        $('#cgst').val(gst + '%');
-        $('#sgst').val(gst + '%');
-      } else {
-        $('#cgst').val('');
-        $('#sgst').val('');
-      }
-    });
-  });
-</script> -->
+</div>
 
 <script>
-$(document).ready(function () {
+    function toggleGSTType() {
+        const gstType = document.querySelector('input[name="gst_type"]:checked').value;
+        const totalGST = parseFloat(document.getElementById('total_gst').value) || 0;
 
-    // Back button
-    $("#back").click(function () {
-        window.location.href = "/gst/show_gst";
-    });
-
-    // FUNCTION TO CALCULATE CGST/SGST
-    function updateGST() {
-        const gstValue = $("#total_gst").val();
-        if (gstValue) {
-            const half = gstValue / 2;
-            $("#cgst").val(half + "%");
-            $("#sgst").val(half + "%");
+        if (gstType === "CS") {
+            $("#cgstDiv").show();
+            $("#sgstDiv").show();
+            $("#igstDiv").hide();
+            $("#cgst").val((totalGST / 2) + "%");
+            $("#sgst").val((totalGST / 2) + "%");
+            $("#igst").val("");
         } else {
+            $("#cgstDiv").hide();
+            $("#sgstDiv").hide();
+            $("#igstDiv").show();
+            $("#igst").val(totalGST + "%");
             $("#cgst").val("");
             $("#sgst").val("");
         }
     }
 
-    // 1️⃣ RUN updateGST() first before capturing initial values
-    updateGST();
+    $(document).ready(function () {
+        // Feather Icons
+        if (typeof feather !== 'undefined') {
+            feather.replace();
+        }
 
-    // 2️⃣ NOW capture the true initial values
-    const initialValues = {
-        gst_num: $("#gst_num").val(),
-        total_gst: $("#total_gst").val(),
-        cgst: $("#cgst").val(),
-        sgst: $("#sgst").val(),
-        igst: $("#igst").val(),
-        gst_type: $('input[name="gst_type"]:checked').val()
-    };
+        // Initialize Select2
+        $('.op-select').select2({
+            width: '100%'
+        });
 
-    // console.log("Initial Values:", initialValues);
+        // Back button
+        $("#back").click(function () {
+            window.location.href = "/gst/show_gst";
+        });
 
-    // 3️⃣ Change detection
-    function checkForChanges() {
-        let changed =
-            $("#gst_num").val() !== initialValues.gst_num ||
-            $("#total_gst").val() !== initialValues.total_gst ||
-            $("#cgst").val() !== initialValues.cgst ||
-            $("#sgst").val() !== initialValues.sgst ||
-            $("#igst").val() !== initialValues.igst ||
-            $('input[name="gst_type"]:checked').val() !== initialValues.gst_type;
+        // Change detection logic
+        const initialValues = {
+            gst_num: $("#gst_num").val(),
+            total_gst: $("#total_gst").val(),
+            gst_type: $('input[name="gst_type"]:checked').val()
+        };
 
-        $("#submitBtn").prop("disabled", !changed);
-    }
+        function checkForChanges() {
+            let changed =
+                $("#gst_num").val() !== initialValues.gst_num ||
+                $("#total_gst").val() !== initialValues.total_gst ||
+                $('input[name="gst_type"]:checked').val() !== initialValues.gst_type;
 
-    // 4️⃣ Bind events
-    $("#gst_num").on("input", checkForChanges);
+            $("#submitBtn").prop("disabled", !changed);
+        }
 
-    $("#total_gst").change(function () {
-        updateGST();
-        checkForChanges();
+        // Initial run
+        toggleGSTType();
+
+        // Bind events
+        $("#gst_num").on("input", checkForChanges);
+        $("#total_gst").change(function () {
+            toggleGSTType();
+            checkForChanges();
+        });
+        $('input[name="gst_type"]').change(function () {
+            toggleGSTType();
+            checkForChanges();
+        });
     });
-
-    $('input[name="gst_type"]').change(function () {
-    toggleGSTType();
-    checkForChanges();
-});
-
-});
 </script>
-
-

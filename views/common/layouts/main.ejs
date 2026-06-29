@@ -18,6 +18,7 @@
     <link href="/template/dist/css/custome.css" rel="stylesheet">
     <link href="/template/dist/css/style.min.css" rel="stylesheet">
     <link href="/template/style.css" rel="stylesheet">
+    <link href="/template/dist/css/custom-nav.css" rel="stylesheet">
     
 
 
@@ -28,7 +29,8 @@
 
   
   <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
   <link href="/template/assets/extra-libs/datatables.net-bs4/css/dataTables.bootstrap4.css" rel="stylesheet">
 
@@ -41,7 +43,158 @@
     width: 50% !important;
   }
 
+  body.nav-loader-active {
+    overflow: hidden;
+  }
+
+  .global-nav-loader {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(241, 245, 249, 0.42);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.22s ease, visibility 0.22s ease;
+    z-index: 200000;
+  }
+
+  .global-nav-loader.is-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+  }
+
+  .global-nav-loader-box {
+    min-width: 220px;
+    padding: 24px 28px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(16, 185, 129, 0.18);
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.14);
+    text-align: center;
+  }
+
+  .global-nav-loader-spinner {
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 14px;
+    border-radius: 50%;
+    border: 4px solid rgba(16, 185, 129, 0.16);
+    border-top-color: #059669;
+    animation: globalNavSpin 0.8s linear infinite;
+  }
+
+  .global-nav-loader-text {
+    color: #0f172a;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+
+  @keyframes globalNavSpin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Design Tokens */
+  :root {
+    --op-green: #059669;
+    --green-50:  #ecfdf5;
+    --green-100: #d1fae5;
+    --green-200: #a7f3d0;
+    --green-500: #10b981;
+    --green-600: #059669;
+    --green-700: #047857;
+    --white: #ffffff;
+    --gray-50:  #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-500: #6b7280;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+  }
+
+  /* Select2 Custom Styling — Premium Green Theme */
+  .select2-container--default .select2-selection--single {
+      background-color: var(--gray-100) !important;
+      border: 1.5px solid var(--gray-200) !important;
+      border-radius: 8px !important;
+      height: 40px !important;
+      display: flex !important;
+      align-items: center !important;
+      transition: all 0.2s ease !important;
+  }
+  .select2-container--default .select2-selection--single:focus,
+  .select2-container--default.select2-container--open .select2-selection--single {
+      border-color: var(--green-600) !important;
+      background-color: #fff !important;
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1) !important;
+  }
+  .select2-container--default .select2-selection--single .select2-selection__rendered {
+      color: var(--gray-800) !important;
+      font-size: 0.88rem !important;
+      padding-left: 15px !important;
+  }
+  .select2-container--default .select2-selection--single .select2-selection__arrow {
+      height: 38px !important;
+      right: 10px !important;
+  }
+  .select2-dropdown {
+      border: 1px solid var(--green-200) !important;
+      border-radius: 12px !important;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+      overflow: hidden !important;
+      z-index: 9999 !important;
+  }
+  .select2-results__option {
+      padding: 8px 15px !important;
+      font-size: 0.85rem !important;
+  }
+  .select2-container--default .select2-results__option--highlighted[aria-selected] {
+      background-color: var(--green-50) !important;
+      color: var(--green-700) !important;
+  }
+  .select2-container--default .select2-results__option[aria-selected=true] {
+      background-color: var(--green-600) !important;
+      color: #fff !important;
+  }
+
+  .op-label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin-bottom: 6px;
+  }
+
+  .op-input, .op-select-custom, .op-textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1.5px solid var(--gray-200);
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    background: var(--gray-100);
+  }
+  .op-input:focus, .op-select-custom:focus, .op-textarea:focus {
+    outline: none !important;
+    border-color: var(--green-600) !important;
+    background: #fff !important;
+    box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.2) !important;
+  }
+
   </style>
+  <script src="/template/assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="/template/assets/libs/popper.js/dist/umd/popper.min.js"></script>
+  <script src="/template/assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="/template/dist/js/feather.min.js"></script>
+
 
 </head>
 
@@ -55,37 +208,24 @@
             <div class="lds-pos"></div>
         </div>
     </div>
+    <div class="global-nav-loader" id="globalNavLoader" aria-hidden="true">
+        <div class="global-nav-loader-box">
+            <div class="global-nav-loader-spinner"></div>
+            <div class="global-nav-loader-text">Loading page...</div>
+        </div>
+    </div>
     <!-- ============================================================== -->
     <!-- Main wrapper - style you can find in pages.scss -->
     <!-- ============================================================== -->
     <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
         data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
-        <!-- ============================================================== -->
-        <!-- Topbar header - style you can find in pages.scss -->
-        <!-- ============================================================== -->
-       
-
-
+        <!-- Topbar header -->
         <%- include('../partials/topbar') %>
 
-
-
-        <!-- ============================================================== -->
-        <!-- End Topbar header -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- Left Sidebar - style you can find in sidebar.scss  -->
-        <!-- ============================================================== -->
-       
-
-
+        <!-- Left Sidebar -->
         <%-include('../partials/sidebar')%>
-        <!-- ============================================================== -->
-        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
+
         <!-- Page wrapper  -->
-        <!-- ============================================================== -->
         <div class="page-wrapper">
           
 
@@ -122,233 +262,256 @@
 
 
        <!-- The Modal -->
-       <div class="modal fade" id="myAccount">
-        <div class="modal-dialog modal-xl">
+       <div class="modal fade" id="myAccount" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
           <div class="modal-content">
             <!-- Modal Header -->
-            <div class="modal-header" style="background-color: aliceblue;">
-              <h3 class="modal-title"><i data-feather="user"
-                class="svg-icon mr-2 ml-1" style="color: black;"></i><b style="color: black;">My Profile&nbsp; (<%= user.user_data ? (user.user_data.user_type=='C' ? user.user_data.customer_name : user.user_data.seller_name) : user.userData.user_name %>)</b></h3>
-              <button type="button" class="close" data-dismiss="modal">
-                &times;
+            <div class="modal-header">
+              <h4 class="modal-title">
+                <i data-feather="user"></i>
+                My Profile - <%= user.user_data ? (user.user_data.user_type=='C' ? user.user_data.customer_name : user.user_data.seller_name) : user.userData.user_name %>
+              </h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
               </button>
             </div>
             
             <!-- Modal body -->
-            <div class="modal-body" style="background-color: antiquewhite;">
+            <div class="modal-body">
               <% if(user.user_data){
                 if (user.user_data.user_type=='C') { %>
                   <form action="/save_my_profile" method="post">
-                  <div class="row" style="align-items: center;margin-left: 5vw;">
-                    <div class="col-md-10">
-                      <h4 class="badge badge-success" style="font-size: 21px;margin-left: 25vw;"><%= user.user_data ? user.user_data.customer_name : '' %></h4>
-                    <div class="row mt-4 ml-5">
-                      <div class="form-group col-md-12">
-                        <label for="loc_id"><b style="color: black;">Location Name:</b></label>
-                        <select name="loc_id" class="form-control" id="loc_id" required>
-                        <option value="">Select Location Name</option>
-                      
+                    <!-- <div class="text-center mb-3">
+                      <span class="badge badge-success px-4 py-2" style="font-size: 0.95rem; border-radius: 20px;">
+                        <%= user.user_data ? user.user_data.customer_name : '' %>
+                      </span>
+                    </div> -->
+
+                    <div class="row">
+                      <div class="form-group col-md-4 mb-2">
+                        <label class="op-label">Location Name</label>
+                        <select name="loc_id" class="form-control form-control-sm select2-profile" id="loc_id" required>
+                          <option value="">Select Location Name</option>
                         </select>
-                        </div>
-                        </div>
-                        <div class="row ml-5">
-                        <div class="form-group col-md-4">
-                          <label for="phone"><b style="color: black;">Phone No:</b></label>
-                          <input type="text" id="phone" name="phone" class="form-control" value="<%= user.user_data.mobile_no %>" />
-                          </div>
-                          <div class="form-group col-md-4">
-                            <label for="email_id"><b style="color: black;">Email:</b></label>
-                            <input type="text" id="email_id" name="email_id" class="form-control" value="<%= user.user_data.email %>" />
-                            </div>  
-                            <div class="form-group col-md-4">
-                              <label for="mode"><b style="color: black;">Mode:</b></label>
-                              <input type="text" id="mode" name="mode" class="form-control" value="<%= user.user_data.dev_mod == 'D' ? 'Dual' : 'Fixed' %>" readonly style="background-color: #b0cfec;"/>
-                            </div>    
-                       </div>
-                          <div class="row ml-5">
-                              <div class="form-group col-md-4">
-                                <label for="device"><b style="color: black;">No. of Users:</b></label>
-                                <input type="text" id="device" name="device" class="form-control" value="<%= user.user_data.no_device %>" readonly style="background-color: #b0cfec;"/>
-                                </div>
-                              <div class="form-group col-md-4">
-                                  <label for="dev_type"><b style="color: black;">Device Type:</b></label>
-                                  <input type="text" id="dev_type" name="dev_type" class="form-control" value="<%= user.user_data.device_type=='H' ? 'Handheld Device' : user.user_data.device_type=='M' ? 'Mobile Device' : user.user_data.device_type=='A' ? 'Amigos Blue Handheld Device' : '' %>" readonly style="background-color: #b0cfec;"/>
-                                  </div> 
-                                  <% if (user.user_data.dev_mod=='F') { %> 
-                              <div class="form-group col-md-4">
-                                  <label for="upi_id"><b style="color: black;">UPI ID:</b></label>
-                                  <input type="text" id="upi_id" name="upi_id" class="form-control" value="<%= user.user_data.upi_id %>" style="background-color: #b0cfec;"/>
-                                  </div>  
-                                  <% }  %>      
-                          </div>  
-                          <div class="row ml-5">
-                            <div class="form-group col-md-12">
-                                 <label for="cust_add"><b style="color: black;">Customer Address:</b></label>
-                                 <textarea id="cust_add" name="cust_add" class="form-control" rows="4"><%= user.user_data.cust_addr %></textarea>
-                             </div>  
-                         </div>        
+                      </div>
+                      <div class="form-group col-md-4 mb-2">
+                        <label class="op-label">Phone No</label>
+                        <input type="text" id="phone" name="phone" class="op-input" value="<%= user.user_data.mobile_no %>" />
+                      </div>
+                      <div class="form-group col-md-4 mb-2">
+                        <label class="op-label">Email</label>
+                        <input type="text" id="email_id" name="email_id" class="op-input" value="<%= user.user_data.email %>" />
+                      </div>
                     </div>
+
+                    <div class="row">
+                      <div class="form-group col-md-4 mb-2">
+                        <label class="op-label">Mode</label>
+                        <input type="text" id="mode" name="mode" class="op-input" value="<%= user.user_data.dev_mod == 'D' ? 'Dual' : 'Fixed' %>" readonly style="background-color: var(--gray-100); cursor: not-allowed;"/>
+                      </div>
+                      <div class="form-group col-md-4 mb-2">
+                        <label class="op-label">No. of Users</label>
+                        <input type="text" id="device" name="device" class="op-input" value="<%= user.user_data.no_device %>" readonly style="background-color: var(--gray-100); cursor: not-allowed;"/>
+                      </div>
+                      <div class="form-group col-md-4 mb-2">
+                        <label class="op-label">Device Type</label>
+                        <input type="text" id="dev_type" name="dev_type" class="op-input" value="<%= user.user_data.device_type=='H' ? 'Handheld Device' : user.user_data.device_type=='M' ? 'Mobile Device' : user.user_data.device_type=='A' ? 'Amigos Blue Handheld Device' : '' %>" readonly style="background-color: var(--gray-100); cursor: not-allowed;"/>
+                      </div> 
+                      <% if (user.user_data.dev_mod=='F') { %> 
+                      <div class="form-group col-md-3 mb-2">
+                        <label class="op-label">UPI ID</label>
+                        <input type="text" id="upi_id" name="upi_id" class="op-input" value="<%= user.user_data.upi_id %>" style="background-color: var(--gray-100);"/>
+                      </div>  
+                      <% }  %>      
+                    </div>
+
+                    <div class="row">
+                      <div class="form-group col-md-12 mb-2">
+                        <label class="op-label">Customer Address</label>
+                        <textarea id="cust_add" name="cust_add" class="op-textarea" rows="2"><%= user.user_data.cust_addr %></textarea>
+                      </div>  
+                    </div>        
                   
-                 <div class="row mt-3">
-                  <button type="submit" class="btn btn-primary" style="border-radius: 5px;margin-left: 31vw;">Submit</button>
-                 </div>
-                </div>
-              </div>
-              </form>
+                    <div class="text-center mt-4">
+                      <button type="submit" class="btn modal-btn-primary">Save Profile Changes</button>
+                    </div>
+                  </form>
                  <% }} %>
             </div>
   
             <!-- Modal footer -->
-            <div class="modal-footer" style="background-color: aliceblue;">
-              <!-- <button
-                type="button"
-                class="btn btn-secondary"
-                data-dismiss="modal"
-              >
-                Close
-              </button> -->
-            </div>
+            <!-- <div class="modal-footer">
+              <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+            </div> -->
           </div>
         </div>
       </div>
 
 
+
        <!--change password modal-->
 
-    <div class="modal fade" id="changepwd">
-      <div class="modal-dialog modal-xl">
+    <div class="modal fade" id="changepwd" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
           <!-- Modal Header -->
-          <div class="modal-header" style="background-color: aliceblue;">
-            <h4 class="modal-title"><i class="fa fa-key" style="font-size:30px;color: black;">&nbsp;Change Password</i></h4>
-            <button type="button" class="close" data-dismiss="modal">
-              &times;
+          <div class="modal-header">
+            <h4 class="modal-title">
+              <i class="fa fa-key"></i>Change Password
+            </h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
             </button>
           </div>
           
           <!-- Modal body -->
-          <div class="modal-body" style="background-color: antiquewhite;">
+          <div class="modal-body">
             <% if(user.user_data){
               if (user.user_data.user_type=='C') { %>
           <form action="/password" method="post" id="myForm">
             <div class="row">
-              <div class="col-md-4">
-                <label for="old_pwd"><b style="color: black;">Old Password:</b></label>
-                <input
-                    type="password"
-                    name="old_pwd"
-                    class="form-control"
-                    id="old_pwd"
-                    maxlength="4"
-                    placeholder="Enter old password....."
-                    required
-                  />
+              <div class="col-md-4 mb-3">
+                <label for="old_pwd">Old Password</label>
+                <div class="input-group password-group">
+                  <input
+                      type="password"
+                      name="old_pwd"
+                      class="form-control"
+                      id="old_pwd"
+                      maxlength="4"
+                      placeholder="Existing password"
+                      required
+                    />
+                  <div class="input-group-append">
+                    <span class="input-group-text toggle-password" data-target="old_pwd">
+                      <i class="fa fa-eye"></i>
+                    </span>
+                  </div>
+                </div>
               </div>
-              <div class="col-md-4">
-                <label for="new_pwd"><b style="color: black;">New Password:<span class="text-danger" style="font-size: small;">&nbsp;&nbsp;(Max 4 digits)</span></b></label>
-                <input
-                    type="password"
-                    name="new_pwd"
-                    class="form-control"
-                    id="new_pwd"
-                    maxlength="4"
-                    placeholder="Enter new password....."
-                    required
-                  />
+              <div class="col-md-4 mb-3">
+                <label for="new_pwd">New Password <span class="password-hint">(Max 4 digits)</span></label>
+                <div class="input-group password-group">
+                  <input
+                      type="password"
+                      name="new_pwd"
+                      class="form-control"
+                      id="new_pwd"
+                      maxlength="4"
+                      placeholder="New password"
+                      required
+                    />
+                  <div class="input-group-append">
+                    <span class="input-group-text toggle-password" data-target="new_pwd">
+                      <i class="fa fa-eye"></i>
+                    </span>
+                  </div>
+                </div>
               </div>
-              <div class="col-md-4">
-                <label for="con_pwd"><b style="color: black;">Confirm Password:</b></label>
-                <input
-                    type="password"
-                    name="con_pwd"
-                    class="form-control"
-                    id="con_pwd"
-                    maxlength="4"
-                    placeholder="Enter confirm password....."
-                    required
-                  />
-              </div>
-              <div class="form-group col-3 mt-4">
-                <button
-                  type="submit"
-                  value="SUBMIT"
-                  class="btn btn-primary" style="margin-left: 40vw;border-radius: 5px;">Submit
-              </button>
+              <div class="col-md-4 mb-3">
+                <label for="con_pwd">Confirm Password</label>
+                <div class="input-group password-group">
+                  <input
+                      type="password"
+                      name="con_pwd"
+                      class="form-control"
+                      id="con_pwd"
+                      maxlength="4"
+                      placeholder="Repeat new password"
+                      required
+                    />
+                  <div class="input-group-append">
+                    <span class="input-group-text toggle-password" data-target="con_pwd">
+                      <i class="fa fa-eye"></i>
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
-            </form>
+            
+            <div class="text-center mt-4">
+              <button type="submit" class="btn modal-btn-primary">Update Password</button>
+            </div>
+          </form>
             <% }} else { %>
               <form action="/superadmin_password" method="post" id="myForm">
                 <div class="row">
-                  <div class="col-md-4">
-                    <label for="old_pwd"><b style="color: black;">Old Password:</b></label>
-                    <input
-                        type="password"
-                        name="old_pwd"
-                        class="form-control"
-                        id="old_pwd"
-                        placeholder="Enter old password....."
-                        required
-                      />
+                  <div class="col-md-4 mb-3">
+                    <label for="old_pwd_sa">Old Password</label>
+                    <div class="input-group password-group">
+                      <input
+                          type="password"
+                          name="old_pwd"
+                          class="form-control"
+                          id="old_pwd_sa"
+                          placeholder="Existing password"
+                          required
+                        />
+                      <div class="input-group-append">
+                        <span class="input-group-text toggle-password" data-target="old_pwd_sa">
+                          <i class="fa fa-eye"></i>
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <div class="col-md-4">
-                    <label for="new_pwd"><b style="color: black;">New Password:</b></label>
-                    <input
-                        type="password"
-                        name="new_pwd"
-                        class="form-control"
-                        id="new_pwd"
-                        placeholder="Enter new password....."
-                        required
-                      />
+                  <div class="col-md-4 mb-3">
+                    <label for="new_pwd_sa">New Password</label>
+                    <div class="input-group password-group">
+                      <input
+                          type="password"
+                          name="new_pwd"
+                          class="form-control"
+                          id="new_pwd_sa"
+                          placeholder="New password"
+                          required
+                        />
+                      <div class="input-group-append">
+                        <span class="input-group-text toggle-password" data-target="new_pwd_sa">
+                          <i class="fa fa-eye"></i>
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <div class="col-md-4">
-                    <label for="con_pwd"><b style="color: black;">Confirm Password:</b></label>
-                    <input
-                        type="password"
-                        name="con_pwd"
-                        class="form-control"
-                        id="con_pwd"
-                        placeholder="Enter confirm password....."
-                        required
-                      />
-                  </div>
-                  <div class="form-group col-3 mt-4">
-                    <button
-                      type="submit"
-                      value="SUBMIT"
-                      class="btn btn-primary" style="margin-left: 40vw;border-radius: 5px;">Submit
-                  </button>
+                  <div class="col-md-4 mb-3">
+                    <label for="con_pwd_sa">Confirm Password</label>
+                    <div class="input-group password-group">
+                      <input
+                          type="password"
+                          name="con_pwd"
+                          class="form-control"
+                          id="con_pwd_sa"
+                          placeholder="Repeat new password"
+                          required
+                        />
+                      <div class="input-group-append">
+                        <span class="input-group-text toggle-password" data-target="con_pwd_sa">
+                          <i class="fa fa-eye"></i>
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                </form>
+                
+                <div class="text-center mt-4">
+                  <button type="submit" class="btn modal-btn-primary">Update Password</button>
+                </div>
+              </form>
            <% } %>
-            
           </div>
 
           <!-- Modal footer -->
-          <div class="modal-footer" style="background-color: aliceblue;">
-            <!-- <button
-              type="button"
-              class="btn btn-secondary"
-              data-dismiss="modal"
-            >
-              Close
-            </button> -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
           </div>
         </div>
       </div>
     </div>
 
 
-    <script src="/template/assets/libs/jquery/dist/jquery.min.js"></script>
-    <script src="/template/assets/libs/popper.js/dist/umd/popper.min.js"></script>
-    <script src="/template/assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
-    <!-- apps -->
-    <!-- apps -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="/template/dist/js/app-style-switcher.js"></script>
-    <script src="/template/dist/js/feather.min.js"></script>
     <script src="/template/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
+
     <script src="/template/dist/js/sidebarmenu.js"></script>
     <!--Custom JavaScript -->
     <script src="/template/dist/js/custom.min.js"></script>
@@ -359,7 +522,6 @@
     <script src="/template/assets/libs/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js"></script>
     <script src="/template/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.min.js"></script>
     <script src="/template/assets/extra-libs/jvector/jquery-jvectormap-world-mill-en.js"></script>
-    <script src="/template/dist/js/pages/dashboards/dashboard1.min.js"></script>
     <script src="/template/assets/extra-libs/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="/template/dist/js/pages/datatable/datatable-basic.init.js"></script>
     <script>
@@ -388,6 +550,28 @@
   <% } %>
 
   <script>
+    // Password Visibility Toggle Logic
+    $(document).ready(function() {
+        $('.toggle-password').click(function() {
+            const targetId = $(this).data('target');
+            const input = $('#' + targetId);
+            const icon = $(this).find('i');
+            
+            if (input.attr('type') === 'password') {
+                input.attr('type', 'text');
+                icon.removeClass('fa-eye').addClass('fa-eye-slash');
+            } else {
+                input.attr('type', 'password');
+                icon.removeClass('fa-eye-slash').addClass('fa-eye');
+            }
+        });
+
+        // Initialize Select2 for Profile Modal
+        $('.select2-profile').select2({
+          dropdownParent: $('#myAccount'),
+          width: '100%'
+        });
+    });
 
     $("#myprofile").click(function(){
       var loc_id = $('#loc_id').val();
@@ -407,6 +591,8 @@
             // console.log(item.location_id);
             $('#loc_id').append($('<option>', {value: item.location_id, text: item.loction, selected: _selected}))
            });
+           // Refresh Select2 after options are loaded
+           $('.select2-profile').trigger('change');
       },
       error: function (error) {
         // console.log(error);
@@ -435,6 +621,47 @@
         const sec = String(date.getSeconds()).padStart(2, '0');
         return `${day}/${month}/${year} ${hr}:${min}:${sec}`;
     }
+
+    (function () {
+      var loader = document.getElementById('globalNavLoader');
+
+      if (!loader) return;
+
+      function showGlobalLoader() {
+        loader.classList.add('is-visible');
+        document.body.classList.add('nav-loader-active');
+      }
+
+      function hideGlobalLoader() {
+        loader.classList.remove('is-visible');
+        document.body.classList.remove('nav-loader-active');
+      }
+
+      function shouldHandleLink(link) {
+        if (!link) return false;
+        if (link.hasAttribute('download')) return false;
+        if (link.getAttribute('target') === '_blank') return false;
+        if (link.getAttribute('data-toggle') === 'modal') return false;
+        if (link.getAttribute('data-toggle') === 'dropdown') return false;
+        if (link.classList.contains('dropdown-toggle')) return false;
+
+        var href = link.getAttribute('href');
+        if (!href || href === '#' || href.indexOf('javascript:') === 0) return false;
+
+        return true;
+      }
+
+      document.addEventListener('click', function (event) {
+        var link = event.target.closest('a[href]');
+        if (!shouldHandleLink(link)) return;
+
+        showGlobalLoader();
+      });
+
+      window.addEventListener('pageshow', hideGlobalLoader);
+      window.addEventListener('load', hideGlobalLoader);
+      window.addEventListener('beforeunload', showGlobalLoader);
+    })();
   </script>
 
   <!-- <script>

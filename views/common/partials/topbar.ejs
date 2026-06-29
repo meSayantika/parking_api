@@ -1,208 +1,174 @@
 <header class="topbar" data-navbarbg="skin6">
-  <nav class="navbar top-navbar navbar-expand-md">
-      <div class="navbar-header" data-logobg="skin6">
-          <!-- This is for the sidebar toggle which is visible on mobile only -->
-          <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)"><i
-                  class="ti-menu ti-close"></i></a>
-          <!-- ============================================================== -->
-          <!-- Logo -->
-          <!-- ============================================================== -->
-          <% if(user.user_data) {
-            if(user.user_data.seller_id=='2' && user.user_data.user_type !='C'){  %>
-          <div class="navbar-brand">
-              <!-- Logo icon -->
-              <a href="/">
-                  <b class="logo-icon">
-                      <!-- Dark Logo icon -->
-                      <img src="/image/logo.png" alt="homepage" class="dark-logo siteLogo" />
-                      <!-- Light Logo icon -->
-                      <img src="/image/logo.png" alt="homepage" class="light-logo siteLogo" />
-                  </b>
-                  <!--End Logo icon -->
-                  <!-- Logo text -->
-                  <span class="logo-text">
-                     
-                  </span>
-              </a>
-          </div>
-          <% } } else {%>
+    <nav class="navbar top-navbar navbar-expand-md">
+        <div class="navbar-header" data-logobg="skin6">
+            <!-- NO BUTTON HERE AS REQUESTED -->
+
+            <!-- Logo Section -->
             <div class="navbar-brand">
-                <!-- Logo icon -->
-                <a href="">
+                <a href="/">
                     <b class="logo-icon">
-                        <!-- Dark Logo icon -->
-                        <img src="/image/logo_sss.png" alt="homepage" class="dark-logo siteLogo" style="width: 113%; height: 85px;"/>
-                        <!-- Light Logo icon -->
-                        <img src="/image/logo_sss.png" alt="homepage" class="light-logo siteLogo"
-                        style="width: 113%; height: 85px;" />
+                        <% if(user.user_data && user.user_data.seller_id=='2' && user.user_data.user_type !='C' ) { %>
+                            <img src="/image/logo.png" alt="homepage" class="dark-logo siteLogo" />
+                            <% } else { %>
+                                <img src="/image/logo_sss.png" alt="homepage" class="dark-logo siteLogo"
+                                    style="height: auto;" />
+                                <% } %>
                     </b>
-                    <!--End Logo icon -->
-                    <!-- Logo text -->
-                    <span class="logo-text">
-                       
+                </a>
+            </div>
+
+            <!-- Sidebar Toggle added back to Logo Section -->
+            <a class="nav-link sidebartoggler d-none d-md-block" href="javascript:void(0)" id="sidebarToggle"
+                style="margin-left: auto; padding-right: 20px;">
+                <i data-feather="menu" class="feather-icon text-dark"></i>
+            </a>
+
+            <!-- Logo for Mini-Sidebar Mode (Absolute Positioned) -->
+            <div class="logo-mini-mode">
+                <a href="/" class="py-0">
+                    <span class="logo-icon">
+                        <% if(user.user_data && user.user_data.seller_id=='2' && user.user_data.user_type !='C' ) { %>
+                            <img src="/image/logo.png" alt="homepage" class="topbar-logo-img" />
+                            <% } else { %>
+                                <img src="/image/logo_sss.png" alt="homepage" class="topbar-logo-img" />
+                                <% } %>
                     </span>
                 </a>
             </div>
-            <% } %>
-          <!-- ============================================================== -->
-          <!-- End Logo -->
-          <!-- ============================================================== -->
-          <!-- ============================================================== -->
-          <!-- Toggle which is visible on mobile only -->
-          <!-- ============================================================== -->
-          <a class="topbartoggler d-block d-md-none waves-effect waves-light" href="javascript:void(0)"
-              data-toggle="collapse" data-target="#navbarSupportedContent"
-              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><i
-                  class="ti-more"></i></a>
-      </div>
-      <!-- ============================================================== -->
-      <!-- End Logo -->
-      <!-- ============================================================== -->
-      <div class="navbar-collapse collapse" id="navbarSupportedContent">
-          <!-- ============================================================== -->
-          <!-- toggle and nav items -->
-          <!-- ============================================================== -->
-          <ul class="navbar-nav float-left mr-auto ml-3 pl-1">
-              <!-- Notification -->
-              <li class="nav-item dropdown">
-                  <!-- <a class="nav-link dropdown-toggle pl-md-3 position-relative" href="javascript:void(0)"
-                      id="bell" role="button" data-toggle="dropdown" aria-haspopup="true"
-                      aria-expanded="false">
-                      <span><i data-feather="bell" class="svg-icon"></i></span>
-                      <span class="badge badge-primary notify-no rounded-circle">5</span>
-                  </a> -->
-                  <div class="dropdown-menu dropdown-menu-left mailbox animated bounceInDown">
-                      <ul class="list-style-none">
-                          <li>
-                              <div class="message-center notifications position-relative">
-                                  <!-- Message -->
-                                  <!-- <a href="javascript:void(0)"
-                                      class="message-item d-flex align-items-center border-bottom px-3 py-2">
-                                      <div class="btn btn-danger rounded-circle btn-circle"><i
-                                              data-feather="airplay" class="text-white"></i></div>
-                                      <div class="w-75 d-inline-block v-middle pl-2">
-                                          <h6 class="message-title mb-0 mt-1">Luanch Admin</h6>
-                                          <span class="font-12 text-nowrap d-block text-muted">Just see
-                                              the my new
-                                              admin!</span>
-                                          <span class="font-12 text-nowrap d-block text-muted">9:30 AM</span>
-                                      </div>
-                                  </a> -->
-                                  <!-- Message -->
-                                  
-                                    
-                                  <!-- Message -->
-                                  <!-- <a href="javascript:void(0)"
-                                      class="message-item d-flex align-items-center border-bottom px-3 py-2">
-                                      <span class="btn btn-info rounded-circle btn-circle"><i
-                                              data-feather="settings" class="text-white"></i></span>
-                                      <div class="w-75 d-inline-block v-middle pl-2">
-                                          <h6 class="message-title mb-0 mt-1">Settings</h6>
-                                          <span
-                                              class="font-12 text-nowrap d-block text-muted text-truncate">You
-                                              can customize this template
-                                              as you want</span>
-                                          <span class="font-12 text-nowrap d-block text-muted">9:08 AM</span>
-                                      </div>
-                                  </a>
-                                   -->
-                              </div>
-                          </li>
-                          <!-- <li>
-                              <a class="nav-link pt-3 text-center text-dark" href="javascript:void(0);">
-                                  <strong>Check all notifications</strong>
-                                  <i class="fa fa-angle-right"></i>
-                              </a>
-                          </li> -->
-                      </ul>
-                  </div>
-              </li>
-              <!-- End Notification -->
-              <!-- ============================================================== -->
-              <!-- create new -->
-              <!-- ============================================================== -->
-             
-          </ul>
-          <!-- ============================================================== -->
-          <!-- Right side toggle and nav items -->
-          <!-- ============================================================== -->
-          <ul class="navbar-nav float-right">
-              <!-- ============================================================== -->
-              <!-- Search -->
-              <!-- ============================================================== -->
-              <!-- <li class="nav-item d-none d-md-block">
-                  <a class="nav-link" href="javascript:void(0)">
-                      <form>
-                          <div class="customize-input">
-                              <input class="form-control custom-shadow custom-radius border-0 bg-white"
-                                  type="search" placeholder="Search" aria-label="Search">
-                              <i class="form-control-icon" data-feather="search"></i>
-                          </div>
-                      </form>
-                  </a>
-              </li> -->
-              <!-- ============================================================== -->
-              <!-- User profile and search -->
-              <!-- ============================================================== -->
-              <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown"
-                      aria-haspopup="true" aria-expanded="false" >
 
+            <!-- Mobile Toggle -->
+            <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)"
+                id="mobileSidebarToggle" style="margin-left: auto;">
+                <i data-feather="menu" class="feather-icon text-dark"></i>
+            </a>
 
-                      <!-- <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown"
-                      aria-haspopup="true" aria-expanded="false" style="display: flex; justify-content: center; align-items: center;"> -->
+            <!-- Mobile Topbar Toggler (Right) -->
+            <a class="topbartoggler d-block d-md-none waves-effect waves-light" href="javascript:void(0)"
+                data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <i data-feather="more-vertical" class="feather-icon text-dark"></i>
+            </a>
+        </div>
 
-                     
-
-                      <img src="/template/assets/images/users/profile-pic.png" alt="user" class="rounded-circle"
-                          width="40">
-                      <span class="ml-2 d-none d-lg-inline-block"><span>Hello,</span> <span
-                              class="text-dark"><%= user.user_data ? (user.user_data.user_type=='C' ? user.user_data.customer_name : user.user_data.user_name) : user.userData.user_name %></span> <i data-feather="chevron-down"
-                              class="svg-icon"></i></span>
-                  </a>
-                  <% if(user.user_data){
-                    if (user.user_data.user_type=='C') { %>
-                  <div id="myDropdown" class="dropdown-menu dropdown-menu-right user-dd animated flipInY">
-                      <a class="dropdown-item" href="javascript:void(0)"  data-toggle="modal"
-                      data-target="#myAccount" id="myprofile"><i data-feather="user"
-                              class="svg-icon mr-2 ml-1"></i>
-                          My Profile</a>
-
-
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="javascript:void(0)"  data-toggle="modal"
-                        data-target="#changepwd"><i data-feather="lock"
-                                class="svg-icon mr-2 ml-1"></i>
-                                Change
-                                Password</a>
-                          
-                      
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="/logout"><i data-feather="power"
-                              class="svg-icon mr-2 ml-1"></i>
-                          Logout</a>
-                     
-                  </div>
-                  <% }} else { %>
-                    <div id="myDropdown" class="dropdown-menu dropdown-menu-right user-dd animated flipInY">
-                        <a class="dropdown-item" href="javascript:void(0)"  data-toggle="modal"
-                        data-target="#changepwd"><i data-feather="lock"
-                                class="svg-icon mr-2 ml-1"></i>
-                                Change
-                                Password</a>
-
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="/superadmin_logout"><i data-feather="power"
-                                class="svg-icon mr-2 ml-1"></i>
-                            Logout</a>
-                       
+        <div class="navbar-collapse collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mx-auto d-none d-md-flex align-items-center">
+                <li class="nav-item">
+                    <div class="d-flex align-items-center px-3 py-2"
+                        style="background: var(--green-50, #ecfdf5); border-radius: 20px; border: 1px solid var(--green-200, #a7f3d0);">
+                        <i data-feather="zap"
+                            style="color: var(--green-600, #059669); width: 16px; height: 16px; margin-right: 8px;"></i>
+                        <span
+                            style="color: var(--green-800, #065f46); font-weight: 600; font-size: 0.9rem; font-family: 'Inter', sans-serif; letter-spacing: 0.2px;">
+                            <% if (user && user.user_data && user.user_data.user_type=='C') { %>
+                                Welcome to Admin Active Workspace
+                            <% } else { %>
+                                Welcome to Superadmin Active Workspace
+                            <% } %>
+                        </span>
                     </div>
-                 <% } %>
-              </li>
-              <!-- ============================================================== -->
-              <!-- User profile and search -->
-              <!-- ============================================================== -->
-          </ul>
-      </div>
-  </nav>
+                </li>
+            </ul>
+            <ul class="navbar-nav float-right">
+                <!-- User Profile & Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <img src="/template/assets/images/users/profile-pic.png" alt="user" class="rounded-circle"
+                            width="40">
+                        <span class="ml-2 d-none d-lg-inline-block">
+                            <span class="text-dark font-weight-bold"
+                                style="font-family: 'Inter', sans-serif; font-size: 0.9rem;">
+                            <%= (user && user.user_data && user.user_data.user_type=='C')
+                                ? user.user_data.customer_name
+                                : (user && user.userData && user.userData.user_name)
+                                    ? user.userData.user_name
+                                    : (user && user.user_data && user.user_data.user_name)
+                                        ? user.user_data.user_name
+                                        : '' %>
+                            </span>
+                            <i data-feather="chevron-down" class="svg-icon text-dark" style="margin-left: 4px;"></i>
+                        </span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right user-dd animated flipInY">
+                        <% if(user.user_data){ if (user.user_data.user_type=='C' ) { %>
+                            <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal"
+                                data-target="#myAccount" id="myprofile"><i data-feather="user"
+                                    class="svg-icon text-dark mr-2 ml-1"></i> <span class="text-dark">My
+                                    Profile</span></a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal"
+                                data-target="#changepwd"><i data-feather="lock"
+                                    class="svg-icon text-dark mr-2 ml-1"></i> <span class="text-dark">Change
+                                    Password</span></a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/logout"><i data-feather="power"
+                                    class="svg-icon text-dark mr-2 ml-1"></i> <span class="text-dark">Logout</span></a>
+                            <% } else { %>
+                                <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal"
+                                    data-target="#changepwd"><i data-feather="lock"
+                                        class="svg-icon text-dark mr-2 ml-1"></i> <span class="text-dark">Change
+                                        Password</span></a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/superadmin_logout"><i data-feather="power"
+                                        class="svg-icon text-dark mr-2 ml-1"></i> <span
+                                        class="text-dark">Logout</span></a>
+                                <% } } else { %>
+                                    <!-- Fallback for superadmin -->
+                                    <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal"
+                                        data-target="#changepwd"><i data-feather="lock"
+                                            class="svg-icon text-dark mr-2 ml-1"></i> <span class="text-dark">Change
+                                            Password</span></a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="/superadmin_logout"><i data-feather="power"
+                                            class="svg-icon text-dark mr-2 ml-1"></i> <span
+                                            class="text-dark">Logout</span></a>
+                                    <% } %>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
 </header>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const body = document.body;
+        const wrapper = document.getElementById('main-wrapper');
+
+        // Sync feather icons
+        if (window.feather) { feather.replace(); }
+
+        // State management
+        const loadSidebarState = () => {
+            const isCollapsed = localStorage.getItem('sidebar-collapsed') === 'true';
+            if (isCollapsed) {
+                body.classList.add('mini-sidebar');
+                if (wrapper) wrapper.setAttribute('data-sidebartype', 'mini-sidebar');
+            } else {
+                body.classList.remove('mini-sidebar');
+                if (wrapper) wrapper.setAttribute('data-sidebartype', 'full');
+            }
+        };
+
+        loadSidebarState();
+
+        const toggleSidebar = function () {
+            body.classList.toggle('mini-sidebar');
+            const isCollapsed = body.classList.contains('mini-sidebar');
+            localStorage.setItem('sidebar-collapsed', isCollapsed);
+            if (wrapper) {
+                wrapper.setAttribute('data-sidebartype', isCollapsed ? 'mini-sidebar' : 'full');
+            }
+        };
+
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', toggleSidebar);
+        }
+
+        const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+        if (mobileSidebarToggle) {
+            mobileSidebarToggle.addEventListener('click', toggleSidebar);
+        }
+    });
+</script>

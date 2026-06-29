@@ -1,95 +1,123 @@
-<div class="container-fluid">
+<link href="/template/dist/css/operator-page.css" rel="stylesheet">
+
+<div class="op-page-wrapper">
+  <div class="container-fluid">
     <div class="row">
-      <div class="card col-12">
-        <div class="card-body">
-          <div class="titleSec">
-             <h2 class="text-dark"><i class="fa fa-arrow-circle-left" aria-hidden="true" id="back" style="cursor: pointer;">&nbsp;Operator Edit Details</i></h2>
-          </div> 
-          <form action="/superadmin/operator_save" id="myForm" method="post">
-            <div class="row mt-3">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="cust_name" class="text-dark"><b>Customer Name</b></label>
-                        <select name="cust_name" class="form-control" id="cust_name" disabled>
+      <div class="col-12">
+        <div class="card op-card">
+          <div class="card-body">
+            
+            <!-- HEADER -->
+            <div class="op-header" style="margin-bottom:20px;">
+                <div class="op-title-group">
+                    <div class="op-icon-badge">
+                        <i data-feather="edit-3"></i>
+                    </div>
+                    <span class="op-back-btn" id="back" title="Back to Operator">
+                        <i data-feather="arrow-left"></i>
+                    </span>
+                    <h3 class="op-edit-title">Edit Operator</h3>
+                </div>
+            </div>
+
+            <!-- FORM -->
+            <form action="/superadmin/operator_save" id="myForm" method="post">
+                <div class="row mt-4">
+                    <div class="col-md-6 op-form-group">
+                        <label class="op-label">Customer Name</label>
+                        <select name="cust_name_view" class="op-select" id="cust_name" disabled style="background-color: var(--gray-100); cursor: not-allowed;">
                             <option value="">Select Customer Name</option>
                             <% customer.forEach(dt =>{ %>
                                 <option value="<%= dt.customer_id %>" <%= dt.customer_id == data[0].customer_id ? 'selected' : '' %>><%= dt.customer_name %></option>
                              <% }) %>
                         </select>
+                        <input type="hidden" name="cust_name" value="<%= data[0].customer_id %>">
                     </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="seller_name" class="text-dark"><b>Seller Name</b></label>
-                        <select name="seller_name" class="form-control" id="seller_name">
+
+                    <div class="col-md-6 op-form-group">
+                        <label class="op-label">Seller Name</label>
+                        <select name="seller_name" class="op-select" id="seller_name" required>
                             <option value="">Select Seller Name</option>
                             <% seller.forEach(dt => { %>
                               <option value="<%= dt.seller_id %>" <%= dt.seller_id == data[0].seller_id ? 'selected' : '' %>><%= dt.seller_name %></option>
                               <% }) %>
                         </select>
                     </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="op_name" class="text-dark"><b>Operator Name</b></label>
-                      <input type="text" class="form-control" id="op_name" name="op_name" value="<%= data[0].operator_name %>">
-                    </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label for="mobile" class="text-dark"><b>Mobile No</b></label>
-                        <input type="text" class="form-control" id="mobile" name="mobile" value="<%= data[0].user_id %>" readonly>
-                      </div>
-                      </div>
-                      <div class="col-md-6">
-                          <div class="form-group">
-                          <label for="loc_name" class="text-dark"><b>Location Name</b></label>
-                            <select name="loc_name" class="form-control" id="loc_name">
-                              <option value="">Select Location Name</option>
-                              <% location.forEach(dt => { %>
-                                <option value="<%= dt.location_id %>" <%= dt.location_id == data[0].location_id ? 'selected' : '' %>><%= dt.loction %></option>
-                              <% })%>
-                            </select>
-                          </div>
-                          </div> 
-                          <div class="col-md-6">
-                              <div class="form-group">
-                                <label for="dev_id" class="text-dark"><b>Device ID</b></label>
-                                <input type="text" class="form-control" id="dev_id" name="dev_id" value="<%= data[0].device_id %>">
-                              </div>
-                              </div>
-                              <div class="form-group col-6">
-                                  <label for="pwd" class="text-dark"><b>Password:</b></label>
-                                  <div class="input-group">
-                                    <input type="password" class="form-control" name="pwd" id="pwd" value="" placeholder="Enter Password">
-                                    <div class="input-group-append">
-                                      <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                                        <i class="fa fa-eye-slash"></i>
-                                      </button>
-                                    </div>
-                                  </div>
-                                </div> 
-              </div>
-              <div class="row mt-3">
-                <input type="hidden" name="id" value="<%= id %>">
-                <input type="hidden" name="cust_id" value="<%= customer_id %>">
 
-                  <div class="form-group col-md-5"></div>
-                  <div class="form-group col-md-7">
-                          <input type="submit" value="SUBMIT" class="btn btn-primary"
-                            style="border-radius: 6px;" />
+                    <div class="col-md-6 op-form-group">
+                        <label class="op-label">Operator Name</label>
+                        <input type="text" class="op-input" id="op_name" name="op_name" value="<%= data[0].operator_name %>" required placeholder="Name of the operator">
+                    </div>
+
+                    <div class="col-md-6 op-form-group">
+                        <label class="op-label">Mobile Number (User ID)</label>
+                        <input type="text" class="op-input" id="mobile" name="mobile" value="<%= data[0].user_id %>" readonly style="background-color: var(--gray-100); cursor: not-allowed;" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)">
+                    </div>
+
+                    <div class="col-md-6 op-form-group">
+                        <label class="op-label">Location Name</label>
+                        <select name="loc_name" class="op-select" id="loc_name" required>
+                            <option value="">Select Location Name</option>
+                            <% location.forEach(dt => { %>
+                            <option value="<%= dt.location_id %>" <%= dt.location_id == data[0].location_id ? 'selected' : '' %>><%= dt.loction %></option>
+                            <% })%>
+                        </select>
+                    </div> 
+
+                    <div class="col-md-6 op-form-group">
+                        <label class="op-label">Device ID</label>
+                        <input type="text" class="op-input" id="dev_id" name="dev_id" value="<%= data[0].device_id %>" required placeholder="Assigned Device ID">
+                    </div>
+
+                    <div class="col-md-6 op-form-group">
+                        <label class="op-label">Password <span style="font-size: 0.7rem; color: var(--gray-500); font-weight: 400;">(Leave blank to keep current)</span></label>
+                        <div class="op-password-group">
+                            <input type="password" class="op-input" name="pwd" id="pwd" placeholder="Enter new password">
+                            <button class="op-password-toggle" type="button" id="togglePassword">
+                                <i data-feather="eye-off" style="width:16px;height:16px;"></i>
+                            </button>
                         </div>
-              </div>
-          </form>
+                    </div> 
+                </div>
+
+                <div class="text-center mt-4 pt-2">
+                    <input type="hidden" name="id" value="<%= id %>">
+                    <input type="hidden" name="cust_id" value="<%= customer_id %>">
+                    <button type="submit" class="op-submit-btn">Update Operator Details</button>
+                </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <script>
+<script>
     $(document).ready(function () {
       $("#back").click(function () {
         window.location.href = "/superadmin/operator";
       });
+
+      // Initialize Select2 for dropdowns
+      $('.op-select').select2({
+        placeholder: 'Select an option',
+        width: '100%'
+      });
+
+      // Password toggle
+      $("#togglePassword").click(function() {
+        const pwdField = $("#pwd");
+        const icon = $(this).find('i');
+        
+        if (pwdField.attr("type") === "password") {
+            pwdField.attr("type", "text");
+            $(this).html('<i data-feather="eye" style="width:16px;height:16px;"></i>');
+        } else {
+            pwdField.attr("type", "password");
+            $(this).html('<i data-feather="eye-off" style="width:16px;height:16px;"></i>');
+        }
+        feather.replace();
+      });
     });
-  </script>
+</script>

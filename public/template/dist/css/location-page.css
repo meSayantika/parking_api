@@ -1,0 +1,661 @@
+/* ============================================================
+   LOCATION PAGE — WHITE & GREEN PROFESSIONAL DESIGN
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ---------- Variables ---------- */
+:root {
+  --green-50:  #ecfdf5;
+  --green-100: #d1fae5;
+  --green-200: #a7f3d0;
+  --green-500: #10b981;
+  --green-600: #059669;
+  --green-700: #047857;
+  --green-800: #065f46;
+  --white: #ffffff;
+  --gray-50:  #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  --danger: #ef4444;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 25px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.03);
+  --shadow-green: 0 4px 14px rgba(16, 185, 129, 0.25);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+.loc-page-wrapper {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ---------- Page ---------- */
+.loc-page-wrapper {
+  padding: 24px 20px 40px;
+  background: var(--gray-100);
+  min-height: 100vh;
+}
+
+@keyframes locSlideUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   CARD — white card with green top border
+   ============================================================ */
+.loc-card {
+  background: var(--white);
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  animation: locSlideUp 0.4s ease both;
+  position: relative;
+}
+.loc-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--green-500), var(--green-600));
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.loc-card .card-body {
+  padding: 28px 30px 30px;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.loc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--gray-200);
+}
+.loc-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Green icon circle */
+.loc-icon-badge {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--green-500), var(--green-600));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-green);
+}
+.loc-icon-badge i,
+.loc-icon-badge svg {
+  color: #fff !important;
+  width: 20px;
+  height: 20px;
+  stroke: #fff;
+}
+.loc-page-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin: 0;
+}
+
+/* Count pill */
+.loc-count-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--green-700);
+  background: var(--green-50);
+  border: 1px solid var(--green-200);
+  border-radius: 20px;
+  margin-left: 8px;
+}
+
+/* ADD button — solid green */
+.loc-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 22px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, var(--green-500), var(--green-600));
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-green);
+  letter-spacing: 0.2px;
+}
+.loc-add-btn:hover {
+  background: linear-gradient(135deg, var(--green-600), var(--green-700));
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+  transform: translateY(-1px);
+  color: #fff;
+}
+.loc-add-btn:active {
+  transform: translateY(0);
+}
+.loc-add-btn i,
+.loc-add-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* ============================================================
+   TABLE — clean white with green header
+   ============================================================ */
+.loc-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--gray-200);
+  padding: 0 20px 20px 20px;
+}
+.loc-table-wrap table.loc-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+}
+
+/* Green-tinted header */
+.loc-table thead th {
+  background: var(--green-600);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  padding: 13px 18px;
+  border: none;
+  text-align: center;
+  white-space: nowrap;
+}
+.loc-table thead th:first-child {
+  border-radius: 0;
+}
+.loc-table thead th:last-child {
+  border-radius: 0;
+}
+
+/* Body */
+.loc-table tbody tr {
+  transition: background 0.15s ease;
+  background: var(--white);
+}
+.loc-table tbody tr:nth-child(even) {
+  background: var(--gray-50);
+}
+.loc-table tbody tr:hover {
+  background: var(--green-50);
+}
+.loc-table tbody td {
+  padding: 13px 18px;
+  font-size: 0.86rem;
+  color: var(--gray-700);
+  border-bottom: 1px solid var(--gray-100);
+  text-align: center;
+  vertical-align: middle;
+}
+.loc-table tbody td:first-child {
+  font-weight: 700;
+  color: var(--green-600);
+  width: 80px;
+}
+.loc-table thead th:first-child,
+.loc-table tbody td:first-child {
+    padding-left: 30px !important;
+}
+
+.loc-table thead th:last-child,
+.loc-table tbody td:last-child {
+    padding-right: 30px !important;
+}
+
+/* No data */
+.loc-table .loc-no-data {
+  color: var(--danger);
+  font-weight: 500;
+  padding: 30px 18px;
+}
+
+/* Edit icon — green outline */
+.loc-edit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: var(--green-50);
+  border: 1px solid var(--green-200);
+  color: var(--green-600);
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+.loc-edit-btn:hover {
+  background: var(--green-600);
+  color: #fff;
+  border-color: var(--green-600);
+  box-shadow: var(--shadow-green);
+  transform: scale(1.08);
+  text-decoration: none;
+}
+
+/* ============================================================
+   DATATABLE OVERRIDES — forced green theme
+   ============================================================ */
+.loc-page-wrapper .dataTables_wrapper {
+  color: var(--gray-500) !important;
+  font-size: 0.8rem;
+  padding-top: 0;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+/* Show entries + Search row — spacing */
+.loc-page-wrapper .dataTables_wrapper .dataTables_length,
+.loc-page-wrapper .dataTables_wrapper .dataTables_filter {
+  margin-top: 20px !important;
+  margin-bottom: 24px !important;
+  padding-top: 6px !important;
+}
+/* Force spacing on the row wrapper that contains Show+Search */
+.loc-page-wrapper .dataTables_wrapper > .row:first-child {
+  margin-bottom: 20px !important;
+}
+.loc-page-wrapper .dataTables_wrapper .dataTables_length label,
+.loc-page-wrapper .dataTables_wrapper .dataTables_filter label {
+  color: var(--gray-600) !important;
+  font-weight: 500;
+  font-size: 0.84rem;
+  margin-bottom: 0;
+}
+.loc-page-wrapper .dataTables_wrapper select,
+.loc-page-wrapper .dataTables_wrapper input[type="search"] {
+  background: var(--white) !important;
+  border: 1px solid var(--gray-300) !important;
+  color: var(--gray-700) !important;
+  border-radius: 6px !important;
+  padding: 5px 10px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+.loc-page-wrapper .dataTables_wrapper select:focus,
+.loc-page-wrapper .dataTables_wrapper input[type="search"]:focus {
+  border-color: var(--green-500) !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15) !important;
+}
+
+/* Pagination buttons — all states */
+.loc-page-wrapper .dataTables_wrapper .dataTables_paginate .paginate_button,
+.loc-page-wrapper .dataTables_wrapper .dataTables_paginate .paginate_button.previous,
+.loc-page-wrapper .dataTables_wrapper .dataTables_paginate .paginate_button.next {
+  color: var(--gray-600) !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: 6px !important;
+  margin: 0 1px;
+  padding: 4px 10px;
+  transition: all 0.15s ease;
+}
+.loc-page-wrapper .dataTables_wrapper .dataTables_paginate .paginate_button:hover,
+.loc-page-wrapper .dataTables_wrapper .dataTables_paginate .paginate_button.previous:hover,
+.loc-page-wrapper .dataTables_wrapper .dataTables_paginate .paginate_button.next:hover {
+  background: #ecfdf5 !important;
+  color: #047857 !important;
+  border-color: #a7f3d0 !important;
+}
+.loc-page-wrapper .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.loc-page-wrapper .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+  background: #059669 !important;
+  color: #fff !important;
+  border-color: #059669 !important;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(5, 150, 105, 0.3);
+}
+.loc-page-wrapper .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+.loc-page-wrapper .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover {
+  color: var(--gray-400) !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none;
+}
+.loc-page-wrapper .dataTables_info {
+  color: var(--gray-500) !important;
+  padding-top: 14px !important;
+  font-size: 0.82rem;
+}
+/* Bottom pagination row */
+.loc-page-wrapper .dataTables_wrapper .dataTables_paginate {
+  padding-top: 14px !important;
+}
+
+/* DataTable sorting icons */
+.loc-page-wrapper table.dataTable thead .sorting,
+.loc-page-wrapper table.dataTable thead .sorting_asc,
+.loc-page-wrapper table.dataTable thead .sorting_desc {
+  background-image: none !important;
+}
+
+/* Bootstrap 4 Pagination overrides (DataTables BS4 uses these) */
+.loc-page-wrapper .dataTables_wrapper .dataTables_paginate .pagination .page-item .page-link {
+  color: #4b5563 !important;
+  background-color: #fff !important;
+  border-color: #d1d5db !important;
+  transition: all 0.15s ease;
+  font-size: 0.84rem;
+}
+.loc-page-wrapper .dataTables_wrapper .dataTables_paginate .pagination .page-item .page-link:hover {
+  color: #047857 !important;
+  background-color: #ecfdf5 !important;
+  border-color: #a7f3d0 !important;
+}
+.loc-page-wrapper .dataTables_wrapper .dataTables_paginate .pagination .page-item.active .page-link,
+.loc-page-wrapper .dataTables_wrapper .dataTables_paginate .pagination .page-item.active .page-link:hover {
+  color: #fff !important;
+  background-color: #059669 !important;
+  border-color: #059669 !important;
+  box-shadow: 0 2px 6px rgba(5, 150, 105, 0.3);
+  font-weight: 600;
+}
+.loc-page-wrapper .dataTables_wrapper .dataTables_paginate .pagination .page-item.disabled .page-link {
+  color: #9ca3af !important;
+  background-color: #f9fafb !important;
+  border-color: #e5e7eb !important;
+}
+/* Also override at page level in case wrapper scope isn't enough */
+.page-item.active .page-link {
+  background-color: #059669 !important;
+  border-color: #059669 !important;
+}
+
+/* ============================================================
+   SIDEBAR COLORS — Professional Green Theme
+   ============================================================ */
+.left-sidebar, 
+.left-sidebar .scroll-sidebar {
+  background: var(--white) !important;
+}
+.left-sidebar {
+  border-right: 1px solid var(--gray-200) !important;
+  box-shadow: 4px 0 10px rgba(0,0,0,0.02) !important;
+}
+
+/* Sidebar Links Default */
+.sidebar-link {
+  color: var(--gray-600) !important;
+  border-radius: 8px !important;
+  margin: 4px 12px !important;
+  padding: 10px 15px !important;
+  transition: all 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  background: transparent !important;
+}
+.sidebar-link i, 
+.sidebar-link span {
+  color: inherit !important;
+  background: transparent !important; /* Ensure no gradient here */
+}
+.sidebar-link:hover {
+  background: var(--green-50) !important;
+  color: var(--green-600) !important;
+}
+
+/* SIDEBAR ACTIVE / SELECTED STATE */
+.sidebar-item.selected > .sidebar-link,
+.sidebar-item.active > .sidebar-link,
+.sidebar-item.selected .sidebar-link.active,
+.sidebar-link.active {
+  background: linear-gradient(135deg, var(--green-500), var(--green-600)) !important;
+  color: var(--white) !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25) !important;
+}
+
+/* Force white text/icons when active */
+.sidebar-item.selected > .sidebar-link i,
+.sidebar-item.selected > .sidebar-link span,
+.sidebar-item.active > .sidebar-link i,
+.sidebar-item.active > .sidebar-link span,
+.sidebar-link.active i,
+.sidebar-link.active span {
+  color: var(--white) !important;
+  background: transparent !important;
+}
+
+.sidebar-link i {
+  color: var(--gray-500) !important;
+  width: 18px;
+  height: 18px;
+  margin-right: 10px !important;
+}
+.list-divider {
+  border-top: 1px solid var(--gray-100) !important;
+  margin: 15px 0 !important;
+  padding: 0 !important;
+}
+.nav-small-cap {
+  color: var(--gray-400) !important;
+  font-size: 0.7rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  margin-top: 20px !important;
+  padding: 0 25px !important;
+}
+
+/* Fix for potential text-dark overrides in HTML */
+.sidebar-link .text-dark,
+.sidebar-link i.text-dark {
+  color: inherit !important;
+}
+
+/* ============================================================
+   TOPBAR & LOGO HEADER
+   ============================================================ */
+.topbar {
+  background: var(--white) !important;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.03) !important;
+}
+.navbar-header {
+  background: var(--white) !important;
+  border-right: 1px solid var(--gray-100) !important;
+}
+/* Profile Name */
+.topbar .navbar-nav span.text-dark {
+  color: var(--gray-700) !important;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+}
+/* User profile dropdown - hover effect */
+.topbar .nav-item.dropdown:hover > a.nav-link {
+  color: var(--green-600) !important;
+}
+.topbar .nav-item.dropdown:hover .svg-icon {
+  color: var(--green-600) !important;
+  stroke: var(--green-600) !important;
+}
+
+/* ============================================================
+   MODAL — NOT scoped, renders at body level
+   ============================================================ */
+.loc-modal .modal-content {
+    background-color: #fff !important;
+    border-radius: 14px;
+    border: none;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.18);
+    overflow: hidden;
+}
+.loc-modal .modal-header {
+    background: linear-gradient(135deg, var(--green-600), var(--green-700)) !important;
+    color: white !important;
+    padding: 20px 30px;
+    border: none;
+}
+.loc-modal .modal-title, 
+.loc-modal .modal-title b,
+.loc-modal .modal-title i,
+.loc-modal .modal-title svg {
+    color: white !important;
+    stroke: white !important;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.loc-modal .close {
+    color: white !important;
+    opacity: 0.9 !important;
+    text-shadow: none;
+    font-size: 1.5rem;
+    font-weight: 300;
+    transition: all 0.2s ease;
+}
+.loc-modal .close:hover {
+    opacity: 1 !important;
+    transform: rotate(90deg);
+}
+.loc-modal .modal-body {
+  padding: 28px 24px 24px;
+  background: #fff;
+}
+
+/* ============================================================
+   FORM ELEMENTS — modal + edit page
+   ============================================================ */
+.loc-form-group {
+  margin-bottom: 18px;
+}
+.loc-form-label {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: 8px;
+  letter-spacing: 0.3px;
+}
+.loc-textarea {
+  width: 100%;
+  background: var(--gray-100);
+  border: 1.5px solid var(--gray-300);
+  border-radius: 8px;
+  color: var(--gray-800);
+  padding: 12px 16px;
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+  resize: vertical;
+  transition: all 0.2s ease;
+  min-height: 85px;
+}
+.loc-textarea:focus {
+  outline: none;
+  border-color: var(--green-500);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
+  background: #fff;
+}
+.loc-textarea::placeholder {
+  color: var(--gray-400);
+}
+
+/* Submit / Update button */
+.loc-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 30px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, var(--green-500), var(--green-600));
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-green);
+  letter-spacing: 0.3px;
+}
+.loc-submit-btn:hover {
+  background: linear-gradient(135deg, var(--green-600), var(--green-700));
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+  transform: translateY(-1px);
+}
+.loc-submit-btn:active {
+  transform: translateY(0);
+}
+
+/* ============================================================
+   EDIT PAGE
+   ============================================================ */
+.loc-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--green-600);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: none;
+  border: none;
+  padding: 0;
+  text-decoration: none;
+}
+.loc-back-btn:hover {
+  color: var(--green-700);
+  transform: translateX(-3px);
+}
+.loc-back-btn i {
+  font-size: 1.25rem;
+}
+.loc-edit-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin: 0;
+  letter-spacing: -0.2px;
+}
+.loc-form-section {
+  margin-top: 22px;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  .loc-page-wrapper { padding: 12px 8px 24px; }
+  .loc-card .card-body { padding: 18px 14px 20px; }
+  .loc-header { flex-direction: column; align-items: flex-start; }
+  .loc-add-btn { width: 100%; justify-content: center; }
+  .loc-table thead th, .loc-table tbody td {
+    padding: 10px 12px; font-size: 0.8rem;
+  }
+}

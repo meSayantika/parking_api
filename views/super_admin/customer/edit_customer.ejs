@@ -1,116 +1,106 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="card col-12">
-      <div class="card-body">
-        <div class="titleSec">
-           <h2 class="text-dark"><i class="fa fa-arrow-circle-left" aria-hidden="true" id="back" style="cursor: pointer;">&nbsp;Customer Edit Details</i></h2>
-        </div> 
-        <form action="/superadmin/customer_save" id="myForm" method="post">
-        <div class="row mt-4">
-          <div class="col-md-6">
-              <div class="form-group">
-                <label for="sell_name" class="text-dark"><b>Seller Name</b></label>
-                <select name="sell_name" class="form-control" id="sell_name">
+<link href="/template/dist/css/customer-page.css" rel="stylesheet">
+
+<div class="cust-page-wrapper">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card cust-card">
+          <div class="card-body">
+            <!-- HEADER -->
+            <div class="cust-header" style="margin-bottom:20px;">
+                <div class="cust-title-group">
+                    <div class="cust-icon-badge">
+                        <i data-feather="edit-3"></i>
+                    </div>
+                    <span class="cust-back-btn" id="back" title="Back to Customer">
+                        <i data-feather="arrow-left" class="feather-icon"></i>
+                    </span>
+                    <h3 class="cust-edit-title">Edit Customer</h3>
+                </div>
+            </div>
+
+            <!-- FORM -->
+            <form action="/superadmin/customer_save" id="myForm" method="post">
+                <div class="row mt-4">
+                  <div class="col-md-6 cust-form-group">
+                      <label class="cust-label">Seller Name</label>
+                      <select name="sell_name" class="cust-select" id="sell_name" required>
                         <option value="">Select Seller Name</option>
                         <% sell.forEach(dt => { %>
                             <option value="<%= dt.seller_id %>" <% if (dt.seller_id == data[0].seller_id) { %> selected <% } %>><%= dt.seller_name %></option>
                         <% }) %>
-                </select>
-              </div>
-              </div>
-
-              <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="cust_name" class="text-dark"><b>Customer Name</b></label>
-                    <input type="text" class="form-control" id="cust_name" name="cust_name" value="<%= data[0].customer_name %>">
+                      </select>
                   </div>
-                  </div>   
-                  
-                  <div class="col-md-6">
-                      <div class="form-group">
-                          <label for="loc_name" class="text-dark"><b>Location Name</b></label>
-                          <select name="loc_name" class="form-control" id="loc_name">
-                              <option value="">Select Location Name</option>
-                              <% location.forEach(dt => { %>
-                                  <option value="<%= dt.location_id %>" <% if (dt.location_id == data[0].location_id) { %> selected <% } %>><%= dt.loction %></option>
-                              <% }) %>
-                          </select>
-                      </div>
-                  </div>    
 
-                  <div class="col-md-6">
-                      <div class="form-group">
-                        <label for="phone" class="text-dark"><b>Phone No</b></label>
-                        <input type="text" class="form-control" id="phone" name="phone" value="<%= data[0].mobile_no%>">
-                      </div>
-                      </div>
-      
-                      <div class="col-md-6">
-                          <div class="form-group">
-                            <label for="email" class="text-dark"><b>Email</b></label>
-                            <input type="text" class="form-control" id="email" name="email" value="<%= data[0].email%>">
-                          </div>
-                          </div>      
-                          
-                          <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="dev_mode" class="text-dark"><b>Mode</b></label>
-                                <select name="dev_mode" class="form-control" id="dev_mode">
-                                    <option value="D" <%= data[0].dev_mod == 'D' ? 'selected' : '' %>>Dual</option>
-                                    <option value="F" <%= data[0].dev_mod == 'F' ? 'selected' : '' %>>Fixed</option>
-                                </select>
-                            </div>
-                        </div>   
-                              
-                              <div class="col-md-6">
-                                <div class="form-group">
-                                  <label for="no_device" class="text-dark"><b>No. of Device</b></label>
-                                  <input type="text" class="form-control" id="no_device" name="no_device" value="<%= data[0].no_device%>">
-                                </div>
-                                </div>     
+                  <div class="col-md-6 cust-form-group">
+                      <label class="cust-label">Customer Name</label>
+                      <input type="text" class="cust-input" id="cust_name" name="cust_name" value="<%= data[0].customer_name %>" required>
+                  </div>
 
-                                <div class="col-md-6">
-                                  <div class="form-group">
-                                  <label for="cust_type" class="text-dark"><b>Customer Type</b></label>
-                                    <select name="cust_type" class="form-control" id="cust_type">
-                                      <option value="P" <%= data[0].customer_type == 'P' ? 'selected' : '' %>>Parking</option>
-                                      <option value="T" <%= data[0].customer_type == 'T' ? 'selected' : '' %>>Toll plaza</option>
-                                    </select>
-                                  </div>
-                                  </div>
-                      
-                                  <div class="col-md-6">
-                                    <div class="form-group">
-                                      <label for="password" class="text-dark"><b>Password</b></label>
-                                      <input type="text" class="form-control" id="password" name="password">
-                                    </div>
-                                  </div>
+                  <div class="col-md-6 cust-form-group">
+                      <label class="cust-label">Location Name</label>
+                      <select name="loc_name" class="cust-select" id="loc_name" required>
+                        <option value="">Select Location Name</option>
+                        <% location.forEach(dt => { %>
+                            <option value="<%= dt.location_id %>" <% if (dt.location_id == data[0].location_id) { %> selected <% } %>><%= dt.loction %></option>
+                        <% }) %>
+                      </select>
+                  </div>
 
-                                   <div class="col-md-6" id="upi_section" style="display:none;">
-                                  <div class="form-group">
-                                  <label for="upi_id" class="text-dark"><b>UPI ID:</b></label>
-                                  <input type="text" id="upi_id" name="upi_id" class="form-control" value="<%= data[0].upi_id%>">
-                                  </div>
-            </div>             
-          <div class="col-md-12">
-              <div class="form-group">
-                <label for="cust_add" class="text-dark"><b>Customer Address</b></label>
-                <textarea class="form-control" rows="3" id="cust_add" name="cust_add"><%= data[0].cust_addr%></textarea>
-              </div>
-            </div>
-            
+                  <div class="col-md-6 cust-form-group">
+                      <label class="cust-label">Phone Number</label>
+                      <input type="text" class="cust-input" id="phone" name="phone" value="<%= data[0].mobile_no%>" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)" required>
+                  </div>
+
+                  <div class="col-md-6 cust-form-group">
+                      <label class="cust-label">Email Address</label>
+                      <input type="email" class="cust-input" id="email" name="email" value="<%= data[0].email%>" required>
+                  </div>
+
+                  <div class="col-md-6 cust-form-group">
+                      <label class="cust-label">Mode</label>
+                      <select name="dev_mode" class="cust-select" id="dev_mode" required>
+                        <option value="D" <%= data[0].dev_mod == 'D' ? 'selected' : '' %>>Dual</option>
+                        <option value="F" <%= data[0].dev_mod == 'F' ? 'selected' : '' %>>Fixed</option>
+                      </select>
+                  </div>
+
+                  <div class="col-md-6 cust-form-group">
+                      <label class="cust-label">No. of Device</label>
+                      <input type="text" class="cust-input" id="no_device" name="no_device" value="<%= data[0].no_device%>" required>
+                  </div>
+
+                  <div class="col-md-6 cust-form-group">
+                      <label class="cust-label">Customer Type</label>
+                      <select name="cust_type" class="cust-select" id="cust_type" required>
+                        <option value="P" <%= data[0].customer_type == 'P' ? 'selected' : '' %>>Parking</option>
+                        <option value="T" <%= data[0].customer_type == 'T' ? 'selected' : '' %>>Toll Plaza</option>
+                      </select>
+                  </div>
+
+                  <div class="col-md-6 cust-form-group">
+                      <label class="cust-label">Password <span style="font-size: 0.7rem; color: var(--gray-500); font-weight: 400;">(Leave blank to keep current)</span></label>
+                      <input type="password" class="cust-input" id="password" name="password" placeholder="Enter new password">
+                  </div>
+          
+                  <div class="col-md-6 cust-form-group" id="upi_section" style="display:none;">
+                      <label class="cust-label">UPI ID</label>
+                      <input type="text" id="upi_id" name="upi_id" class="cust-input" value="<%= data[0].upi_id%>">
+                  </div>
+
+                  <div class="col-md-12 cust-form-group">
+                      <label class="cust-label">Customer Address</label>
+                      <textarea class="cust-textarea" rows="3" id="cust_add" name="cust_add" required><%= data[0].cust_addr%></textarea>
+                  </div>
+                </div>
+
+                <div class="text-center mt-4 pt-2">
+                    <input type="hidden" name="id" value="<%= id %>">
+                    <button type="submit" class="cust-submit-btn">Update Customer Details</button>
+                </div>
+            </form>
+          </div>
         </div>
-        <div class="row mt-4">
-          <input type="hidden" name="id" value="<%= id %>">
-          <div class="form-group col-md-3">
-              <input
-                type="submit"
-                value="SUBMIT"
-                class="btn btn-primary btn-block" style="margin-left: 25vw;"
-              />
-            </div>
-        </div>
-        </form>
       </div>
     </div>
   </div>
@@ -121,26 +111,23 @@
     $("#back").click(function () {
       window.location.href = "/superadmin/customer";
     });
-  });
-</script>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
+    // Initialize Select2
+    $('.cust-select').select2({
+      placeholder: 'Select an option',
+      width: '100%'
+    });
 
-    const devMode = document.getElementById("dev_mode");
-    const upiSection = document.getElementById("upi_section");
-
-    function toggleUpiSection() {
-        let mode = devMode.value.trim();  // remove spaces just in case
-
-        if (mode === "F") {
-            upiSection.style.display = "block";   // show
+    // Device mode toggle logic
+    function toggleUpi() {
+        if ($("#dev_mode").val() === "F") {
+            $("#upi_section").fadeIn();
         } else {
-            upiSection.style.display = "none";    // hide
+            $("#upi_section").fadeOut();
         }
     }
 
-    devMode.addEventListener("change", toggleUpiSection);
-    toggleUpiSection(); // run on page load
-});
+    $("#dev_mode").on("change", toggleUpi);
+    toggleUpi(); // run on load
+  });
 </script>

@@ -1,40 +1,54 @@
-<div class="container-fluid">
+<link href="/template/dist/css/location-page.css" rel="stylesheet">
+
+<div class="loc-page-wrapper">
+  <div class="container-fluid">
     <div class="row">
-      <div class="card col-12">
+      <div class="card col-12 loc-card">
         <div class="card-body">
-          <div class="titleSec">
-             <h2 class="text-dark"><i class="fa fa-arrow-circle-left" aria-hidden="true" id="back" style="cursor: pointer;">&nbsp;Location Edit Details</i></h2>
-          </div> 
+
+          <!-- HEADER -->
+          <div class="loc-header" style="margin-bottom:20px;">
+            <div class="loc-title-group">
+              <div class="loc-icon-badge">
+                <i data-feather="edit-3"></i>
+              </div>
+              <span class="loc-back-btn" id="back" title="Back to Locations">
+                <i data-feather="arrow-left" class="feather-icon"></i>
+              </span>
+              <h3 class="loc-edit-title">Edit Location</h3>
+            </div>
+          </div>
+
+          <!-- FORM -->
           <form action="/superadmin/location_save" id="myForm" method="post">
-          <div class="row mt-4">
-            <div class="col-md-12">
-                <div class="form-group">
-                  <label for="loc_name" class="text-dark"><b>Location Name</b></label>
-                  <textarea class="form-control" rows="3" id="loc_name" name="loc_name"><%= data[0].loction %></textarea>
+            <div class="loc-form-section">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="loc-form-group">
+                    <label for="loc_name" class="loc-form-label">Location Name</label>
+                    <textarea class="loc-textarea" rows="3" id="loc_name" name="loc_name"><%= data[0].loction %></textarea>
+                  </div>
                 </div>
               </div>
-              
-          </div>
-          <div class="row mt-4">
-            <input type="hidden" name="id" value="<%= id %>">
-            <div class="form-group col-md-3">
-                <input
-                  type="submit"
-                  value="SUBMIT"
-                  class="btn btn-primary btn-block" style="margin-left: 25vw;"
-                />
+              <div class="row mt-3">
+                <input type="hidden" name="id" value="<%= id %>">
+                <div class="col-12" style="text-align:right;">
+                  <input type="submit" value="UPDATE" class="loc-submit-btn" />
+                </div>
               </div>
-          </div>
+            </div>
           </form>
+
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <script>
-    $(document).ready(function () {
-      $("#back").click(function () {
-        window.location.href = "/superadmin/location";
-      });
+<script>
+  $(document).ready(function () {
+    $("#back").click(function () {
+      window.location.href = "/superadmin/location";
     });
-  </script>
+  });
+</script>

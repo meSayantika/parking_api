@@ -1,73 +1,81 @@
-<div class="container-fluid">
-    <div class="row">
-      <div class="card col-12">
-        <div class="card-body">
-          <div class="titleSec">
-             <h2 class="text-dark"><i class="fa fa-arrow-circle-left" aria-hidden="true" id="back" style="cursor: pointer;">&nbsp;Seller Edit Details</i></h2>
-          </div> 
-          <form action="/superadmin/seller_add" id="myForm" method="post">
-          <div class="row mt-4">
-            <div class="col-md-6">
-                <div class="form-group">
-                  <label for="sell_name" class="text-dark"><b>Seller Name</b></label>
-                  <input type="text" class="form-control" id="sell_name" name="sell_name" value="<%= data[0].seller_name%>">
-                </div>
-                </div>
+<link href="/template/dist/css/seller-page.css" rel="stylesheet">
 
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="phone" class="text-dark"><b>Phone No</b></label>
-                    <input type="text" class="form-control" id="phone" name="phone" value="<%= data[0].seller_mob%>">
-                  </div>
-                  </div>
-
-                <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="email" class="text-dark"><b>Email</b></label>
-                      <input type="text" class="form-control" id="email" name="email" value="<%= data[0].email%>">
-                    </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="loc_name" class="text-dark"><b>Location Name</b></label>
-                            <select name="loc_name" class="form-control" id="loc_name">
-                                <option value="">Select Location Name</option>
-                                <% location.forEach(dt => { %>
-                                    <option value="<%= dt.location_id %>" <% if (dt.location_id == data[0].location_id) { %> selected <% } %>><%= dt.loction %></option>
-                                <% }) %>
-                            </select>
+<div class="sell-page-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card sell-card">
+                    <div class="card-body">
+                        <!-- HEADER -->
+                        <div class="sell-header" style="margin-bottom:20px;">
+                            <div class="sell-title-group">
+                                <div class="sell-icon-badge">
+                                    <i data-feather="edit-3"></i>
+                                </div>
+                                <span class="sell-back-btn" id="back" title="Back to Seller">
+                                    <i data-feather="arrow-left" class="feather-icon"></i>
+                                </span>
+                                <h3 class="sell-edit-title">Edit Seller</h3>
+                            </div>
                         </div>
+
+                        <!-- FORM -->
+                        <form action="/superadmin/seller_add" id="myForm" method="post">
+                            <div class="row mt-4">
+                                <div class="col-md-6 sell-form-group">
+                                    <label class="sell-label">Seller Name</label>
+                                    <input type="text" class="sell-input" id="sell_name" name="sell_name" value="<%= data[0].seller_name%>" required>
+                                </div>
+
+                                <div class="col-md-6 sell-form-group">
+                                    <label class="sell-label">Phone Number</label>
+                                    <input type="text" class="sell-input" id="phone" name="phone" value="<%= data[0].seller_mob%>" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)" required>
+                                </div>
+
+                                <div class="col-md-6 sell-form-group">
+                                    <label class="sell-label">Email Address</label>
+                                    <input type="email" class="sell-input" id="email" name="email" value="<%= data[0].email%>" required>
+                                </div>
+
+                                <div class="col-md-6 sell-form-group">
+                                    <label class="sell-label">Location Name</label>
+                                    <select name="loc_name" class="sell-select" id="loc_name" required>
+                                        <option value="">Select Location</option>
+                                        <% location.forEach(dt => { %>
+                                            <option value="<%= dt.location_id %>" <% if (dt.location_id == data[0].location_id) { %> selected <% } %>><%= dt.loction %></option>
+                                        <% }) %>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-12 sell-form-group">
+                                    <label class="sell-label">Seller Address</label>
+                                    <textarea class="sell-textarea" rows="3" id="sell_add" name="sell_add" required><%= data[0].seller_addr%></textarea>
+                                </div>
+                            </div>
+
+                            <div class="text-center mt-4 pt-2">
+                                <input type="hidden" name="id" value="<%= id %>">
+                                <button type="submit" class="sell-submit-btn">Update Seller Details</button>
+                            </div>
+                        </form>
                     </div>
-
-            <div class="col-md-12">
-                <div class="form-group">
-                  <label for="sell_add" class="text-dark"><b>Seller Address</b></label>
-                  <textarea class="form-control" rows="3" id="sell_add" name="sell_add"><%= data[0].seller_addr%></textarea>
                 </div>
-              </div>
-              
-          </div>
-          <div class="row mt-4">
-            <input type="hidden" name="id" value="<%= id %>">
-            <div class="form-group col-md-3">
-                <input
-                  type="submit"
-                  value="SUBMIT"
-                  class="btn btn-primary btn-block" style="margin-left: 25vw;"
-                />
-              </div>
-          </div>
-          </form>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
+</div>
 
-  <script>
+<!-- Scripts for Select2 initialized via main.ejs -->
+<script>
     $(document).ready(function () {
       $("#back").click(function () {
         window.location.href = "/superadmin/seller";
       });
+
+      // Initialize Select2
+      $('.sell-select').select2({
+        placeholder: 'Select an option',
+        width: '100%'
+      });
     });
-  </script>
+</script>

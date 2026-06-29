@@ -1,184 +1,228 @@
-<div class="container-fluid">
-    <div class="col-sm-12 col-md-12 col-lg-12">
-      <div class="card">
-        <div class="card-body">
-          <div class="titleSec">
-            <button type="button" class="btn btn-primary" id="myBtn"
-              style="float: inline-end;border-radius: 6px;width: 6vw;cursor: pointer;">Add</button>
-          </div>
-          <div class="row mt-4">
-            <h3 class="text-dark"><i data-feather="user-check" class="feather-icon text-dark"></i>&nbsp;<b>Operator</b>
-            </h3>
-          </div>
-          <form action="/superadmin/operator" method="post">
-            <div class="row mt-4">
-              <div class="form-group col-md-5">
-                <label for="cust_name"><b style="color: black;">Customer Name:</b></label>
-                <select name="cust_name" class="form-control" id="cust_name" required>
-                  <option value="">Select Customer Name</option>
-                  <% customer.forEach(dt => {
-                    var _selected = ''
-                    if(selected.cust_id == dt.customer_id) _selected = 'selected' %>
-                      <option value="<%= dt.customer_id %>" <%= _selected %>><%= dt.customer_name %></option>
-                    <% })%>
-                </select>
-              </div>
-              <div class="form-group col-md-4" style="margin-top: 30px;">
-                <button type="submit" class="btn btn-primary" style="border-radius: 5px;" id="submitBtn">Submit</button>
-              </div>
-            </div>
-          </form>
-          <% if(selected.cust_id > 0){ %>
-            <div class="row">
-              <div class="col-md-12">
-                <div class="table-responsive mt-3">
-                  <table id="dataTable" class="table table-striped table-bordered no-wrap show_data">
-                      <thead>
-                          <tr>
-                              <th class="text-center text-dark">Sl No.</th>
-                              <th class="text-center text-dark">Operator Name</th>
-                              <th class="text-center text-dark">User ID</th>
-                              <th class="text-center text-dark">Action</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                        <% if(data.length > 0){
-                            var i = 1
-                            data.forEach(dt => { %>
-                              <tr>
-                                <td class="text-center text-dark"><%= i %></td>
-                                <td class="text-center text-dark"><%= dt.operator_name %></td>
-                                <td class="text-center text-dark"><%= dt.user_id %></td>
-                                <td class="text-center text-dark"><a href='/superadmin/edit_operator?customer_id=<%= selected.cust_id %>&id=<%= dt.operator_id %>' class='btn btn-info' style='border-radius:5px'><i class='fa fa-edit'></i></a></td>
-                              </tr>
-                          <% i++; })
-                          }else{ %>
-                            <tr>
-                              <td class="text-center text-danger" colspan="4">No data found</td>
-                            </tr>
-                          <% } %>
-                      </tbody>
-                      <tfoot>
-                         
-                      </tfoot>
-                  </table>
-                </div>
-              </div>
-            </div>
-            <% } %>
-        </div>
-      </div>
-    </div>
-  </div>
+<link href="/template/dist/css/operator-page.css" rel="stylesheet">
 
-  <div class="modal fade" id="myModal">
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h3 class="modal-title text-dark"><i data-feather="plus-circle" class="feather-icon"></i>&nbsp;<b>Add Operator</b>
-          </h3>
-          <button type="button" class="close" data-dismiss="modal">
-            &times;
-          </button>
-        </div>
-  
-        <!-- Modal body -->
-        <div class="modal-body">
-          <form action="/superadmin/operator_save" method="post" id="myForm">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                    <label for="cust_name" class="text-dark"><b>Customer Name</b></label>
-                    <select name="cust_name" class="form-control" id="cust_name">
-                        <option value="">Select Customer Name</option>
-                        <% customer.forEach(dt => { %>
-                          <option value="<%= dt.customer_id %>"><%= dt.customer_name %></option>
-                          <% }) %>
-                    </select>
+<div class="op-page-wrapper">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card op-card">
+          <div class="card-body">
+
+            <!-- HEADER -->
+            <div class="op-header">
+              <div class="op-title-group">
+                <div class="op-icon-badge">
+                  <i data-feather="user-check"></i>
                 </div>
+                <h3 class="op-page-title">Operator Management</h3>
+              </div>
+              <button type="button" class="op-add-btn" data-toggle="modal" data-target="#myModal">
+                <i data-feather="plus" style="width:15px;height:15px;stroke:currentColor;"></i> Add Operator
+              </button>
             </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="seller_name" class="text-dark"><b>Seller Name</b></label>
-                    <select name="seller_name" class="form-control" id="seller_name">
-                        <option value="">Select Seller Name</option>
-                        <% seller.forEach(dt => { %>
-                          <option value="<%= dt.seller_id %>"><%= dt.seller_name %></option>
-                          <% }) %>
+
+            <!-- FILTER SECTION -->
+            <div class="op-filter-sec">
+              <form action="/superadmin/operator" method="post">
+                <div class="row align-items-end">
+                  <div class="col-md-5 op-form-group mb-0">
+                    <label class="op-label"><i data-feather="users"
+                        style="width:14px;height:14px;margin-right:4px;"></i> Customer Name</label>
+                    <select name="cust_name" class="op-select" id="cust_name_filter" required>
+                      <option value="">Select Customer to filter...</option>
+                      <% customer.forEach(dt=> {
+                        var _selected = ''
+                        if(selected.cust_id == dt.customer_id) _selected = 'selected' %>
+                        <option value="<%= dt.customer_id %>" <%=_selected %>><%= dt.customer_name %>
+                        </option>
+                        <% })%>
                     </select>
+                  </div>
+                  <div class="col-md-4">
+                    <div style="white-space: nowrap;">
+                      <button type="submit" class="op-submit-btn" id="submitBtn">
+                        <i data-feather="search" style="width:15px;height:15px;margin-right:6px;"></i> Filter Results
+                      </button>
+                      <a href="/superadmin/operator" class="op-refresh-btn" style="margin-left:8px;"
+                        title="Refresh Page">
+                        <i data-feather="refresh-cw"></i>
+                      </a>
+                    </div>
+                  </div>
                 </div>
+              </form>
             </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="op_name" class="text-dark"><b>Operator Name</b></label>
-                    <input type="text" class="form-control" id="op_name" name="op_name" placeholder="Enter Operator Name.....">
-                  </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="mobile" class="text-dark"><b>Mobile No</b></label>
-                      <input type="text" class="form-control" id="mobile" name="mobile" placeholder="Enter Mobile No.....">
-                    </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                        <label for="loc_name" class="text-dark"><b>Location Name</b></label>
-                          <select name="loc_name" class="form-control" id="loc_name">
-                            <option value="">Select Location Name</option>
-                            <% location.forEach(dt => { %>
-                              <option value="<%= dt.location_id %>"><%= dt.loction %></option>
-                            <% })%>
-                          </select>
-                        </div>
-                        </div> 
-                        <div class="col-md-6">
-                            <div class="form-group">
-                              <label for="dev_id" class="text-dark"><b>Device ID</b></label>
-                              <input type="text" class="form-control" id="dev_id" name="dev_id" placeholder="Enter Device ID.....">
-                            </div>
-                            </div>
-                            <div class="form-group col-6">
-                                <label for="pwd" class="text-dark"><b>Password:</b></label>
-                                <div class="input-group">
-                                  <input type="password" class="form-control" name="pwd" id="pwd" value="" placeholder="Enter Password">
-                                  <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                                      <i class="fa fa-eye-slash"></i>
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>           
-            </div>
-            <div class="row">
-                <input type="hidden" name="id" value="0">
-                <div class="form-group col-md-5"></div>
-                <div class="form-group col-md-7">
-                        <input type="submit" value="SUBMIT" class="btn btn-primary"
-                          style="border-radius: 6px;" />
-                      </div>
-            </div>
-          </form>
+
+            <% if(selected.cust_id> 0){ %>
+              <!-- TABLE CONTENT -->
+              <div class="op-table-wrap mt-3">
+                <table id="dataTable" class="table op-table no-wrap">
+                  <thead>
+                    <tr>
+                      <th>Sl No.</th>
+                      <th>Operator Name</th>
+                      <th>User ID (Mobile)</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% if(data.length> 0){
+                      var i = 1
+                      data.forEach(dt => { %>
+                      <tr>
+                        <td>
+                          <%= i %>
+                        </td>
+                        <td style="font-weight: 600; color: var(--gray-800);">
+                          <%= dt.operator_name %>
+                        </td>
+                        <td>
+                          <%= dt.user_id %>
+                        </td>
+                        <td>
+                          <a href='/superadmin/edit_operator?customer_id=<%= selected.cust_id %>&id=<%= dt.operator_id %>'
+                            class='action-btn-edit' title="Edit Operator">
+                            <i class="fa fa-edit"></i>
+                          </a>
+                        </td>
+                      </tr>
+                      <% i++; }) }else{ %>
+                        <tr>
+                          <td colspan="4"
+                            style="color: var(--danger); font-weight: 500; padding: 30px; text-align: center;">No
+                            operators found for this customer</td>
+                        </tr>
+                        <% } %>
+                  </tbody>
+                </table>
+              </div>
+              <% } else { %>
+                <div class="text-center py-5"
+                  style="background: var(--gray-50); border-radius: 12px; border: 1px dashed var(--gray-300);">
+                  <i data-feather="info" style="color: var(--gray-400); margin-bottom: 12px;"></i>
+                  <p style="color: var(--gray-500); font-size: 0.9rem;">Please select a customer above to view and
+                    manage operators.</p>
+                </div>
+                <% } %>
+
+          </div>
         </div>
       </div>
     </div>
   </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade loc-modal" id="myModal">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title"><i data-feather="plus-circle" style="width:20px;height:20px;"></i><b> Add Operator</b>
+        </h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <form action="/superadmin/operator_save" method="post" id="myForm">
+          <div class="row">
+            <div class="col-md-6 op-form-group">
+              <label class="op-label">Customer Name</label>
+              <select name="cust_name" class="op-select" id="cust_name_modal">
+                <option value="">Select Customer</option>
+                <% customer.forEach(dt=> { %>
+                  <option value="<%= dt.customer_id %>">
+                    <%= dt.customer_name %>
+                  </option>
+                  <% }) %>
+              </select>
+            </div>
+            <div class="col-md-6 op-form-group">
+              <label class="op-label">Seller Name</label>
+              <select name="seller_name" class="op-select" id="seller_name">
+                <option value="">Select Seller</option>
+                <% seller.forEach(dt=> { %>
+                  <option value="<%= dt.seller_id %>">
+                    <%= dt.seller_name %>
+                  </option>
+                  <% }) %>
+              </select>
+            </div>
+            <div class="col-md-6 op-form-group">
+              <label class="op-label">Operator Name</label>
+              <input type="text" class="op-input" id="op_name" name="op_name" placeholder="Full name of operator">
+            </div>
+            <div class="col-md-6 op-form-group">
+              <label class="op-label">Mobile Number (User ID)</label>
+              <input type="text" class="op-input" id="mobile" name="mobile" placeholder="10-digit mobile number"
+                maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)" required>
+            </div>
+            <div class="col-md-6 op-form-group">
+              <label class="op-label">Location Name</label>
+              <select name="loc_name" class="op-select" id="loc_name">
+                <option value="">Select Location</option>
+                <% location.forEach(dt=> { %>
+                  <option value="<%= dt.location_id %>">
+                    <%= dt.loction %>
+                  </option>
+                  <% })%>
+              </select>
+            </div>
+            <div class="col-md-6 op-form-group">
+              <label class="op-label">Device ID</label>
+              <input type="text" class="op-input" id="dev_id" name="dev_id" placeholder="Assign Device ID">
+            </div>
+            <div class="col-md-6 op-form-group">
+              <label class="op-label">Password</label>
+              <div class="op-password-group">
+                <input type="password" class="op-input" name="pwd" id="pwd" placeholder="Enter secure password">
+                <button class="op-password-toggle" type="button" id="togglePassword">
+                  <i data-feather="eye-off" style="width:16px;height:16px;"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center mt-4 pt-2">
+            <input type="hidden" name="id" value="0">
+            <button type="submit" class="op-submit-btn">Register Operator</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
-    $(document).ready(function () {
-      $("#myBtn").click(function () {
-        $("#myModal").modal();
+  $(document).ready(function () {
+    // Initialize Select2 for filter dropdowns
+    $('.op-select').select2({
+      placeholder: 'Select an option',
+      width: '100%'
+    });
+
+    // Special initialization for selects inside the modal to fix focus/z-index issues
+    $('#myModal').on('shown.bs.modal', function () {
+      $('.op-select', this).select2({
+        placeholder: 'Select an option',
+        width: '100%',
+        dropdownParent: $('#myModal')
       });
     });
-  </script>
 
-<script>
-    document.getElementById("togglePassword").addEventListener("click", function () {
-      const pwdField = document.getElementById("pwd");
-      if (pwdField.type === "password") {
-        pwdField.type = "text";
+    // Password toggle
+    $("#togglePassword").click(function () {
+      const pwdField = $("#pwd");
+      const icon = $(this).find('i');
+
+      if (pwdField.attr("type") === "password") {
+        pwdField.attr("type", "text");
+        $(this).html('<i data-feather="eye" style="width:16px;height:16px;"></i>');
       } else {
-        pwdField.type = "password";
+        pwdField.attr("type", "password");
+        $(this).html('<i data-feather="eye-off" style="width:16px;height:16px;"></i>');
       }
+      feather.replace();
     });
-  </script>
+  });
+</script>

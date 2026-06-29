@@ -1,359 +1,301 @@
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="/template/dist/css/device_setting.css" rel="stylesheet">
 
-<!-- Bootstrap Toggle CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap4-toggle/css/bootstrap4-toggle.min.css" rel="stylesheet">
+<div class="dev-page-wrapper">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card dev-card">
+          <div class="card-body">
+            
+            <!-- HEADER -->
+            <div class="dev-header" style="margin-bottom:20px;">
+                <div class="dev-title-group">
+                    <div class="dev-icon-badge">
+                        <i data-feather="edit-3"></i>
+                    </div>
+                    <span class="dev-back-btn" id="back" title="Back to Device Settings">
+                        <i data-feather="arrow-left"></i>
+                    </span>
+                    <h3 class="dev-edit-title">Edit Device Setting</h3>
+                </div>
+            </div>
 
-<!-- Bootstrap Toggle JS -->
-<script defer src="https://cdn.jsdelivr.net/npm/bootstrap4-toggle/js/bootstrap4-toggle.min.js"></script>
+            <!-- FORM -->
+            <form action="/superadmin/save_device_setting" id="myForm" method="post">
+                <div class="row mt-4">
+                    <!-- Core Info -->
+                    <div class="col-md-3 dev-form-group">
+                        <label class="dev-label">Customer Name</label>
+                        <select name="cust_id_view" class="dev-select" id="cust_id" disabled style="background-color: var(--gray-100); cursor: not-allowed;">
+                            <option value="">Select Customer Name</option>
+                            <% customer.forEach(dt =>{ %>
+                                <option value="<%= dt.customer_id %>" <%= dt.customer_id == data[0].customer_id ? 'selected' : '' %>><%= dt.customer_name %></option>
+                            <% }) %>
+                        </select>
+                        <input type="hidden" name="cust_id" value="<%= data[0].customer_id %>">
+                    </div>
 
+                    <div class="col-md-3 dev-form-group">
+                        <label class="dev-label">Mode</label>
+                        <select name="dev_mode" class="dev-select" id="dev_mode" readonly style="background-color: var(--gray-100); cursor: not-allowed;">
+                            <option value="">Select Mode</option>
+                            <option value="D" <% if (data[0].dev_mod === 'D') { %>selected<% } %>>Dual</option>
+                            <option value="F" <% if (data[0].dev_mod === 'F') { %>selected<% } %>>Fixed</option>
+                        </select>
+                    </div>
 
-<div class="container-fluid">
-  <div class="row">
-    <div class="card col-12">
-      <div class="card-body">
-        <div class="titleSec">
-          <h2 class="text-dark"><i class="fa fa-arrow-circle-left" aria-hidden="true" id="back"
-              style="cursor: pointer;">&nbsp;Device Edit Details</i></h2>
+                    <div class="col-md-3 dev-form-group">
+                        <label class="dev-label">Device ID</label>
+                        <input type="text" class="dev-input" id="app_id" name="app_id" value="<%= data[0].app_id %>" readonly style="background-color: var(--gray-100); cursor: not-allowed;">
+                    </div>
+
+                    <div class="col-md-3 dev-form-group">
+                        <label class="dev-label">Device Type</label>
+                        <select name="dev_type" class="dev-select" id="dev_type">
+                            <option value="">Select Device Type</option>
+                            <option value="H" <% if (data[0].device_type === 'H') { %>selected<% } %>>Handheld Device</option>
+                            <option value="M" <% if (data[0].device_type === 'M') { %>selected<% } %>>Mobile Device</option>
+                            <option value="A" <% if (data[0].device_type === 'A') { %>selected<% } %>>Amigos Blue Handheld Device</option>
+                        </select>
+                    </div>
+
+                    <!-- Flags Row 1 -->
+                    <div class="col-md-3 dev-form-group">
+                        <div class="switch-container">
+                            <label class="dev-label">GST Flag</label>
+                            <label class="dev-switch">
+                                <input type="checkbox" value="Y" id="gst_flag" name="gst_flag" <%=(data[0].gst_flag=='Y' )?'checked':''%>>
+                                <span class="dev-slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 dev-form-group">
+                        <div class="switch-container">
+                            <label class="dev-label">Report Flag</label>
+                            <label class="dev-switch">
+                                <input type="checkbox" value="Y" id="report_flag" name="report_flag" <%=(data[0].report_flag=='Y' )?'checked':''%>>
+                                <span class="dev-slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 dev-form-group">
+                        <div class="switch-container">
+                            <label class="dev-label">Total Collection</label>
+                            <label class="dev-switch">
+                                <input type="checkbox" value="Y" id="tot_col" name="tot_col" <%=(data[0].total_collection=='Y' )?'checked':''%>>
+                                <span class="dev-slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 dev-form-group">
+                        <div class="switch-container">
+                            <label class="dev-label">Redirection (H/B)</label>
+                            <label class="dev-switch switch-info">
+                                <input type="checkbox" value="Y" id="redirect_flag" name="redirect_flag" <%=(data[0].redirection_flag=='Y' )?'checked':''%>>
+                                <span class="dev-slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Rates and Period -->
+                    <div class="col-md-3 dev-form-group">
+                        <div class="switch-container">
+                            <label class="dev-label">Grace Period</label>
+                            <label class="dev-switch">
+                                <input type="checkbox" value="Y" id="grace_flag" name="grace_flag" <%=(data[0].grace_period_flag=='Y' )?'checked':''%>>
+                                <span class="dev-slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 dev-form-group" id="hide_grace">
+                        <label class="dev-label">Grace Value (Min)</label>
+                        <input type="text" name="grace_value" id="grace_value" class="dev-input" value="<%= data[0].grace_value %>">
+                    </div>
+
+                    <div class="col-md-3 dev-form-group">
+                        <div class="switch-container">
+                            <label class="dev-label">Advance Flag</label>
+                            <label class="dev-switch">
+                                <input type="checkbox" value="Y" id="adv_pay_flag" name="adv_pay_flag" <%=(data[0].adv_pay=='Y' )?'checked':''%>>
+                                <span class="dev-slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 dev-form-group" id="hide_adv">
+                        <label class="dev-label">Advance Value</label>
+                        <input type="text" name="adv_value" id="adv_value" class="dev-input" value="<%= data[0].adv_value %>">
+                    </div>
+
+                    <!-- Payment Options -->
+                    <div class="col-md-3 dev-form-group">
+                        <div class="switch-container">
+                            <label class="dev-label">Pay Mode Flag</label>
+                            <label class="dev-switch">
+                                <input type="checkbox" value="Y" id="pay_mode_flag" name="pay_mode_flag" <%=(data[0].pay_mode_flag=='Y' )?'checked':''%>>
+                                <span class="dev-slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 dev-form-group">
+                        <div class="switch-container">
+                            <label class="dev-label">QR Code Flag</label>
+                            <label class="dev-switch">
+                                <input type="checkbox" value="Y" id="qr_code_flag" name="qr_code_flag" <%=(data[0].qr_code_flag=='Y' )?'checked':''%>>
+                                <span class="dev-slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 dev-form-group" id="day_wise_rate_container" style="display:none;">
+                        <div class="switch-container">
+                            <label class="dev-label">Day Wise Rate</label>
+                            <label class="dev-switch">
+                                <input type="checkbox" value="Y" id="day_wise_rate" name="day_wise_rate" <%=(data[0].day_wise_rate=='Y' )?'checked':''%>>
+                                <span class="dev-slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 dev-form-group" id="default_pay_mode_box" style="display:none;">
+                        <label class="dev-label">Default Payment Mode</label>
+                        <select name="default_payment_mode" class="dev-select" id="default_payment_mode">
+                            <option value="">Select Payment Mode</option>
+                            <option value="C" <% if (data[0].default_pay_mode === 'C') { %>selected<% } %>>CASH</option>
+                            <option value="U" <% if (data[0].default_pay_mode === 'U') { %>selected<% } %>>UPI</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="text-center mt-1">
+                    <input type="hidden" name="id" value="<%= id %>">
+                    <button type="submit" id="submitBtn" class="dev-submit-btn" disabled>Update Device Details</button>
+                </div>
+            </form>
+          </div>
         </div>
-        <form action="/superadmin/save_device_setting" id="myForm" method="post">
-          <div class="row">
-            <div class="form-group col-3">
-              <label for="cust_id" class="text-dark"><b>Customer Name:</b></label>
-              <select name="cust_id" class="form-control" id="cust_id" disabled>
-                <option value="">Select Customer Name</option>
-                <% customer.forEach(dt =>{ %>
-                  <option value="<%= dt.customer_id %>" <%= dt.customer_id == data[0].customer_id ? 'selected' : '' %>><%= dt.customer_name %></option>
-               <% }) %>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="dev_mode" class="text-dark"><b>Mode</b></label>
-                <select name="dev_mode" class="form-control" id="dev_mode" readonly>
-                  <option value="">Select Mode</option>
-                  <option value="D" <% if (data[0].dev_mod === 'D') { %>selected<% } %>>Dual</option>
-                  <option value="F" <% if (data[0].dev_mod === 'F') { %>selected<% } %>>Fixed</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="app_id" class="text-dark"><b>Device ID</b></label>
-                <input type="text" class="form-control" id="app_id" name="app_id" placeholder="Enter Device ID...."
-                  value="<%= data[0].app_id %>" readonly>
-              </div>
-            </div>
-            <div class="col-md-3 cust-toggle1">
-              <label for="gst_flag" class="text-dark"><b>GST Flag</b></label><br>
-              <input type="checkbox" value="Y" id="gst_flag" data-toggle="toggle"
-                  data-onstyle="success" data-offstyle="danger" data-on="Active" data-off="Deactive"
-                  name="gst_flag" <%=(data[0].gst_flag=='Y' )?'checked':''%>
-              >
-          </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="dev_type" class="text-dark"><b>Device Type</b></label>
-                <select name="dev_type" class="form-control" id="dev_type">
-                  <option value="">Select Device Type</option>
-                  <option value="H" <% if (data[0].device_type === 'H') { %>selected<% } %>>Handheld Device</option>
-                  <option value="M" <% if (data[0].device_type === 'M') { %>selected<% } %>>Mobile Device</option>
-                  <option value="A" <% if (data[0].device_type === 'A') { %>selected<% } %>>Amigos Blue Handheld Device</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="col-md-3 cust-toggle1">
-              <label for="report_flag" class="text-dark"><b>Report Flag</b></label><br>
-              <input type="checkbox" value="Y" id="report_flag" data-toggle="toggle" data-onstyle="success"
-                data-offstyle="danger" data-on="Active" data-off="Deactive" name="report_flag" <%=(data[0].report_flag=='Y' )?'checked':''%>>
-            </div>
-            <div class="col-md-3 cust-toggle1">
-              <label for="tot_col" class="text-dark"><b>Total collection Flag</b></label><br>
-              <input type="checkbox" value="Y" id="tot_col" data-toggle="toggle" data-onstyle="success"
-                data-offstyle="danger" data-on="Active" data-off="Deactive" name="tot_col" <%=(data[0].total_collection=='Y' )?'checked':''%>>
-            </div>
-
-            <div class="col-md-3 cust-toggle1">
-              <label for="redirect_flag" class="text-dark"><b>Redirection</b></label><br>
-              <input type="checkbox" value="Y" id="redirect_flag" data-toggle="toggle" data-onstyle="success"
-                data-offstyle="danger" data-on="Home" data-off="Back" name="redirect_flag" <%=(data[0].redirection_flag=='Y' )?'checked':''%>>
-            </div>
-
-            <div class="col-md-3 cust-toggle1">
-              <label for="grace_flag" class="text-dark"><b>Grace Period Flag</b></label><br>
-              <input type="checkbox" value="Y" id="grace_flag" data-toggle="toggle" data-onstyle="success"
-                data-offstyle="danger" data-on="Active" data-off="Deactive" name="grace_flag" <%=(data[0].grace_period_flag=='Y' )?'checked':''%>>
-            </div>
-
-            <div class="col-md-3" id="hide_grace">
-              <div class="form-group">
-                <label for="grace_value" class="text-dark"><b>Grace Value &nbsp;<span class=text-danger>(In
-                      Minute)</span></b></label>
-                <input type="text" name="grace_value" id="grace_value" class="form-control" value="<%= data[0].grace_value %>">
-              </div>
-            </div>
-
-            <div class="col-md-3 cust-toggle1">
-              <label for="adv_pay_flag" class="text-dark"><b>Advance Flag</b></label><br>
-              <input type="checkbox" value="Y" id="adv_pay_flag" data-toggle="toggle" data-onstyle="success"
-                data-offstyle="danger" data-on="Active" data-off="Deactive" name="adv_pay_flag" <%=(data[0].adv_pay=='Y' )?'checked':''%>>
-            </div>
-
-            <div class="col-md-3" id="hide_adv">
-              <div class="form-group">
-                <label for="adv_value" class="text-dark"><b>Advance Value &nbsp;</b></label>
-                <input type="text" name="adv_value" id="adv_value" class="form-control" value="<%= data[0].adv_value %>">
-              </div>
-            </div>
-
-            <div class="col-md-3 cust-toggle1">
-              <label for="pay_mode_flag" class="text-dark"><b>Pay Mode Flag</b></label><br>
-              <input type="checkbox" value="Y" id="pay_mode_flag" data-toggle="toggle"
-                  data-onstyle="success" data-offstyle="danger" data-on="Active" data-off="Deactive"
-                  name="pay_mode_flag" <%=(data[0].pay_mode_flag=='Y' )?'checked':''%>>
-          </div>
-          <div class="col-md-3 cust-toggle1">
-            <label for="qr_code_flag" class="text-dark"><b>QR Code Flag</b></label><br>
-            <input type="checkbox" value="Y" id="qr_code_flag" data-toggle="toggle" data-onstyle="success"
-              data-offstyle="danger" data-on="Active" data-off="Deactive" name="qr_code_flag" <%=(data[0].qr_code_flag=='Y' )?'checked':''%>>
-          </div>
-
-          
-           <div class="col-md-3 cust-toggle1 mt-3" id="day_wise_rate_container" style="display:none;">
-            <label for="day_wise_rate" class="text-dark"><b>Day wise Vehicle Rate</b></label><br>
-            <input type="checkbox" value="Y" id="day_wise_rate" data-toggle="toggle" data-onstyle="success"
-            data-offstyle="danger" data-on="Active" data-off="Deactive" name="day_wise_rate" <%=(data[0].day_wise_rate=='Y' )?'checked':''%>>
-            </div>
-
-              <div class="col-md-3 mt-3" id="default_pay_mode_box" style="display:none;">
-                <label for="default_payment_mode" class="text-dark"><b>Default Payment Mode</b></label>
-                <select name="default_payment_mode" class="form-control" id="default_payment_mode">
-                  <option value="">Select Payment Mode</option>
-                  <option value="C" <% if (data[0].default_pay_mode === 'C') { %>selected<% } %>>CASH</option>
-                  <option value="U" <% if (data[0].default_pay_mode === 'U') { %>selected<% } %>>UPI</option>
-                </select>
-            </div>
-
-          </div>
-          <div class="row mt-3">
-            <input type="hidden" name="id" value="<%= id %>">
-            <input type="hidden" name="cust_id" value="<%= customer_id %>">
-
-            <div class="form-group col-md-5"></div>
-            <div class="form-group col-md-7">
-              <input type="submit" value="SUBMIT" id="submitBtn" class="btn btn-primary" style="border-radius: 6px;" disabled/>
-            </div>
-          </div>
-        </form>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-  $('#grace_flag').on('change', function () {
-      if ($(this).is(':checked')) {
-          $('#hide_grace').show()
-          $('#grace_value').attr('required', 'required')
-      } else {
-          $('#grace_value').removeAttr('required')
-          $('#grace_value').val('00')
-          $('#hide_grace').hide()
-      }
-  })
-</script>
+    $(document).ready(function () {
+        // Feather Icons
+        feather.replace();
 
-<script>
-  $('#adv_pay_flag').on('change', function () {
-      if ($(this).is(':checked')) {
-          $('#hide_adv').show()
-          $('#adv_value').attr('required', 'required')
-      } else {
-          $('#adv_value').removeAttr('required')
-          $('#adv_value').val('00')
-          $('#hide_adv').hide()
-      }
-  })
-</script>
+        // Back button
+        $("#back").click(function () {
+            window.location.href = "/superadmin/device_setting";
+        });
 
-<script>
-  $(document).ready(function () {
-      <% if (data.grace_period_flag != 'Y') { %>
-          $('#grace_value').removeAttr('required')
-          $('#grace_value').val('00')
-          $('#hide_grace').hide()
-              <% } %>
-      <% if (data.adv_pay != 'Y') { %>
-          $('#adv_value').removeAttr('required')
-          $('#adv_value').val('00')
-          $('#hide_adv').hide()
-              <% } %>        
-                  $("#back").click(function () {
-                      window.location.href = "/superadmin/device_setting";
-                  });
-  });
-</script>
-
-<script>
-  $(document).ready(function () {
-    $('#gst_flag').bootstrapToggle();
-    $('#adv_pay_flag').bootstrapToggle();
-
-    $('#gst_flag').on('change', function () {
-      if ($(this).prop('checked')) {
-        $('#adv_pay_flag').bootstrapToggle('off'); 
-         $('#adv_pay_flag').bootstrapToggle('disable');
-      } else {
-        $('#adv_pay_flag').bootstrapToggle('enable'); 
-      }
-    });
-
-      $('#adv_pay_flag').change(function () {
-
-    if ($('#gst_flag').prop('checked')) {
-
-      // If GST is ON → never allow advance
-      $('#adv_pay_flag').bootstrapToggle('off');
-
-      return false;
-    }
-    });
-
-  //   $('#adv_pay_flag').on('change', function () {
-  //     if ($(this).prop('checked')) {
-  //       $('#gst_flag').bootstrapToggle('off'); 
-  //     } else {
-  //       $('#gst_flag').bootstrapToggle('on'); 
-  //     }
-  //   });
-  });
-</script>
-
-<script>
-  $(document).ready(function () {
-
-    function toggleDayWiseRate(mode) {
-      if (mode === 'D') {
-        $('#day_wise_rate_container').show();
-      } else {
-        $('#day_wise_rate_container').hide();
-        $('#day_wise_rate').prop('checked', false); // reset when hidden
-      }
-    }
-
-    // Trigger when dropdown changes
-    $('#dev_mode').on('change', function () {
-      toggleDayWiseRate($(this).val());
-    });
-
-    // Run on page load (for edit case)
-    toggleDayWiseRate($('#dev_mode').val());
-
-  });
-</script>
-
-<script>
-  $(document).ready(function () {
-function toggleDefaultPayMode(mode) {
-    if (mode === 'F') {
-        $("#default_pay_mode_box").show();
-    } else {
-        $("#default_pay_mode_box").hide();
-        $("#default_payment_mode").val("");  // reset
-    }
-}
-
- // run when user changes dev_mode (even if readonly, but safer)
-    $("#dev_mode").on("change", function () {
-        toggleDefaultPayMode($(this).val());
-    });
-
-    // run on page load (for EDIT mode)
-    toggleDefaultPayMode($("#dev_mode").val());
-  });
-</script>
-
-
-  <script>
-$(document).ready(function () {
-
-    // ===== A. Initialize Toggle Buttons Properly =====
-    // (This ensures correct checked values)
-    $('input[type=checkbox][data-toggle="toggle"]').each(function () {
-        $(this).bootstrapToggle();
-    });
-
-    // ===== B. Function to get current value of any field =====
-    function getFieldValue(id) {
-        let $el = $("#" + id);
-
-        if ($el.length === 0) return null;
-
-        // If checkbox toggle → return Y or N
-        if ($el.attr("type") === "checkbox") {
-            return $el.prop("checked") ? "Y" : "N";
-        }
-
-        return $el.val();
-    }
-
-    // ===== C. List all fields you want to detect =====
-    const fieldList = [
-        "dev_type",
-        "gst_flag",
-        "report_flag",
-        "tot_col",
-        "redirect_flag",
-        "grace_flag",
-        "grace_value",
-        "adv_pay_flag",
-        "adv_value",
-        "pay_mode_flag",
-        "qr_code_flag",
-        "day_wise_rate",
-        "default_payment_mode"
-    ];
-
-    // Remove fields that don't exist for single-device mode
-    const validFields = fieldList.filter(id => $("#" + id).length > 0);
-
-    // ===== D. Capture initial values (AFTER toggle ready) =====
-    const initialValues = {};
-    validFields.forEach(id => {
-        initialValues[id] = getFieldValue(id);
-    });
-
-    console.log("INITIAL:", initialValues);
-
-    // ===== E. Change detector =====
-    function checkForChanges() {
-        let changed = false;
-
-        validFields.forEach(id => {
-            if (getFieldValue(id) !== initialValues[id]) {
-                changed = true;
+        // Grace logic
+        $('#grace_flag').on('change', function () {
+            if ($(this).is(':checked')) {
+                $('#hide_grace').show();
+                $('#grace_value').attr('required', 'required');
+            } else {
+                $('#grace_value').removeAttr('required').val('00');
+                $('#hide_grace').hide();
             }
         });
 
-        $("#submitBtn").prop("disabled", !changed);
-    }
+        // Advance logic
+        $('#adv_pay_flag').on('change', function () {
+            if ($(this).is(':checked')) {
+                $('#hide_adv').show();
+                $('#adv_value').attr('required', 'required');
+            } else {
+                $('#adv_value').removeAttr('required').val('00');
+                $('#hide_adv').hide();
+            }
+        });
 
-    // ===== F. Bind events to all fields =====
-    validFields.forEach(id => {
-        let $el = $("#" + id);
+        // GST vs Advance Mutual Exclusion
+        $('#gst_flag').on('change', function () {
+            if ($(this).prop('checked')) {
+                $('#adv_pay_flag').prop('checked', false).trigger('change');
+                $('#adv_pay_flag').closest('.dev-switch').addClass('disabled-opacity');
+            } else {
+                $('#adv_pay_flag').closest('.dev-switch').removeClass('disabled-opacity');
+            }
+        });
 
-        if ($el.attr("type") === "checkbox") {
+        $('#adv_pay_flag').change(function () {
+            if ($('#gst_flag').prop('checked')) {
+                $(this).prop('checked', false);
+                return false;
+            }
+        });
 
-            // toggle needs slight delay
-            $el.on("change", function () {
-                setTimeout(checkForChanges, 15);
-            });
+        // Initialize visibility on load
+        if (!$('#grace_flag').is(':checked')) $('#hide_grace').hide();
+        if (!$('#adv_pay_flag').is(':checked')) $('#hide_adv').hide();
+        if ($('#gst_flag').is(':checked')) $('#adv_pay_flag').closest('.dev-switch').addClass('disabled-opacity');
 
-        } else {
-            // normal text/select
-            $el.on("input change", checkForChanges);
+        // Initialize Select2
+        $('.dev-select').select2({
+            width: '100%',
+            placeholder: 'Select an option'
+        });
+
+        // Mode-based visibility
+        function toggleModeDependentFields(mode) {
+            if (mode === 'D') {
+                $('#day_wise_rate_container').show();
+            } else {
+                $('#day_wise_rate_container').hide();
+                $('#day_wise_rate').prop('checked', false);
+            }
+
+            if (mode === 'F') {
+                $("#default_pay_mode_box").show();
+            } else {
+                $("#default_pay_mode_box").hide();
+                $("#default_payment_mode").val("").trigger('change');
+            }
         }
-    });
 
-});
+        toggleModeDependentFields($('#dev_mode').val());
+
+        // Change Detection Logic
+        function getFieldValue(id) {
+            let $el = $("#" + id);
+            if ($el.length === 0) return null;
+            if ($el.attr("type") === "checkbox") return $el.prop("checked") ? "Y" : "N";
+            return $el.val();
+        }
+
+        const fieldList = [
+            "dev_type", "gst_flag", "report_flag", "tot_col", "redirect_flag",
+            "grace_flag", "grace_value", "adv_pay_flag", "adv_value",
+            "pay_mode_flag", "qr_code_flag", "day_wise_rate", "default_payment_mode"
+        ];
+
+        const initialValues = {};
+        fieldList.forEach(id => {
+            if ($("#" + id).length > 0) initialValues[id] = getFieldValue(id);
+        });
+
+        function checkForChanges() {
+            let changed = false;
+            fieldList.forEach(id => {
+                if ($("#" + id).length > 0 && getFieldValue(id) !== initialValues[id]) {
+                    changed = true;
+                }
+            });
+            $("#submitBtn").prop("disabled", !changed);
+        }
+
+        fieldList.forEach(id => {
+            $("#" + id).on("input change", function() {
+                setTimeout(checkForChanges, 20);
+            });
+        });
+    });
 </script>

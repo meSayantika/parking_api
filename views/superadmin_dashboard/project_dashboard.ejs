@@ -1,0 +1,735 @@
+<link href="/template/dist/css/superadmin-dashboard.css" rel="stylesheet">
+<link href="/template/dist/css/operator-page.css" rel="stylesheet">
+
+<% const dash=dashboard || {}; const counts=dash.counts || {}; const revenue=dash.revenue || {}; const trend=dash.trend
+  || []; const paymentModes=dash.paymentModes || []; const vehicleTypes=dash.vehicleTypes || []; const
+  recentTransactions=dash.recentTransactions || []; const topOperators=dash.topOperators || []; const
+  topDevices=dash.topDevices || []; const toCurrency=(value)=> {
+  const num = Number(value || 0);
+  return num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+
+  const toNumber = (value) => Number(value || 0).toLocaleString('en-IN');
+  %>
+
+  <div class="sad-page">
+    <div class="sad-loader" id="dashboardLoader">
+      <div class="sad-loader-box">
+        <div class="sad-loader-spinner"></div>
+        <div class="sad-loader-text">Loading dashboard data...</div>
+      </div>
+    </div>
+
+    <div id="dashboardContent" class="sad-blur">
+      <div class="container-fluid">
+
+        <!-- PROJECT SELECTOR -->
+        <% if(typeof isCustomerView==='undefined' || !isCustomerView) { %>
+          <div class="row mb-4">
+            <div class="col-12">
+              <div class="card op-card"
+                style="border: 1px solid var(--gray-200); border-radius: 12px; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);">
+                <div class="card-body py-3">
+                  <div class="row align-items-center">
+                    <div class="col-md-3">
+                      <h4 class="mb-0 text-dark font-weight-bold">Select Project</h4>
+                    </div>
+                    <div class="col-md-6">
+                      <select class="form-control op-select" id="customerSelector">
+                        <option value="">-- Choose a Customer/Project --</option>
+                        <% customers.forEach(function(cust) { %>
+                          <option value="<%= cust.customer_id %>" <%=selectedCustomerId==cust.customer_id ? 'selected'
+                            : '' %>>
+                            <%= cust.customer_name %>
+                          </option>
+                          <% }) %>
+                      </select>
+                    </div>
+                    <div class="col-md-3">
+                      <% if(selectedCustomerId) { %>
+                        <div class="sad-panel-chip bg-success text-white" style="font-size: 0.8rem;">Project ID: <%=
+                            selectedCustomerId %>
+                        </div>
+                        <% } %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% } %>
+
+            <% if(!selectedCustomerId) { %>
+              <div class="row">
+                <div class="col-12 text-center py-5">
+                  <div class="sad-panel"
+                    style="background: rgba(255,255,255,0.6); border: 2px dashed var(--gray-200); border-radius: 16px; padding: 40px 20px;">
+                    <div class="card-body py-5">
+                      <i data-feather="grid"
+                        style="width: 64px; height: 64px; color: var(--gray-400); margin-bottom: 20px;"></i>
+                      <h2 class="text-muted font-weight-bold" style="color: var(--gray-700) !important;">Please select a
+                        project to view details</h2>
+                      <p class="text-muted" style="font-size: 1.1rem;">Use the dropdown above to filter the dashboard by
+                        a specific customer.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <% } else { %>
+                <!-- DASHBOARD HERO -->
+                <div class="sad-hero">
+                  <div class="sad-hero-copy">
+                    <div class="sad-overline">Project Analytics</div>
+                    <h1 class="sad-title">
+                      <%= customers.find(c=> c.customer_id == selectedCustomerId)?.customer_name || 'Project Dashboard'
+                        %>
+                    </h1>
+                    <p class="sad-subtitle">
+                      Read operations, revenue, operator performance, device activity, payment mix, and recent activity
+                      from one clean screen.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- 6 KPI CARDS GRID -->
+                <div class="sad-kpi-grid">
+                  <div class="sad-kpi-card">
+                    <div class="sad-kpi-icon sad-green"><i data-feather="user-check"></i></div>
+                    <div class="sad-kpi-body">
+                      <div class="sad-kpi-value">
+                        <%= toNumber(counts.total_operators) %>
+                      </div>
+                      <div class="sad-kpi-label">Operators</div>
+                    </div>
+                  </div>
+                  <div class="sad-kpi-card">
+                    <div class="sad-kpi-icon sad-teal"><i data-feather="slack"></i></div>
+                    <div class="sad-kpi-body">
+                      <div class="sad-kpi-value">
+                        <%= toNumber(counts.total_devices) %>
+                      </div>
+                      <div class="sad-kpi-label">Devices</div>
+                    </div>
+                  </div>
+                  <div class="sad-kpi-card">
+                    <div class="sad-kpi-icon sad-blue"><i data-feather="truck"></i></div>
+                    <div class="sad-kpi-body">
+                      <div class="sad-kpi-value">
+                        <%= toNumber(counts.active_parked) %>
+                      </div>
+                      <div class="sad-kpi-label">Active Parked</div>
+                    </div>
+                  </div>
+                  <div class="sad-kpi-card">
+                    <div class="sad-kpi-icon sad-orange"><i data-feather="calendar"></i></div>
+                    <div class="sad-kpi-body">
+                      <div class="sad-kpi-value">
+                        <%= toNumber(counts.today_entries) %>
+                      </div>
+                      <div class="sad-kpi-label">Today Entries</div>
+                    </div>
+                  </div>
+                  <div class="sad-kpi-card">
+                    <div class="sad-kpi-icon sad-indigo"><i data-feather="activity"></i></div>
+                    <div class="sad-kpi-body">
+                      <div class="sad-kpi-value">
+                        <%= toNumber(counts.total_entries) %>
+                      </div>
+                      <div class="sad-kpi-label">Total Entries</div>
+                    </div>
+                  </div>
+                  <div class="sad-kpi-card">
+                    <div class="sad-kpi-icon sad-red"><i data-feather="credit-card"></i></div>
+                    <div class="sad-kpi-body">
+                      <div class="sad-kpi-value">Rs. <%= toCurrency(revenue.total_revenue) %>
+                      </div>
+                      <div class="sad-kpi-label">Total Revenue</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- TOP CARDS GRID -->
+                <div class="row sad-secondary-grid">
+                  <div class="col-xl-6 col-lg-12">
+                    <div class="sad-panel">
+                      <div class="sad-panel-head">
+                        <div>
+                          <div class="sad-panel-eyebrow">Operator Performance</div>
+                          <h3 class="sad-panel-title">Top operators by revenue</h3>
+                        </div>
+                      </div>
+                      <div class="sad-chart-wrap sad-chart-mid">
+                        <canvas id="customerRevenueChart"></canvas>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-xl-6 col-lg-12">
+                    <div class="sad-panel">
+                      <div class="sad-panel-head">
+                        <div>
+                          <div class="sad-panel-eyebrow">Device Activity</div>
+                          <h3 class="sad-panel-title">Top devices by entries</h3>
+                        </div>
+                      </div>
+                      <div class="sad-chart-wrap sad-chart-mid">
+                        <canvas id="locationActivityChart"></canvas>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- MAIN ROW GRID -->
+                <!-- ROW 1: TREND AND COLLECTIONS -->
+                <div class="row sad-main-grid">
+                  <div class="col-xl-8 col-lg-12 d-flex mb-4 mb-xl-0">
+                    <div class="sad-panel sad-panel-lg w-100 h-100 mb-0 d-flex flex-column">
+                      <div class="sad-panel-head">
+                        <div>
+                          <div class="sad-panel-eyebrow">Revenue Trend</div>
+                          <h3 class="sad-panel-title">Last 7 days entries, paid amount and advance amount</h3>
+                        </div>
+                        <div class="sad-panel-chip">Live trend</div>
+                      </div>
+                      <div class="sad-chart-wrap flex-grow-1" style="min-height: 320px;">
+                        <canvas id="revenueTrendChart"></canvas>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-xl-4 col-lg-12 d-flex">
+                    <div class="sad-panel w-100 h-100 mb-0 d-flex flex-column">
+                      <div class="sad-panel-head">
+                        <div>
+                          <div class="sad-panel-eyebrow">Collections</div>
+                          <h3 class="sad-panel-title">Revenue snapshot</h3>
+                        </div>
+                      </div>
+                      <div class="sad-amount-stack flex-grow-1 d-flex flex-column justify-content-between">
+                        <div class="sad-amount-card">
+                          <span class="sad-amount-label">Today Paid</span>
+                          <strong>Rs. <%= toCurrency(revenue.today_revenue) %></strong>
+                        </div>
+                        <div class="sad-amount-card">
+                          <span class="sad-amount-label">Today Advance</span>
+                          <strong>Rs. <%= toCurrency(revenue.today_advance) %></strong>
+                        </div>
+                        <div class="sad-amount-card">
+                          <span class="sad-amount-label">Month Paid</span>
+                          <strong>Rs. <%= toCurrency(revenue.month_revenue) %></strong>
+                        </div>
+                        <div class="sad-amount-card">
+                          <span class="sad-amount-label">Total Paid</span>
+                          <strong>Rs. <%= toCurrency(revenue.total_revenue) %></strong>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ROW 2: VEHICLE MIX AND PAYMENT MIX (side-by-side) -->
+                <div class="row mt-4">
+                  <div class="col-md-8 d-flex mb-4 mb-md-0">
+                    <div class="sad-panel w-100 mb-0 d-flex flex-column">
+                      <div class="sad-panel-head">
+                        <div>
+                          <div class="sad-panel-eyebrow">Vehicle Mix</div>
+                          <h3 class="sad-panel-title">Top vehicle categories by entries and revenue</h3>
+                        </div>
+                        <div class="sad-panel-chip">Live category view</div>
+                      </div>
+                      <div style="height: 320px; position: relative; width: 100%;">
+                        <canvas id="vehicleTypeChart"></canvas>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4 d-flex">
+                    <div class="sad-panel w-100 mb-0 d-flex flex-column">
+                      <div class="sad-panel-head">
+                        <div>
+                          <div class="sad-panel-eyebrow">Payment Mix</div>
+                          <h3 class="sad-panel-title">Mode-wise amount</h3>
+                        </div>
+                      </div>
+                      <div style="height: 220px; position: relative; width: 100%;">
+                        <canvas id="paymentModeChart"></canvas>
+                      </div>
+                      <div class="sad-legend-list" style="margin-top: 16px;">
+                        <% if (paymentModes.length) { %>
+                          <% paymentModes.forEach(function(mode){ %>
+                            <div class="sad-legend-item">
+                              <span>
+                                <%= mode.pay_mode=='C' ? 'Cash' : mode.pay_mode=='U' ? 'UPI' : 'Unknown' %>
+                              </span>
+                              <strong>Rs. <%= toCurrency(mode.total_amount) %></strong>
+                            </div>
+                            <% }) %>
+                              <% } else { %>
+                                <div class="sad-empty-inline">No payment data available</div>
+                                <% } %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- DISTRIBUTION GRID -->
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="sad-panel">
+                      <div class="sad-panel-head">
+                        <div>
+                          <div class="sad-panel-eyebrow">Operator Distribution</div>
+                          <h3 class="sad-panel-title">Operator-wise revenue contribution</h3>
+                        </div>
+                      </div>
+                      <div class="sad-chart-wrap sad-chart-mid">
+                        <canvas id="operatorCustomerChart"></canvas>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="sad-panel">
+                      <div class="sad-panel-head">
+                        <div>
+                          <div class="sad-panel-eyebrow">Device Distribution</div>
+                          <h3 class="sad-panel-title">Device-wise revenue contribution</h3>
+                        </div>
+                      </div>
+                      <div class="sad-chart-wrap sad-chart-mid" style="height:300px;">
+                        <canvas id="deviceCustomerChart"></canvas>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- RECENT ACTIVITY TABLE -->
+                <div class="sad-panel sad-table-panel">
+                  <div class="sad-panel-head">
+                    <div>
+                      <div class="sad-panel-eyebrow">Recent Activity</div>
+                      <h3 class="sad-panel-title">Latest transaction feed</h3>
+                    </div>
+                    <a href="/superadmin/view_trans?customerId=<%= selectedCustomerId %>" class="sad-link-chip">Open
+                      transaction page</a>
+                  </div>
+                  <div class="table-responsive sad-table-wrap">
+                    <table class="table sad-table">
+                      <thead>
+                        <tr>
+                          <th>Receipt</th>
+                          <th>Vehicle</th>
+                          <th>Number</th>
+                          <th>Pay Mode</th>
+                          <th>Paid</th>
+                          <th>Advance</th>
+                          <th>Status</th>
+                          <th>Time</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% if (recentTransactions.length) { %>
+                          <% recentTransactions.forEach(function(item){ %>
+                            <tr>
+                              <td><span class="sad-badge sad-badge-soft">
+                                  <%= item.receipt_no || '-' %>
+                                </span></td>
+                              <td>
+                                <%= item.vehicle_name || '-' %>
+                              </td>
+                              <td><strong>
+                                  <%= item.vehicle_no || '-' %>
+                                </strong></td>
+                              <td>
+                                <%= item.pay_mode=='C' ? 'Cash' : item.pay_mode=='U' ? 'UPI' : 'Unknown' %>
+                              </td>
+                              <td class="sad-amount-text">Rs. <%= toCurrency(item.paid_amt) %>
+                              </td>
+                              <td class="sad-amount-text">Rs. <%= toCurrency(item.advance_amt) %>
+                              </td>
+                              <td>
+                                <% if (item.car_out_flag==='N' ) { %>
+                                  <span class="sad-status sad-status-live">In Parking</span>
+                                  <% } else { %>
+                                    <span class="sad-status sad-status-done">Completed</span>
+                                    <% } %>
+                              </td>
+                              <td>
+                                <%= item.date_time_in || '-' %>
+                              </td>
+                            </tr>
+                            <% }) %>
+                              <% } else { %>
+                                <tr>
+                                  <td colspan="8" class="sad-empty-table">No transaction data available yet</td>
+                                </tr>
+                                <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <% } %>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="/template/assets/libs/chart.js/dist/Chart.bundle.min.js"></script>
+  <script>
+    (function () {
+      // Feather and Select2 Initialization
+      if (typeof feather !== 'undefined') feather.replace();
+
+      if (window.jQuery && jQuery.fn.select2) {
+        jQuery('.op-select').select2({
+          width: '100%'
+        });
+      }
+
+      jQuery('#customerSelector').on('change', function () {
+        const val = jQuery(this).val();
+        if (val) {
+          window.location.href = '/superadmin/project_dashboard?customerId=' + val;
+        } else {
+          window.location.href = '/superadmin/project_dashboard';
+        }
+      });
+
+      var loader = document.getElementById('dashboardLoader');
+      var content = document.getElementById('dashboardContent');
+
+      function hideLoader() {
+        if (loader) {
+          loader.classList.add('sad-loader-hidden');
+        }
+        if (content) {
+          content.classList.remove('sad-blur');
+        }
+      }
+
+    <% if (selectedCustomerId) { %>
+      var trend = <% - JSON.stringify(trend) %>;
+        var paymentModes = <% - JSON.stringify(paymentModes) %>;
+        var vehicleTypes = <% - JSON.stringify(vehicleTypes) %>;
+        var topOperators = <% - JSON.stringify(topOperators) %>;
+        var topDevices = <% - JSON.stringify(topDevices) %>;
+
+        function safeLabels(list, field, fallbackLabel) {
+          return list.length ? list.map(function (item) { return item[field]; }) : [fallbackLabel];
+        }
+
+        function safeNumbers(list, field) {
+          return list.length ? list.map(function (item) { return Number(item[field] || 0); }) : [0];
+        }
+
+        function shortLabel(label) {
+          if (!label) return '';
+          return label.length > 10 ? label.substring(0, 10) + '...' : label;
+        }
+
+        Chart.defaults.global.defaultFontFamily = "'Inter', 'Segoe UI', sans-serif";
+        Chart.defaults.global.defaultFontColor = '#64748b';
+
+        // 1. Top Operators horizontalBar
+        var customerCtx = document.getElementById('customerRevenueChart');
+        if (customerCtx) {
+          new Chart(customerCtx, {
+            type: 'horizontalBar',
+            data: {
+              labels: safeLabels(topOperators, 'operator_name', 'No Operators'),
+              datasets: [{
+                label: 'Revenue',
+                data: safeNumbers(topOperators, 'total_revenue'),
+                backgroundColor: ['#059669', '#10b981', '#34d399', '#6ee7b7', '#2563eb', '#7c3aed'],
+                borderRadius: 10
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              legend: { display: false },
+              scales: {
+                xAxes: [{
+                  ticks: { beginAtZero: true },
+                  gridLines: { color: 'rgba(148, 163, 184, 0.12)' }
+                }],
+                yAxes: [{
+                  gridLines: { display: false }
+                }]
+              }
+            }
+          });
+        }
+
+        // 2. Top Devices bar
+        var locationCtx = document.getElementById('locationActivityChart');
+        if (locationCtx) {
+          new Chart(locationCtx, {
+            type: 'bar',
+            data: {
+              labels: safeLabels(topDevices, 'device_name', 'No Devices'),
+              datasets: [{
+                label: 'Entries',
+                data: safeNumbers(topDevices, 'total_entries'),
+                backgroundColor: ['#059669', '#10b981', '#34d399', '#60a5fa', '#2563eb', '#7c3aed'],
+                borderWidth: 0
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              legend: { display: false },
+              scales: {
+                xAxes: [{
+                  gridLines: { display: false }
+                }],
+                yAxes: [{
+                  ticks: { beginAtZero: true },
+                  gridLines: { color: 'rgba(148, 163, 184, 0.12)' }
+                }]
+              }
+            }
+          });
+        }
+
+        // 3. Trend Chart
+        var trendCtx = document.getElementById('revenueTrendChart');
+        if (trendCtx) {
+          new Chart(trendCtx, {
+            type: 'bar',
+            data: {
+              labels: safeLabels(trend, 'day_label', 'No Data'),
+              datasets: [
+                {
+                  type: 'line',
+                  label: 'Paid Amount',
+                  data: safeNumbers(trend, 'total_paid'),
+                  borderColor: '#059669',
+                  backgroundColor: 'rgba(5, 150, 105, 0.12)',
+                  borderWidth: 3,
+                  fill: false,
+                  lineTension: 0.35,
+                  pointBackgroundColor: '#059669',
+                  pointRadius: 4
+                },
+                {
+                  type: 'line',
+                  label: 'Advance Amount',
+                  data: safeNumbers(trend, 'total_advance'),
+                  borderColor: '#f97316',
+                  backgroundColor: 'rgba(249, 115, 22, 0.10)',
+                  borderWidth: 2,
+                  fill: false,
+                  lineTension: 0.35,
+                  pointBackgroundColor: '#f97316',
+                  pointRadius: 3
+                },
+                {
+                  type: 'bar',
+                  label: 'Entries',
+                  data: safeNumbers(trend, 'total_entries'),
+                  backgroundColor: 'rgba(37, 99, 235, 0.16)',
+                  borderColor: '#2563eb',
+                  borderWidth: 1,
+                  yAxisID: 'y-axis-entries'
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              legend: { position: 'bottom' },
+              tooltips: { mode: 'index', intersect: false },
+              scales: {
+                yAxes: [
+                  {
+                    id: 'y-axis-amount',
+                    ticks: { beginAtZero: true },
+                    gridLines: { color: 'rgba(148, 163, 184, 0.12)' }
+                  },
+                  {
+                    id: 'y-axis-entries',
+                    position: 'right',
+                    ticks: { beginAtZero: true },
+                    gridLines: { display: false }
+                  }
+                ],
+                xAxes: [
+                  {
+                    gridLines: { display: false }
+                  }
+                ]
+              }
+            }
+          });
+        }
+
+        // 4. Vehicle Type Mix
+        var vehicleTypeCtx = document.getElementById('vehicleTypeChart');
+        if (vehicleTypeCtx) {
+          new Chart(vehicleTypeCtx, {
+            type: 'bar',
+            data: {
+              labels: safeLabels(vehicleTypes, 'vehicle_name', 'No Vehicles'),
+              datasets: [
+                {
+                  type: 'bar',
+                  label: 'Entries',
+                  data: safeNumbers(vehicleTypes, 'total_entries'),
+                  backgroundColor: 'rgba(5, 150, 105, 0.16)',
+                  borderColor: '#059669',
+                  borderWidth: 1,
+                  yAxisID: 'vehicle-entries'
+                },
+                {
+                  type: 'line',
+                  label: 'Revenue',
+                  data: safeNumbers(vehicleTypes, 'total_revenue'),
+                  borderColor: '#2563eb',
+                  backgroundColor: 'rgba(37, 99, 235, 0.12)',
+                  borderWidth: 3,
+                  fill: false,
+                  lineTension: 0.35,
+                  pointBackgroundColor: '#2563eb',
+                  pointRadius: 4,
+                  yAxisID: 'vehicle-revenue'
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              legend: { position: 'bottom' },
+              scales: {
+                yAxes: [
+                  {
+                    id: 'vehicle-entries',
+                    position: 'left',
+                    ticks: { beginAtZero: true },
+                    gridLines: { color: 'rgba(148, 163, 184, 0.12)' }
+                  },
+                  {
+                    id: 'vehicle-revenue',
+                    position: 'right',
+                    ticks: { beginAtZero: true },
+                    gridLines: { display: false }
+                  }
+                ],
+                xAxes: [{
+                  gridLines: { display: false }
+                }]
+              }
+            }
+          });
+        }
+
+        // 5. Payment Mode Doughnut
+        var paymentCtx = document.getElementById('paymentModeChart');
+        if (paymentCtx) {
+          new Chart(paymentCtx, {
+            type: 'doughnut',
+            data: {
+              labels: paymentModes.length ? paymentModes.map(m => m.pay_mode == 'C' ? 'Cash' : m.pay_mode == 'U' ? 'UPI' : 'Unknown') : ['No Data'],
+              datasets: [{
+                data: safeNumbers(paymentModes, 'total_amount'),
+                backgroundColor: ['#059669', '#2563eb', '#f97316', '#dc2626', '#7c3aed', '#0f766e'],
+                borderWidth: 0
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              legend: { display: false },
+              cutoutPercentage: 68
+            }
+          });
+        }
+
+        // 6. Operator Revenue Distribution
+        var operatorCtx = document.getElementById('operatorCustomerChart');
+        if (operatorCtx) {
+          new Chart(operatorCtx, {
+            type: 'bar',
+            data: {
+              labels: topOperators.map(item => shortLabel(item.operator_name)),
+              datasets: [{
+                label: 'Revenue',
+                data: safeNumbers(topOperators, 'total_revenue'),
+                backgroundColor: '#059669',
+                borderRadius: 6,
+                barThickness: 15,
+                maxBarThickness: 18,
+                categoryPercentage: 0.4,
+                barPercentage: 0.6
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              legend: { display: false },
+              scales: {
+                yAxes: [{
+                  ticks: { beginAtZero: true }
+                }],
+                xAxes: [{
+                  gridLines: { display: false },
+                  ticks: {
+                    maxRotation: 30,
+                    minRotation: 0,
+                    autoSkip: false,
+                    fontSize: 10
+                  }
+                }]
+              }
+            }
+          });
+        }
+
+        // 7. Device Revenue Distribution
+        var deviceCtx = document.getElementById('deviceCustomerChart');
+        if (deviceCtx) {
+          new Chart(deviceCtx, {
+            type: 'bar',
+            data: {
+              labels: topDevices.map(item => shortLabel(item.device_name)),
+              datasets: [{
+                label: 'Revenue',
+                data: safeNumbers(topDevices, 'total_revenue'),
+                backgroundColor: 'rgba(110, 204, 153, 1)',
+                barThickness: 'flex',
+                categoryPercentage: 0.5,
+                barPercentage: 0.6,
+                borderRadius: 6
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              legend: { display: false },
+              scales: {
+                yAxes: [{
+                  ticks: {
+                    beginAtZero: true
+                  }
+                }],
+                xAxes: [{
+                  gridLines: { display: false },
+                  ticks: {
+                    maxRotation: 25,
+                    minRotation: 0
+                  }
+                }]
+              }
+            }
+          });
+        }
+    <% } else { %>
+        // If no project selected, hide loader immediately
+        hideLoader();
+    <% } %>
+
+        window.addEventListener('load', hideLoader);
+      setTimeout(hideLoader, 1200);
+    })();
+  </script>

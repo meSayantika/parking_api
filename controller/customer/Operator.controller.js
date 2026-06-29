@@ -7,13 +7,11 @@ const logger = require('../../model/LoggerModel');
 const operator = async (req, res) => {
     try {
       var custId = req.session.user.user_data.customer_id;
-      var select = "a.*,b.*,c.*,d.*",
-      table_name = "md_operator a, md_user b, md_seller c, md_locations d",
-      where = `a.customer_id = b.customer_id
-      AND a.location_id = d.location_id
-      AND a.user_id = b.user_id
-      AND b.seller_id = c.seller_id
-      AND a.customer_id = '${custId}' AND b.user_type = 'O'`;
+      // Use DISTINCT on the columns needed by the view to avoid duplicate rows
+      // caused by one-to-many joins across seller/location tables.
+      var select = "DISTINCT a.operator_name, a.user_id, a.customer_id, b.device_id, b.allow_flag",
+      table_name = "md_operator a INNER JOIN md_user b ON a.customer_id = b.customer_id AND a.user_id = b.user_id INNER JOIN md_seller c ON b.seller_id = c.seller_id INNER JOIN md_locations d ON a.location_id = d.location_id",
+      where = `a.customer_id = '${custId}' AND b.user_type = 'O'`;
       var operator = await db_Select(select, table_name, where, null);
       const page_data = {
         title: "Add customer",
@@ -31,13 +29,9 @@ const operator = async (req, res) => {
     try {
       var data = req.query;
       var custId = req.session.user.user_data.customer_id;
-      var select = "a.*,b.*,c.*,d.*",
-      table_name = "md_operator a, md_user b, md_seller c, md_locations d",
-      where = `a.customer_id = b.customer_id
-      AND a.location_id = d.location_id
-      AND a.user_id = b.user_id
-      AND b.seller_id = c.seller_id
-      AND a.customer_id = '${custId}' AND b.user_type = 'O' AND a.user_id='${data.user_id}'`;
+      var select = "DISTINCT a.operator_name, a.user_id, a.customer_id, b.device_id, b.allow_flag",
+      table_name = "md_operator a INNER JOIN md_user b ON a.customer_id = b.customer_id AND a.user_id = b.user_id INNER JOIN md_seller c ON b.seller_id = c.seller_id INNER JOIN md_locations d ON a.location_id = d.location_id",
+      where = `a.customer_id = '${custId}' AND b.user_type = 'O' AND a.user_id='${data.user_id}'`;
       var operator = await db_Select(select, table_name, where, null);
       const page_data = {
         title: "Edit Operator",

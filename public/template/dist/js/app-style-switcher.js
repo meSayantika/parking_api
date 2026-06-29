@@ -111,6 +111,12 @@ $(function () {
     handlethemeview();
 
     var setsidebartype = function () {
+        var isCollapsed = localStorage.getItem('sidebar-collapsed') === 'true';
+        if (isCollapsed) {
+            $("#main-wrapper").attr("data-sidebartype", "mini-sidebar");
+            $("#main-wrapper").addClass("mini-sidebar");
+            return;
+        }
         var width = (window.innerWidth > 0) ? window.innerWidth : this.screen.width;
         if (width < 1170) {
             $("#main-wrapper").attr("data-sidebartype", "mini-sidebar");

@@ -1,61 +1,65 @@
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="titleSec">
-                        <button type="button" class="btn btn-primary" id="myBtn"
-                          style="float: inline-end;border-radius: 6px;width: 6vw;">Add</button>
-                      </div>
-                    <h3 class="card-title"><i data-feather="user" class="feather-icon text-dark"></i>  Seller</h3>
-                    <div class="table-responsive mt-4">
-                        <table id="dataTable" class="table table-striped table-bordered no-wrap">
-                            <thead>
-                                <tr>
-                                    <th class="text-center text-dark">Sl No.</th>
-                                    <th class="text-center text-dark">Seller Name</th>
-                                    <th class="text-center text-dark">Mobile No.</th>
-                                    <th class="text-center text-dark">Email</th>
-                                    <!-- <th class="text-center text-dark">Location</th> -->
-                                    <th class="text-center text-dark">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% if(data && data.length> 0) { %>
-                                    <% data.forEach(function(item,index) { %>
-                                      <tr>
-                                        <td class="text-center text-dark">
-                                          <%=(index+1)%>
-                                        </td>
-                                        <td class="text-center text-dark">
-                                          <%=item.seller_name %>
-                                        </td>
-                                        <td class="text-center text-dark">
-                                            <%=item.seller_mob %>
-                                          </td>
-                                        <td class="text-center text-dark">
-                                            <%=item.email %>
-                                          </td>
-                                        <!-- <td class="text-center text-dark">
-                                            <%=item.loction %>
-                                          </td>     -->
-                                        <td class="text-center text-dark">
-                                          <a href="edit_seller?id=<%= item.seller_id %>"
-                                            class="btn btn-info" style="border-radius: 5px;"><i class="fa fa-edit"></i></a>
-                                        </td>
-                                      </tr>
-                                      <% }); %>
+<link href="/template/dist/css/seller-page.css" rel="stylesheet">
+
+<div class="sell-page-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card sell-card">
+                    <div class="card-body">
+                        <!-- HEADER -->
+                        <div class="sell-header">
+                            <div class="sell-title-group">
+                                <div class="sell-icon-badge">
+                                    <i data-feather="user"></i>
+                                </div>
+                                <h3 class="sell-page-title">Seller</h3>
+                                <% if(data && data.length > 0) { %>
+                                  <span class="sell-count-badge">
+                                    <%= data.length %> total
+                                  </span>
+                                <% } %>
+                            </div>
+                            <button type="button" class="sell-add-btn" data-toggle="modal" data-target="#myModal">
+                                <i data-feather="plus" style="width:15px;height:15px;stroke:currentColor;"></i> Add Seller
+                            </button>
+                        </div>
+
+                        <!-- TABLE -->
+                        <div class="table-responsive sell-table-wrap mt-4">
+                            <table id="dataTable" class="table sell-table no-wrap">
+                                <thead>
+                                    <tr>
+                                        <th>Sl No.</th>
+                                        <th>Seller Name</th>
+                                        <th>Mobile No.</th>
+                                        <th>Email</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% if(data && data.length> 0) { %>
+                                        <% data.forEach(function(item,index) { %>
+                                          <tr>
+                                            <td><%=(index+1)%></td>
+                                            <td><b><%=item.seller_name %></b></td>
+                                            <td><%=item.seller_mob %></td>
+                                            <td><%=item.email %></td>
+                                            <td>
+                                              <a href="edit_seller?id=<%= item.seller_id %>"
+                                                 class="loc-edit-btn" title="Edit">
+                                                <i class="fa fa-edit"></i>
+                                              </a>
+                                            </td>
+                                          </tr>
+                                          <% }); %>
                                         <% } else { %>
                                           <tr>
-                                            <td colspan="5" class="text-danger text-center">No data available</td>
+                                            <td colspan="5" class="sell-no-data">No seller data available</td>
                                           </tr>
-                                          <% } %>
-                               
-                            </tbody>
-                            <tfoot>
-                               
-                            </tfoot>
-                        </table>
+                                        <% } %>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -63,81 +67,70 @@
     </div>
 </div>
 
-<div class="modal fade" id="myModal">
+<!-- Modal -->
+<div class="modal fade loc-modal" id="myModal">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
-        <!-- Modal Header -->
         <div class="modal-header">
-          <h3 class="modal-title text-dark"><i data-feather="plus-circle" class="feather-icon"></i>&nbsp;<b>Add Seller</b>
-          </h3>
-          <button type="button" class="close" data-dismiss="modal">
-            &times;
-          </button>
+          <h4 class="modal-title"><i data-feather="plus-circle"></i><b> Add New Seller</b></h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
   
-        <!-- Modal body -->
         <div class="modal-body">
           <form action="/superadmin/seller_add" method="post" id="myForm">
             <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="sell_name" class="text-dark"><b>Seller Name</b></label>
-                  <input type="text" class="form-control" id="sell_name" name="sell_name" placeholder="Enter Seller Name.....">
-                </div>
-                </div>
+              <div class="col-md-6 sell-form-group">
+                  <label class="sell-label">Seller Name</label>
+                  <input type="text" class="sell-input" id="sell_name" name="sell_name" placeholder="Full name of the seller" required>
+              </div>
 
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="phone" class="text-dark"><b>Phone No</b></label>
-                    <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter Phone No.....">
-                  </div>
-                  </div>
+              <div class="col-md-6 sell-form-group">
+                  <label class="sell-label">Phone Number</label>
+                  <input type="text" class="sell-input" id="phone" name="phone" placeholder="Contact number" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)" required>
+              </div>
 
-                <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="email" class="text-dark"><b>Email</b></label>
-                      <input type="text" class="form-control" id="email" name="email" placeholder="Enter Email.....">
-                    </div>
-                    </div>
+              <div class="col-md-6 sell-form-group">
+                  <label class="sell-label">Email Address</label>
+                  <input type="email" class="sell-input" id="email" name="email" placeholder="Email contact" required>
+              </div>
 
-                    <div class="col-md-6">
-                      <div class="form-group">
-                      <label for="loc_name" class="text-dark"><b>Location Name</b></label>
-                        <select name="loc_name" class="form-control" id="loc_name">
-                          <option value="">Select Location Name</option>
-                          <% location.forEach(dt => { %>
-                            <option value="<%= dt.location_id %>"><%= dt.loction %></option>
-                          <% })%>
-                        </select>
-                      </div>
-                      </div>
+              <div class="col-md-6 sell-form-group">
+                  <label class="sell-label">Location Name</label>
+                    <select name="loc_name" class="sell-select" id="loc_name" required>
+                      <option value="">Select Location</option>
+                      <% location.forEach(dt => { %>
+                        <option value="<%= dt.location_id %>"><%= dt.loction %></option>
+                      <% })%>
+                    </select>
+              </div>
 
-              <div class="col-md-12">
-                <div class="form-group">
-                  <label for="sell_add" class="text-dark"><b>Seller Address</b></label>
-                  <textarea class="form-control" rows="3" id="sell_add" name="sell_add" placeholder="Enter Address here....."></textarea>
-                </div>
+              <div class="col-md-12 sell-form-group">
+                  <label class="sell-label">Seller Address</label>
+                  <textarea class="sell-textarea" rows="3" id="sell_add" name="sell_add" placeholder="Complete office/business address..."></textarea>
               </div>
             </div>
-            <div class="row">
+
+            <div class="text-center mt-4 pt-2">
                 <input type="hidden" name="id" value="0">
-                <div class="form-group col-md-5"></div>
-                <div class="form-group col-md-7">
-                        <input type="submit" value="SUBMIT" class="btn btn-primary"
-                          style="border-radius: 6px;" />
-                      </div>
-                
+                <button type="submit" class="sell-submit-btn">Register Seller</button>
             </div>
           </form>
         </div>
       </div>
     </div>
-  </div>
+</div>
 
 <script>
     $(document).ready(function () {
-      $("#myBtn").click(function () {
-        $("#myModal").modal();
+      // Modal Select2 logic
+
+      // Initialize Select2 on Modal open
+      $('#myModal').on('shown.bs.modal', function () {
+        $('.sell-select').select2({
+          dropdownParent: $('#myModal'),
+          placeholder: 'Select an option',
+          width: '100%'
+        });
       });
     });
-  </script>
+</script>

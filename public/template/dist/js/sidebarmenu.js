@@ -12,8 +12,25 @@ $(function() {
      var url = window.location + "";
         var path = url.replace(window.location.protocol + "//" + window.location.host + "/", "");
         var element = $('ul#sidebarnav a').filter(function() {
-            return this.href === url || this.href === path;// || url.href.indexOf(this.href) === 0;
+            return this.href === url || this.href === path;
         });
+
+        // Fallback: partial path match for sub-pages (e.g. edit_shift, edit_device_setting)
+        if (element.length === 0) {
+            var bestMatch = null;
+            var bestMatchLength = 0;
+            $('ul#sidebarnav a').each(function() {
+                var linkPath = this.href.replace(window.location.protocol + "//" + window.location.host + "/", "");
+                if (linkPath.length > 1 && url.indexOf(this.href) === 0 && this.href.length > bestMatchLength) {
+                    bestMatch = $(this);
+                    bestMatchLength = this.href.length;
+                }
+            });
+            if (bestMatch) {
+                element = bestMatch;
+            }
+        }
+
         element.parentsUntil(".sidebar-nav").each(function (index)
         {
             if($(this).is("li") && $(this).children("a").length !== 0)
@@ -57,4 +74,4 @@ $(function() {
         e.preventDefault();
     });
     
-});
+});

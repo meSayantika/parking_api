@@ -1,62 +1,158 @@
-<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
-rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+<link href="/template/dist/css/operator-page.css" rel="stylesheet">
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="card col-12">
-            <div class="card-body">
-                <div class="titleSec">
-                    <h2 class="text-dark"><i class="fa fa-arrow-circle-left" aria-hidden="true" id="back"
-                            style="cursor: pointer;">&nbsp;Vehicle Edit Details</i></h2>
+<style>
+    /* Premium Modern Toggle Match from Header Footer */
+    .op-toggle-wrapper {
+        padding-top: 5px;
+    }
+    
+    .op-modern-toggle {
+        display: inline-flex;
+        width: 172px;
+        max-width: 100%;
+        margin: 0;
+        cursor: pointer;
+    }
+
+    .op-toggle-input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .op-toggle-ui {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        width: 100%;
+        height: 46px;
+        padding: 4px;
+        border-radius: 999px;
+        background: linear-gradient(180deg, #f3f6f9, #eef2f7);
+        box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.22);
+        overflow: hidden;
+        transition: all 0.25s ease;
+    }
+
+    .op-toggle-option {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--gray-500);
+        transition: color 0.25s ease;
+    }
+
+    .op-toggle-thumb {
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        width: calc(50% - 4px);
+        height: calc(100% - 8px);
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--green-500), var(--green-600));
+        box-shadow: 0 8px 18px rgba(16, 185, 129, 0.28);
+        transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .op-toggle-input:checked + .op-toggle-ui .op-toggle-thumb {
+        transform: translateX(0);
+        background: linear-gradient(135deg, var(--green-500), var(--green-600));
+        box-shadow: 0 8px 18px rgba(16, 185, 129, 0.28);
+    }
+
+    .op-toggle-input:not(:checked) + .op-toggle-ui .op-toggle-thumb {
+        transform: translateX(100%);
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        box-shadow: 0 8px 18px rgba(220, 38, 38, 0.24);
+    }
+
+    .op-toggle-input:checked + .op-toggle-ui .op-toggle-option-on,
+    .op-toggle-input:not(:checked) + .op-toggle-ui .op-toggle-option-off {
+        color: #ffffff;
+    }
+
+    .op-toggle-input:checked + .op-toggle-ui .op-toggle-option-off,
+    .op-toggle-input:not(:checked) + .op-toggle-ui .op-toggle-option-on {
+        color: var(--gray-500);
+    }
+
+    .op-toggle-input:focus + .op-toggle-ui {
+        box-shadow:
+            inset 0 0 0 1px rgba(16, 185, 129, 0.25),
+            0 0 0 4px rgba(16, 185, 129, 0.14);
+    }
+</style>
+
+<div class="op-page-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card op-card">
+                    <div class="card-body">
+
+                        <!-- HEADER -->
+                        <div class="op-header" style="margin-bottom:20px;">
+                            <div class="op-title-group">
+                                <div class="op-icon-badge">
+                                    <i data-feather="truck"></i>
+                                </div>
+                                <span class="op-back-btn" id="back" title="Back to Vehicle">
+                                    <i data-feather="arrow-left"></i>
+                                </span>
+                                <h3 class="op-edit-title">Vehicle Edit Details</h3>
+                            </div>
+                        </div>
+
+                        <!-- FORM -->
+                        <form action="/vehicle/edit_save_vehicle" id="myForm" method="post">
+                            <input type="hidden" id="vehicle_id" name="vehicle_id" value="<%= data.vehicle_id %>">
+                            <div class="row mt-4">
+                                <div class="col-md-4 op-form-group">
+                                    <label class="op-label">Customer Name</label>
+                                    <select name="cust_id_view" class="op-select" id="cust_id" disabled
+                                        style="background-color: var(--gray-100); cursor: not-allowed;">
+                                        <option value="<%= data.customer_id %>" selected>
+                                            <%= data.customer_name %>
+                                        </option>
+                                    </select>
+                                    <input type="hidden" name="cust_id" value="<%= data.customer_id %>">
+                                </div>
+
+                                <div class="col-md-4 op-form-group">
+                                    <label class="op-label">Vehicle Name</label>
+                                    <input type="text" class="op-input" id="vehicle_name" name="vehicle_name"
+                                        value="<%= data.vehicle_name %>" required placeholder="Enter Vehicle Name">
+                                </div>
+
+                                <div class="col-md-4 op-form-group">
+                                    <label class="op-label">Vehicle Status (ON/OFF)</label>
+                                    <div class="op-toggle-wrapper">
+                                        <label class="op-modern-toggle">
+                                            <input type="checkbox" value="Y" id="veh_flag" name="veh_flag" class="op-toggle-input" <%= (data.vehicle_on_off=='Y') ? 'checked' : '' %>>
+                                            <span class="op-toggle-ui">
+                                                <span class="op-toggle-option op-toggle-option-on">Active</span>
+                                                <span class="op-toggle-option op-toggle-option-off">Deactive</span>
+                                                <span class="op-toggle-thumb"></span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-center mt-4 pt-2">
+                                <button type="submit" id="submitBtn" class="op-submit-btn" disabled>Update Vehicle
+                                    Details</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <form action="/vehicle/edit_save_vehicle" id="myForm" method="post">
-                    <input type="hidden" id="vehicle_id" name="vehicle_id" value="<%= data.vehicle_id %>">
-
-                    <div class="row mt-4">
-                        <div class="form-group col-4">
-                            <label for="cust_id" class="text-dark"><b>Customer Name:</b></label>
-                            <select name="cust_id" class="form-control" id="cust_id" disabled>
-                                <option value="">Select Customer Name</option>
-                                <option value="<%= data.customer_id %>" <%=user.user_data.customer_id==data.customer_id
-                                    ? 'selected' : '' %>><%= data.customer_name %>
-                                </option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-group">
-                              <label for="vehicle_name" class="text-dark"><b>Vehicle Name</b></label>
-                              <input type="text" class="form-control" id="vehicle_name" name="vehicle_name" placeholder="Enter Vehicle Name...."
-                                value="<%= data.vehicle_name %>">
-                            </div>
-                          </div>
-
-                          <div class="col-md-4 cust-toggle1">
-                            <label for="veh_flag" class="text-dark"><b>Vehicle ON/OFF</b></label><br>
-                            <input 
-                            type="checkbox" 
-                            value = "Y"
-                            id="veh_flag" 
-                            data-toggle="toggle" 
-                            data-onstyle="success" 
-                            data-offstyle="danger" 
-                            data-on="Active" 
-                            data-off="Deactive" 
-                            name="veh_flag"
-                            <%=(data.vehicle_on_off=='Y')?'checked':''%>
-                            >
-                            </div>
-            
-                         
-                        <div class="row mt-2">
-                            <div class="form-group col-md-6">
-                                <input type="submit" id="submitBtn" value="SUBMIT" class="btn btn-primary btn-block text-center"
-                                    style="margin-left: 25vw;border-radius: 5px;" disabled/>
-                            </div>
-                        </div>
-                        </div>
-                </form>
             </div>
         </div>
     </div>
@@ -64,131 +160,32 @@ rel="stylesheet">
 
 <script>
     $(document).ready(function () {
-                    $("#back").click(function () {
-                        window.location.href = "/vehicle/vehicle_details";
-                    });
+        feather.replace();
+
+        $("#back").click(function () {
+            window.location.href = "/vehicle/vehicle_details";
+        });
+
+        const $vehicleName = $("#vehicle_name");
+        const $vehFlag = $("#veh_flag");
+        const $submitBtn = $("#submitBtn");
+
+        let initialValues = {
+            vehicle_name: $vehicleName.val(),
+            veh_flag: $vehFlag.prop("checked")
+        };
+
+        const hasChanged = () => {
+            if ($vehicleName.val() !== initialValues.vehicle_name) return true;
+            if ($vehFlag.prop("checked") !== initialValues.veh_flag) return true;
+            return false;
+        };
+
+        const updateSubmitState = () => {
+            $submitBtn.prop("disabled", !hasChanged());
+        };
+
+        $vehicleName.on("input", updateSubmitState);
+        $vehFlag.on("change", updateSubmitState);
     });
 </script>
-
-<script>
-$(function () {
-  const $vehicleName = $("#vehicle_name");
-  const $vehFlag = $("#veh_flag"); // the original checkbox element
-  const $submitBtn = $("#submitBtn");
-
-  // keep submit disabled until we detect a real change
-  $submitBtn.prop("disabled", true);
-
-  // store initial values after toggle is ready
-  let initialValues = null;
-
-  const captureInitialValues = () => {
-    initialValues = {
-      vehicle_name: $vehicleName.val(),
-      veh_flag: !!$vehFlag.prop("checked")
-    };
-    // sanity: update submit state once captured
-    updateSubmitState();
-  };
-
-  const hasChanged = () => {
-    if (!initialValues) return false;
-    if ($vehicleName.val() !== initialValues.vehicle_name) return true;
-    if (!!$vehFlag.prop("checked") !== initialValues.veh_flag) return true;
-    return false;
-  };
-
-  const updateSubmitState = () => {
-    $submitBtn.prop("disabled", !hasChanged());
-  };
-
-  // Wait until bootstrap-toggle widget is present next to the checkbox.
-  // Polls briefly and then calls callback.
-  const waitForToggleWidget = (cb, timeout = 1000) => {
-    const start = Date.now();
-    const tryNow = () => {
-      // bootstrap-toggle wraps checkbox with a sibling .toggle element
-      if ($vehFlag.length && $vehFlag.parent().find(".toggle").length) return cb(true);
-      if (Date.now() - start > timeout) return cb(false);
-      setTimeout(tryNow, 30);
-    };
-    tryNow();
-  };
-
-  // Bind robust event handlers for toggle checkbox & UI
-  const bindToggleEvents = () => {
-    // checkbox change (covers keyboard toggles too)
-    $vehFlag.off(".fc").on("change.fc", () => {
-      // small delay so checked state is stable
-      setTimeout(updateSubmitState, 10);
-    });
-
-    // click on the visible toggle control (covers pointer events)
-    const $uiToggle = $vehFlag.parent().find(".toggle");
-    if ($uiToggle.length) {
-      $uiToggle.off(".fc").on("click.fc", () => {
-        setTimeout(updateSubmitState, 20);
-      });
-    } else {
-      // fallback: listen for clicks in the parent area
-      $vehFlag.parent().off(".fc").on("click.fc", () => {
-        setTimeout(updateSubmitState, 20);
-      });
-    }
-
-    // also listen for key events on the checkbox (space/enter)
-    $vehFlag.off("keyup.fc").on("keyup.fc", (e) => {
-      if (e.key === " " || e.key === "Enter") setTimeout(updateSubmitState, 10);
-    });
-  };
-
-  // Always listen to input on text field
-  $vehicleName.off(".fc").on("input.fc", updateSubmitState);
-
-  // Start flow: wait for toggle widget to exist, then capture initial and bind events
-  waitForToggleWidget((ready) => {
-    captureInitialValues();
-    bindToggleEvents();
-
-    // Extra safety: if widget wasn't ready, keep polling for a short while and re-capture
-    if (!ready) {
-      const pollStart = Date.now();
-      const poll = () => {
-        if ($vehFlag.parent().find(".toggle").length) {
-          captureInitialValues();
-          bindToggleEvents();
-          updateSubmitState();
-        } else if (Date.now() - pollStart < 2000) {
-          setTimeout(poll, 100);
-        }
-      };
-      poll();
-    }
-  });
-
-  // Additional fallback: a tiny periodic check for 1.5s in case events are lost
-  (function shortLivedWatcher() {
-    const end = Date.now() + 1500;
-    const loop = () => {
-      if (Date.now() > end) return;
-      updateSubmitState();
-      setTimeout(loop, 200);
-    };
-    loop();
-  })();
-
-});
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-

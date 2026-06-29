@@ -1,6 +1,11 @@
 const AuthCheckedMW=(req, res,next)=>{
     try {
         if (!req.session.user){
+            // If the user is navigating within the superadmin area, redirect to superadmin login.
+            // This avoids confusing redirects to `/login` for superadmin pages like `/report/*`.
+            if (req.originalUrl && req.originalUrl.startsWith('/superadmin')) {
+                return res.redirect('/superadmin_login');
+            }
             res.redirect('/login')
         }else{
             next()

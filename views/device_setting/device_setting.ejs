@@ -1,217 +1,248 @@
-<div class="container-fluid">
-  <div class="col-sm-12 col-md-12 col-lg-12">
-    <div class="card">
-      <div class="card-body">
-        <div class="titleSec">
-          <button type="button" class="btn btn-primary" id="myBtn"
-            style="float: inline-end;border-radius: 6px;width: 6vw;cursor: pointer;">Add</button>
-        </div>
-        <div class="row mt-4">
-          <h4 class="text-dark"><i data-feather="settings" class="feather-icon"></i>&nbsp;<b>Device Setting</b></h4>
-        </div>
-        <div class="row mt-3">
-          <div class="form-group col-6">
-            <label for="dev_id"><b style="color: black;">Device Id:</b></label>
-            <select name="dev_id" class="form-control" id="dev_id" required>
-              <option value="">Select Device Id</option>
-              <% data.msg.forEach(function(item2,index) { %>
-                <option value="<%=item2.app_id%>">
-                  <%=item2.app_id%>
-                </option>
-                <% }); %>
-            </select>
+<link href="/template/dist/css/device_setting.css" rel="stylesheet">
+<style>
+  /* Direct fallback styles for premium look */
+  .dev-page-wrapper { background: #f3f4f6 !important; padding: 20px !important; min-height: 100vh; }
+  .dev-card { border-radius: 12px !important; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1) !important; border: none !important; background: #fff !important; }
+  .dev-header { border-bottom: 1px solid #e5e7eb !important; padding-bottom: 15px !important; margin-bottom: 20px !important; }
+  .dev-add-btn { background: linear-gradient(135deg, #10b981, #059669) !important; color: #fff !important; border: none !important; padding: 10px 20px !important; border-radius: 8px !important; font-weight: 600 !important; cursor: pointer !important; }
+</style>
+
+<div class="dev-page-wrapper">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card dev-card">
+          <div class="card-body">
+
+            <!-- HEADER -->
+            <div class="dev-header">
+              <div class="dev-title-group">
+                <div class="dev-icon-badge">
+                  <i data-feather="settings"></i>
+                </div>
+                <h3 class="dev-page-title">Device Setting</h3>
+              </div>
+              <button type="button" class="dev-add-btn" id="myBtn">
+                <i data-feather="plus" style="width:15px;height:15px;stroke:currentColor;"></i> Add Device
+              </button>
+            </div>
+
+            <!-- FILTER SECTION -->
+            <div class="dev-filter-sec">
+              <div class="row align-items-end">
+                <div class="col-md-6 dev-form-group mb-0">
+                  <label for="dev_id" class="dev-label">
+                    <i data-feather="tablet" style="width:14px;height:14px;margin-right:4px;"></i> Device ID
+                  </label>
+                  <select name="dev_id" class="dev-select" id="dev_id" required>
+                    <option value="">Select Device ID</option>
+                    <% data.msg.forEach(function(item2,index) { %>
+                      <option value="<%=item2.app_id%>">
+                        <%=item2.app_id%>
+                      </option>
+                      <% }); %>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <div style="white-space: nowrap; display: flex; align-items: center; gap: 10px;">
+                    <button type="submit" class="dev-submit-btn" id="submitBtn">
+                      <i data-feather="search" style="width:15px;height:15px;margin-right:6px;"></i> Filter
+                    </button>
+                    <a href="/device/device_name" class="dev-refresh-btn" title="Refresh List">
+                      <i data-feather="refresh-cw"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- TABLE CONTENT -->
+            <div class="dev-table-wrap mt-4 mb-5">
+              <table id="example" class="table dev-table no-wrap show_data" style="width:100%">
+                <thead>
+                  <tr>
+                    <th>Sl. No.</th>
+                    <th>Device ID</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Data populated by AJAX -->
+                </tbody>
+              </table>
+            </div>
           </div>
-          <div class="form-group col-md-4" style="margin-top: 30px;">
-            <button type="submit" class="btn btn-primary" style="border-radius: 5px;" id="submitBtn">Submit</button>
-          </div>
-        </div>
-        <div class="table-responsive">
-          <table id="example" class="table table-striped table-bordered show_data" style="width:100%">
-            <thead>
-              <tr>
-                <th class="text-dark text-center">Sl. No.</th>
-                <th class="text-dark text-center">Device ID</th>
-                <th class="text-dark text-center">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td colspan="9" class="text-danger text-center">No Data Found</td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
-  rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Bootstrap Toggle CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap4-toggle/css/bootstrap4-toggle.min.css" rel="stylesheet">
-
-<!-- Bootstrap Toggle JS -->
-<script defer src="https://cdn.jsdelivr.net/npm/bootstrap4-toggle/js/bootstrap4-toggle.min.js"></script>
-
-
-
-
-<div class="modal fade" id="myModal">
+<!-- Modal -->
+<div class="modal fade loc-modal" id="myModal">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <!-- Modal Header -->
       <div class="modal-header">
-        <h3 class="modal-title text-dark"><i data-feather="plus-circle" class="feather-icon"></i>&nbsp;<b>Add Device</b>
-        </h3>
-        <button type="button" class="close" data-dismiss="modal">
-          &times;
-        </button>
+        <h4 class="modal-title"><i data-feather="plus-circle" style="width:20px;height:20px;"></i><b> Add Device</b></h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
 
       <!-- Modal body -->
       <div class="modal-body">
         <form action="/device/add_save_device" method="post" id="myForm">
-          <div class="row">
-            <div class="form-group col-12">
-              <label for="no_device"><b class="text-dark">No. of Device:</b>&nbsp;&nbsp;</label>
-              <b><span class="badge badge-primary" style="font-size: medium;"><%= user.user_data.no_device %></span></b>
-              <input type="hidden" id="no_device" value="<%= user.user_data.no_device %>">
+          <div class="row mb-3">
+            <div class="col-12">
+              <div class="dev-info-badge" style="background: var(--primary-light); color: var(--primary); padding: 8px 15px; border-radius: 8px; display: inline-flex; align-items: center; font-weight: 600;">
+                <i data-feather="info" style="width:16px; height:16px; margin-right:8px;"></i>
+                No. of Device Allowed: <span class="ml-2 badge badge-primary"><%= user.user_data.no_device %></span>
+                <input type="hidden" id="no_device" value="<%= user.user_data.no_device %>">
+              </div>
             </div>
-        </div>
+          </div>
           <div class="row">
-            <div class="form-group col-3">
-              <label for="cust_id" class="text-dark"><b>Customer Name:</b></label>
-              <select name="cust_id" class="form-control" id="cust_id" required>
+            <div class="col-md-3 dev-form-group">
+              <label for="cust_id" class="dev-label">Customer Name</label>
+              <select name="cust_id" class="dev-select" id="cust_id" required>
                 <option value="<%= user.user_data.customer_id %>">
                   <%= user.user_data.customer_name %>
                 </option>
               </select>
             </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="dev_mode" class="text-dark"><b>Mode</b></label>
-                <select name="dev_mode" class="form-control" id="dev_mode">
-                  <option value="<%= user.user_data.dev_mod %>">
-                    <%= user.user_data.dev_mod=='D' ? 'Dual' : 'Toll Naka' %>
-                  </option>
-                </select>
-              </div>
+            <div class="col-md-3 dev-form-group">
+              <label for="dev_mode" class="dev-label">Mode</label>
+              <select name="dev_mode" class="dev-select" id="dev_mode">
+                <option value="<%= user.user_data.dev_mod %>">
+                  <%= user.user_data.dev_mod=='D' ? 'Dual' : 'Toll Naka' %>
+                </option>
+              </select>
             </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="app_id" class="text-dark"><b>Device ID</b></label>
-                <input type="text" class="form-control" id="app_id" name="app_id" placeholder="Enter Device ID...."
-                  value="">
-              </div>
+            <div class="col-md-3 dev-form-group">
+              <label for="app_id" class="dev-label">Device ID</label>
+              <input type="text" class="dev-input" id="app_id" name="app_id" placeholder="Enter Device ID...." value="">
             </div>
-            <div class="col-md-3 cust-toggle1">
-              <label for="gst_flag" class="text-dark"><b>GST Flag</b></label><br>
-              <input type="checkbox" value="Y" id="gst_flag" data-toggle="toggle" data-onstyle="success"
-                data-offstyle="danger" data-on="Active" data-off="Deactive" name="gst_flag">
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="dev_type" class="text-dark"><b>Device Type</b></label>
-                <select name="dev_type" class="form-control" id="dev_type">
-                  <option value="">Select Device Type</option>
-                  <option value="H">Handheld Device</option>
-                  <option value="M">Mobile Device</option>
-                  <option value="A">Amigos Blue Handheld Device</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-3 cust-toggle1">
-              <label for="report_flag" class="text-dark"><b>Report Flag</b></label><br>
-              <input type="checkbox" value="Y" id="report_flag" data-toggle="toggle" data-onstyle="success"
-                data-offstyle="danger" data-on="Active" data-off="Deactive" name="report_flag">
-            </div>
-            <div class="col-md-3 cust-toggle1">
-              <label for="tot_col" class="text-dark"><b>Total collection Flag</b></label><br>
-              <input type="checkbox" value="Y" id="tot_col" data-toggle="toggle" data-onstyle="success"
-                data-offstyle="danger" data-on="Active" data-off="Deactive" name="tot_col">
+            <div class="col-md-3 dev-form-group">
+              <label for="dev_type" class="dev-label">Device Type</label>
+              <select name="dev_type" class="dev-select" id="dev_type">
+                <option value="">Select Device Type</option>
+                <option value="H">Handheld Device</option>
+                <option value="M">Mobile Device</option>
+                <option value="A">Amigos Blue Handheld Device</option>
+              </select>
             </div>
 
-            <div class="col-md-3 cust-toggle1">
-              <label for="redirect_flag" class="text-dark"><b>Redirection</b></label><br>
-              <input type="checkbox" value="Y" id="redirect_flag" data-toggle="toggle" data-onstyle="success"
-                data-offstyle="danger" data-on="Home" data-off="Back" name="redirect_flag">
+            <div class="col-md-3 dev-form-group">
+              <div class="switch-container">
+                <label class="dev-label">GST Flag</label>
+                <label class="dev-switch">
+                  <input type="checkbox" name="gst_flag" id="gst_flag" value="Y">
+                  <span class="dev-slider round"></span>
+                </label>
+              </div>
             </div>
-
-            <div class="col-md-3 cust-toggle1">
-              <label for="grace_flag" class="text-dark"><b>Grace Period Flag</b></label><br>
-              <input type="checkbox" value="Y" id="grace_flag" data-toggle="toggle" data-onstyle="success"
-                data-offstyle="danger" data-on="Active" data-off="Deactive" name="grace_flag" checked>
+            <div class="col-md-3 dev-form-group">
+              <div class="switch-container">
+                <label class="dev-label">Report Flag</label>
+                <label class="dev-switch">
+                  <input type="checkbox" name="report_flag" id="report_flag" value="Y">
+                  <span class="dev-slider round"></span>
+                </label>
+              </div>
             </div>
-
-            <div class="col-md-3" id="hide_grace">
-              <div class="form-group">
-                <label for="grace_value" class="text-dark"><b>Grace Value &nbsp;<span class=text-danger>(In
-                      Minute)</span></b></label>
-                <input type="text" name="grace_value" id="grace_value" class="form-control" value="00">
+            <div class="col-md-3 dev-form-group">
+              <div class="switch-container">
+                <label class="dev-label">Total Collection Flag</label>
+                <label class="dev-switch">
+                  <input type="checkbox" name="tot_col" id="tot_col" value="Y">
+                  <span class="dev-slider round"></span>
+                </label>
+              </div>
+            </div>
+            <div class="col-md-3 dev-form-group">
+              <div class="switch-container">
+                <label class="dev-label">Redirection (Home/Back)</label>
+                <label class="dev-switch switch-info">
+                  <input type="checkbox" name="redirect_flag" id="redirect_flag" value="Y">
+                  <span class="dev-slider round"></span>
+                </label>
               </div>
             </div>
 
-            <div class="col-md-3 cust-toggle1">
-              <label for="adv_pay_flag" class="text-dark"><b>Advance Flag</b></label><br>
-              <input type="checkbox" value="Y" id="adv_pay_flag" data-toggle="toggle" data-onstyle="success"
-                data-offstyle="danger" data-on="Active" data-off="Deactive" name="adv_pay_flag">
+            <div class="col-md-3 dev-form-group">
+              <div class="switch-container">
+                <label class="dev-label">Grace Period Flag</label>
+                <label class="dev-switch">
+                  <input type="checkbox" name="grace_flag" id="grace_flag" value="Y" checked>
+                  <span class="dev-slider round"></span>
+                </label>
+              </div>
+            </div>
+            <div class="col-md-3 dev-form-group" id="hide_grace">
+              <label for="grace_value" class="dev-label">Grace Value (Min)</label>
+              <input type="text" name="grace_value" id="grace_value" class="dev-input" value="00">
             </div>
 
-            <div class="col-md-3" id="hide_adv">
-              <div class="form-group">
-                  <label for="adv_value" class="text-dark"><b>Advance Value &nbsp;</b></label>
-                  <input type="text" name="adv_value" id="adv_value" class="form-control"
-                      value="00">
+            <div class="col-md-3 dev-form-group">
+              <div class="switch-container">
+                <label class="dev-label">Advance Flag</label>
+                <label class="dev-switch">
+                  <input type="checkbox" name="adv_pay_flag" id="adv_pay_flag" value="Y">
+                  <span class="dev-slider round"></span>
+                </label>
               </div>
-          </div>
+            </div>
+            <div class="col-md-3 dev-form-group" id="hide_adv" style="display:none;">
+              <label for="adv_value" class="dev-label">Advance Value</label>
+              <input type="text" name="adv_value" id="adv_value" class="dev-input" value="00">
+            </div>
 
-          <div class="col-md-3 cust-toggle1">
-            <label for="pay_mode_flag" class="text-dark"><b>Pay Mode Flag</b></label><br>
-            <input type="checkbox" value="Y" id="pay_mode_flag" data-toggle="toggle" data-onstyle="success"
-              data-offstyle="danger" data-on="Active" data-off="Deactive" name="pay_mode_flag">
-          </div>
+            <div class="col-md-3 dev-form-group">
+              <div class="switch-container">
+                <label class="dev-label">Pay Mode Flag</label>
+                <label class="dev-switch">
+                  <input type="checkbox" name="pay_mode_flag" id="pay_mode_flag" value="Y">
+                  <span class="dev-slider round"></span>
+                </label>
+              </div>
+            </div>
 
-          <% if (user.user_data.dev_mod == 'D') { %>
-          <div class="col-md-3 cust-toggle1">
-            <label for="qr_code_flag" class="text-dark"><b>QR Code Flag</b></label><br>
-            <input type="checkbox" value="Y" id="qr_code_flag" data-toggle="toggle" data-onstyle="success"
-              data-offstyle="danger" data-on="Active" data-off="Deactive" name="qr_code_flag">
-          </div>
-          <% } %>   
-			  
-		 <% if (user.user_data.dev_mod == 'D') { %>
-            <div class="col-md-3 cust-toggle1">
-               <label for="day_wise_rate" class="text-dark"><b>Day wise Vehicle Rate</b></label><br>
-               <input type="checkbox" value="Y" id="day_wise_rate" data-toggle="toggle" data-onstyle="success"
-                  data-offstyle="danger" data-on="Active" data-off="Deactive" name="day_wise_rate">
-                </div>
+            <% if (user.user_data.dev_mod == 'D') { %>
+            <div class="col-md-3 dev-form-group">
+              <div class="switch-container">
+                <label class="dev-label">QR Code Flag</label>
+                <label class="dev-switch">
+                  <input type="checkbox" name="qr_code_flag" id="qr_code_flag" value="Y">
+                  <span class="dev-slider round"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="col-md-3 dev-form-group">
+              <div class="switch-container">
+                <label class="dev-label">Day wise Vehicle Rate</label>
+                <label class="dev-switch">
+                  <input type="checkbox" name="day_wise_rate" id="day_wise_rate" value="Y">
+                  <span class="dev-slider round"></span>
+                </label>
+              </div>
+            </div>
             <% } %>   
 
             <% if (user.user_data.dev_mod == 'F') { %>
-           <div class="col-md-3">
-              <div class="form-group">
-                <label for="default_payment_mode" class="text-dark"><b>Default Payment Mode</b></label>
-                <select name="default_payment_mode" class="form-control" id="default_payment_mode">
-                  <option value="">Select Payment Mode</option>
-                  <option value="C">CASH</option>
-                  <option value="U">UPI</option>
-                </select>
-              </div>
+            <div class="col-md-3 dev-form-group">
+              <label for="default_payment_mode" class="dev-label">Default Payment Mode</label>
+              <select name="default_payment_mode" class="dev-select" id="default_payment_mode">
+                <option value="">Select Payment Mode</option>
+                <option value="C">CASH</option>
+                <option value="U">UPI</option>
+              </select>
             </div>
             <% } %>  
 
           </div>
           <div class="row mt-3">
-            <div class="form-group col-md-3">
-              <input type="submit" value="SUBMIT" id="set_dev_sub" class="btn btn-primary "
-                style="margin-left: 35vw;border-radius: 6px;" />
+            <div class="col-12 text-center">
+              <button type="submit" id="set_dev_sub" class="dev-submit-btn">SUBMIT</button>
             </div>
           </div>
         </form>
@@ -220,242 +251,177 @@
   </div>
 </div>
 
-<!-- <script>
- $(document).on('change', '#gst_flag', function () {
-     console.log("===== GST TOGGLE CLICKED =====");
-
-    let isChecked = $(this).prop('checked');
-
-  if (isChecked) {
-
-    let cust_id = $('#cust_id').val();
-    console.log("Customer ID:", cust_id);
-
-    $.ajax({
-      url: '/device/get_gst_type',
-      type: 'GET',
-      data: { customer_id: cust_id },
-      success: function (res) {
-        console.log(res);
-        alert(JSON.stringify(res.msg));
-
-        if (res.suc > 0  && res.msg.length > 0) {
-           let gstData = res.msg[0];
-
-            console.log("GST FULL DATA:", gstData);
-            console.log("GST TYPE:", gstData.gst_mode);
-        } else {
-           console.log("NO GST DATA FOUND");
-            alert("GST not found in master!");
-          $('#gst_flag').bootstrapToggle('off');
-        }
-      }
-    });
-
-  }
-});
-</script> -->
-
-<!-- <script>
-$(document).ready(function () {
-
-   $('#gst_flag').on('change', function () {
-    let isChecked = $(this).prop('checked');
-
-    // Turn off advance flag
-    if (isChecked) {
-
-      let cust_id = $('#cust_id').val();
-      console.log("Customer ID:", cust_id);
-
-      $.ajax({
-        url: '/device/get_gst_type',
-        type: 'GET',
-        data: { customer_id: cust_id },
-        success: function (res) {
-          console.log("API RESPONSE:", res);
-        },
-        error: function (err) {
-          console.log("ERROR:", err);
-        }
-      });
-    }
-  });
-
-});
-</script> -->
-
 <script>
+  console.log("Device Setting script starting...");
   $(document).ready(function () {
-    $("#myBtn").click(function () {
-      $.ajax({
-      type: "GET",
-      url: "/device/device_id",
-      data: { },
-      success: function (response) {
-        // console.log(response.msg[0].tot_row, $('#no_device').val(),'22222');
-        if($('#no_device').val() <= response.msg[0].tot_row){
-          alert(`You can not add more than ${$('#no_device').val()} device.`)
-          $('#set_dev_sub').attr('disabled', true)
-        }else{
-          $("#myModal").modal();
-        }
-      },
-      error: function (error) {
-        console.log(error);
-
-      },
-    });
-
-    });
-  });
-</script>
-
-<script>
-  $('#grace_flag').on('change', function () {
-    if ($(this).is(':checked')) {
-      $('#hide_grace').show()
-      $('#grace_value').attr('required', 'required')
-    } else {
-      $('#grace_value').removeAttr('required')
-      $('#grace_value').val('00')
-      $('#hide_grace').hide()
-    }
-  })
-</script>
-
-<!-- <script>
-$(document).ready(function () {
-
-  $('#adv_pay_flag').change(function () {
-
-    let isChecked = $(this).prop('checked');
-
-    if (isChecked == true) {
-      $('#hide_adv').css('display', 'block');
-    } else {
-      $('#hide_adv').css('display', 'none');
-      $('#adv_value').val('00');
-    }
-
-  });
-
-});
-</script> -->
-
-<script>
-  $(document).ready(function () {
-  $('#adv_pay_flag').on('change', function () {
-      if ($(this).is(':checked')) {
-      //  if ($(this).prop('checked')) {
-          $('#hide_adv').show()
-          $('#adv_value').attr('required', 'required')
-      } else {
-          $('#adv_value').removeAttr('required')
-          $('#adv_value').val('00')
-          $('#hide_adv').hide()
-      }
-  })
-  })
-</script>
-
-<!-- <script>
-  $(document).ready(function () {
-    // Ensure Bootstrap Toggle is initialized
-    $('#gst_flag').bootstrapToggle();
-    $('#adv_pay_flag').bootstrapToggle();
-
-    // Event listener for GST Flag toggle
-    $('#gst_flag').on('change', function () {
-      if ($(this).prop('checked')) {
-        // If GST Flag is ON, turn Advance Flag OFF
-        $('#adv_pay_flag').bootstrapToggle('off'); // Turn off the Advance Flag toggle
-      } else {
-        // If GST Flag is OFF, turn Advance Flag ON
-        $('#adv_pay_flag').bootstrapToggle('on'); // Turn on the Advance Flag toggle
-      }
-    });
-  });
-</script> -->
-
-<script>
-  $(document).ready(function () {
-    $('#gst_flag').bootstrapToggle();
-    $('#adv_pay_flag').bootstrapToggle();
-
-    $('#gst_flag').on('change', function () {
-      if ($(this).prop('checked')) {
-        $('#adv_pay_flag').bootstrapToggle('off'); 
-         $('#adv_pay_flag').bootstrapToggle('disable');
-      } else {
-        $('#adv_pay_flag').bootstrapToggle('enable'); 
-      }
-    });
-
-      $('#adv_pay_flag').change(function () {
-
-    if ($('#gst_flag').prop('checked')) {
-
-      // If GST is ON → never allow advance
-      $('#adv_pay_flag').bootstrapToggle('off');
-
-      return false;
-    }
-
-  });
-
-    // $('#adv_pay_flag').on('change', function () {
-    //   if ($(this).prop('checked')) {
-    //     $('#gst_flag').bootstrapToggle('off'); 
-    //   } else {
-    //     $('#gst_flag').bootstrapToggle('on'); 
-    //   }
-    // });
-  });
-</script>
-
-
-<script>
-  $('#submitBtn').click(function () {
-    var dev_id = $('#dev_id').val();
-
-    var tbody = $(".show_data tbody");
-    $.ajax({
-      type: "GET",
-      url: "/device/device_details",
-      data: { dev_id: dev_id },
-      success: function (response) {
-        tbody.empty();
-        if (response.suc > 0 && response.msg.length > 0) {
-          response.msg.forEach(function (item, index) {
-            var flag = 'Y', dev = 'D', tot = 'Y', pay = 'Y';
-            var row =
-              "<tr>" +
-              "<td class='text-dark text-center'>" +
-              (index + 1) +
-              "</td>" +
-              "<td class='text-dark text-center'>" +
-              item.app_id +
-              "</td>" +
-              "<td class='text-center'><a href='/device/edit_device_details?customer_id=" + item.customer_id + "&&dev_id=" + item.app_id + "' class='btn btn-info' style='border-radius:5px'><i class='fa fa-edit'></i></a></td>" +
-              "</tr>";
-            tbody.append(row);
+    console.log("Document ready in Device Setting");
+    // We use window.onload to ensure Select2 and DataTables (which are loaded at the bottom of main.ejs) are ready
+    $(window).on('load', function () {
+      console.log("Window fully loaded - initializing libraries");
+      
+      // 1. Initialize Select2
+      if ($.fn.select2) {
+          $('.dev-select').select2({
+              placeholder: 'Select an option',
+              width: '100%'
           });
-        } else {
-          $('.show_data tbody').append(`
-              <tr>
-                <td colspan="3" class="text-danger text-center">No data found</td>
-              </tr>
-            `)
-        }
+      }
 
-      },
-      error: function (error) {
-        // console.log(error);
-        tbody.empty();
+      // 2. Initialize DataTable
+      var table;
+      if ($.fn.DataTable) {
+          table = $('#example').DataTable({
+              "paging": true,
+              "lengthChange": true,
+              "searching": true,
+              "ordering": true,
+              "info": true,
+              "autoWidth": false,
+              "responsive": true,
+              "pageLength": 5,
+              "lengthMenu": [5, 10, 25, 50],
+              "language": {
+                  "paginate": {
+                      "previous": "<i data-feather='chevron-left' style='width:14px;height:14px;'></i>",
+                      "next": "<i data-feather='chevron-right' style='width:14px;height:14px;'></i>"
+                  }
+              }
+          });
 
-      },
+          // Re-replace icons on every draw
+          table.on('draw', function() {
+              if (typeof feather !== 'undefined') feather.replace();
+          });
+      }
+
+      // 3. Add Device Modal Logic
+      $("#myBtn").on('click', function (e) {
+        e.preventDefault();
+        var $btn = $(this);
+        var originalHtml = $btn.html();
+        
+        console.log("Add Device button clicked - checking limit");
+        $btn.html('<i class="fa fa-spinner fa-spin"></i> Checking...').prop('disabled', true);
+
+        $.ajax({
+          type: "GET",
+          url: "/device/device_id",
+          success: function (response) {
+            console.log("Limit check response:", response);
+            $btn.html(originalHtml).prop('disabled', false);
+            
+            var tot_row = (response.msg && response.msg.length > 0) ? parseInt(response.msg[0].tot_row) : 0;
+            var allowed = parseInt($('#no_device').val()) || 0;
+            
+            if(allowed <= tot_row){
+              alert(`Limit reached: You cannot add more than ${allowed} devices. (Current: ${tot_row})`);
+            } else {
+              console.log("Opening modal #myModal");
+              $("#myModal").modal('show');
+            }
+          },
+          error: function (err) {
+            console.error("Limit check error:", err);
+            $btn.html(originalHtml).prop('disabled', false);
+            $("#myModal").modal('show');
+          }
+        });
+      });
+
+      // 4. Filter Logic
+      $('#submitBtn').on('click', function (e) {
+        e.preventDefault();
+        console.log("Filter button clicked");
+        var dev_id = $('#dev_id').val();
+        
+        $.ajax({
+          type: "GET",
+          url: "/device/device_details",
+          data: { dev_id: dev_id },
+          success: function (response) {
+            console.log("Filter AJAX success:", response);
+            
+            if ($.fn.DataTable && $.fn.DataTable.isDataTable('#example')) {
+                var dTable = $('#example').DataTable();
+                dTable.clear();
+                if (response.suc > 0 && response.msg && response.msg.length > 0) {
+                  response.msg.forEach(function (item, index) {
+                    var actionBtn = "<a href='/device/edit_device_details?customer_id=" + item.customer_id + "&&dev_id=" + item.app_id + "' class='action-btn-edit' title='Edit Device'><i class='fa fa-edit' style='font-size:14px;'></i></a>";
+                    dTable.row.add([
+                      (index + 1),
+                      "<span style='font-weight: 600; color: var(--gray-800);'>" + item.app_id + "</span>",
+                      actionBtn
+                    ]);
+                  });
+                }
+                dTable.draw();
+            } else {
+              // Fallback for no DataTables
+              var tbody = $(".show_data tbody");
+              tbody.empty();
+              if (response.suc > 0 && response.msg && response.msg.length > 0) {
+                response.msg.forEach(function (item, index) {
+                  var row = "<tr><td>" + (index + 1) + "</td><td>" + item.app_id + "</td><td><a href='/device/edit_device_details?customer_id=" + item.customer_id + "&&dev_id=" + item.app_id + "' class='action-btn-edit'><i class='fa fa-edit'></i></a></td></tr>";
+                  tbody.append(row);
+                });
+              } else {
+                  tbody.append("<tr><td colspan='3' class='text-center'>No data found</td></tr>");
+              }
+            }
+            if (typeof feather !== 'undefined') feather.replace();
+          },
+          error: function (err) {
+            console.error("Filter AJAX error:", err);
+            alert("Error fetching device details. Please check console.");
+          }
+        });
+      });
+
+      // Auto-load all devices on page load (try after 500ms to be safe)
+      setTimeout(function() {
+          $('#submitBtn').trigger('click');
+      }, 500);
+
+      // Handle modal Select2 focus
+      $('#myModal').on('shown.bs.modal', function () {
+          if ($.fn.select2) {
+              $('.dev-select', this).select2({
+                  placeholder: 'Select an option',
+                  width: '100%',
+                  dropdownParent: $('#myModal')
+              });
+          }
+      });
     });
 
+    // Toggle Logics (don't depend on DataTables/Select2)
+    $('#grace_flag').on('change', function () {
+      if ($(this).is(':checked')) {
+        $('#hide_grace').show();
+        $('#grace_value').attr('required', 'required');
+      } else {
+        $('#grace_value').removeAttr('required').val('00');
+        $('#hide_grace').hide();
+      }
+    });
+
+    $('#adv_pay_flag').on('change', function () {
+      if ($(this).is(':checked')) {
+        $('#hide_adv').show();
+        $('#adv_value').attr('required', 'required');
+      } else {
+        $('#adv_value').removeAttr('required').val('00');
+        $('#hide_adv').hide();
+      }
+    });
+
+    $('#gst_flag').on('change', function () {
+      if ($(this).prop('checked')) {
+        $('#adv_pay_flag').prop('checked', false).trigger('change');
+        $('#adv_pay_flag').closest('.dev-switch').addClass('disabled-opacity');
+      } else {
+        $('#adv_pay_flag').closest('.dev-switch').removeClass('disabled-opacity');
+      }
+    });
   });
-</script>
+</script>

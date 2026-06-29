@@ -3,8 +3,8 @@
     <form action="/superadmin/vehicle_rate_save" method="post" id="myForm">
       <div class="row">
         <div class="form-group col-md-4">
-          <label for="sell_id" class="text-dark"><b>Seller Name:</b></label>
-          <select name="sell_id" class="form-control" id="sell_id">
+          <label for="sell_id" class="veh-label">Seller Name:</label>
+          <select name="sell_id" class="modal-veh-select" id="sell_id">
             <option value="">Select Seller Name</option>
             <% seller.forEach(dt=> { %>
               <option value="<%= dt.seller_id %>">
@@ -14,16 +14,16 @@
           </select>
         </div>
         <div class="form-group col-md-4">
-          <label for="cust_name" class="text-dark"><b>Customer Name:</b></label>
-          <select name="cust_name" class="form-control" id="cust_name">
+          <label for="cust_name" class="veh-label">Customer Name:</label>
+          <select name="cust_name" class="modal-veh-select" id="cust_name">
             <option value="">Select Customer Name</option>
            
           </select>
         </div>
 
         <div class="form-group col-md-4">
-          <label for="rate_name"><b style="color: black;">Rate Type:</b></label>
-          <select name="rate_name" class="form-control" id="rate_name" disabled>
+          <label for="rate_name" class="veh-label">Rate Type:</label>
+          <select name="rate_name" class="modal-veh-select" id="rate_name" disabled>
             <option value="">Select Rate Type</option>
 
           </select>
@@ -32,31 +32,31 @@
         <input type="hidden" name="rate_type" id="rate_type_modal" value="">
 
         <div class="form-group col-md-4">
-          <label for="veh_id"><b style="color: black;">Vehicle Name:</b></label>
-          <select name="veh_id" class="form-control" id="veh_id">
+          <label for="veh_id" class="veh-label">Vehicle Name:</label>
+          <select name="veh_id" class="modal-veh-select" id="veh_id">
             <option value="">Select Vehicle Name</option>
 
           </select>
         </div>
 
         <div class="col-md-4">
-          <div class="form-group">
-            <label for="frm_hr" class="text-dark"><b>From Hour:</b></label>
-            <input type="number" max="24" min="0" class="form-control" id="frm_hr" name="frm_hr" value="00">
+          <div class="veh-form-group">
+            <label for="frm_hr" class="veh-label">From Hour:</label>
+            <input type="number" max="24" min="0" class="veh-input" id="frm_hr" name="frm_hr" value="00">
           </div>
         </div>
 
         <div class="col-md-4">
-          <div class="form-group">
-            <label for="to_hr" class="text-dark"><b>To Hour:</b></label>
-            <input type="number" max="24" min="0" class="form-control" id="to_hr" name="to_hr" value="00">
+          <div class="veh-form-group">
+            <label for="to_hr" class="veh-label">To Hour:</label>
+            <input type="number" max="24" min="0" class="veh-input" id="to_hr" name="to_hr" value="00">
           </div>
         </div>
 
         <div class="col-md-4">
-          <div class="form-group">
-            <label for="park_fee" class="text-dark"><b>Parking Fee:</b></label>
-            <input type="text" class="form-control" id="park_fee" name="park_fee"
+          <div class="veh-form-group">
+            <label for="park_fee" class="veh-label">Parking Fee:</label>
+            <input type="text" class="veh-input" id="park_fee" name="park_fee"
               placeholder="Enter Parking Fee....">
           </div>
         </div>
@@ -64,9 +64,8 @@
       </div>
       <input type="hidden" name="id" value="0">
       <div class="row mt-3">
-        <div class="form-group col-md-3">
-          <input type="submit" value="SUBMIT" class="btn btn-primary "
-            style="margin-left: 38vw;border-radius: 6px;" />
+        <div class="form-group col-md-12 text-center mt-3">
+          <button type="submit" class="veh-submit-btn">Submit Vehicle Rate</button>
         </div>
       </div>
     </form>

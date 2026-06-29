@@ -1,70 +1,84 @@
-<div class="container-fluid">
+<link href="/template/dist/css/operator-page.css" rel="stylesheet">
+
+<div class="op-page-wrapper">
+  <div class="container-fluid">
     <div class="row">
-      <div class="card col-12">
-        <div class="card-body">
-          <div class="titleSec">
-             <h2 class="text-dark"><i class="fa fa-arrow-circle-left" aria-hidden="true" id="back" style="cursor: pointer;">&nbsp;Operator Edit Details</i></h2>
-          </div> 
-          <form action="/operator/save_edit_operator" id="myForm" method="post">
-          <div class="row mt-4">
-            <div class="form-group col-6">
-                <label for="op_name" class="text-dark"><b>Operator Name:</b></label>
-                <input type="text" class="form-control" name="op_name" id="op_name" value="<%=data.msg[0].operator_name %>" placeholder="Enter Operator Name">
-              </div>
-  
-              <div class="form-group col-6">
-                  <label for="mob_no" class="text-dark"><b>Mobile No:</b></label>
-                  <input type="text" class="form-control" name="mob_no" id="mob_no" value="<%=data.msg[0].user_id %>" placeholder="Enter Mobile No." readonly>
+      <div class="col-12">
+        <div class="card op-card">
+          <div class="card-body">
+            
+            <!-- HEADER -->
+            <div class="op-header" style="margin-bottom:20px;">
+                <div class="op-title-group">
+                    <div class="op-icon-badge">
+                        <i data-feather="edit-3"></i>
+                    </div>
+                    <span class="op-back-btn" id="back" title="Back to Operator">
+                        <i data-feather="arrow-left"></i>
+                    </span>
+                    <h3 class="op-edit-title">Operator Edit Details</h3>
                 </div>
-  
-                <div class="form-group col-6">
-                  <label for="dev_id" class="text-dark"><b>Device ID:</b></label>
-                  <input type="text" class="form-control" name="dev_id" id="dev_id" value="<%=data.msg[0].device_id %>" placeholder="Enter Device ID." readonly>
+            </div>
+
+            <!-- FORM -->
+            <form action="/operator/save_edit_operator" id="myForm" method="post">
+                <div class="row mt-4">
+                    <div class="col-md-6 op-form-group">
+                        <label class="op-label">Operator Name</label>
+                        <input type="text" class="op-input" id="op_name" name="op_name" value="<%=data.msg[0].operator_name %>" required placeholder="Enter Operator Name">
+                    </div>
+
+                    <div class="col-md-6 op-form-group">
+                        <label class="op-label">Mobile No</label>
+                        <input type="text" class="op-input" id="mob_no" name="mob_no" value="<%=data.msg[0].user_id %>" readonly style="background-color: var(--gray-100); cursor: not-allowed;" placeholder="Enter Mobile No.">
+                    </div>
+
+                    <div class="col-md-6 op-form-group">
+                        <label class="op-label">Device ID</label>
+                        <input type="text" class="op-input" id="dev_id" name="dev_id" value="<%=data.msg[0].device_id %>" readonly style="background-color: var(--gray-100); cursor: not-allowed;" placeholder="Enter Device ID.">
+                    </div>
+
+                    <div class="col-md-6 op-form-group">
+                        <label class="op-label">Password <span style="font-size: 0.7rem; color: var(--gray-500); font-weight: 400;">(Leave blank to keep current)</span></label>
+                        <div class="op-password-group">
+                            <input type="password" class="op-input" name="pwd" id="pwd" placeholder="Enter new password">
+                            <button class="op-password-toggle" type="button" id="togglePassword">
+                                <i data-feather="eye-off" style="width:16px;height:16px;"></i>
+                            </button>
+                        </div>
+                    </div> 
                 </div>
-  
-                <div class="form-group col-6">
-                  <label for="pwd" class="text-dark"><b>Password:</b></label>
-                  <div class="input-group">
-                  <input type="password" class="form-control" name="pwd" id="pwd" value="" placeholder="Enter Password">
-                  <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                        <i class="fa fa-eye-slash"></i>
-                    </button>
+
+                <div class="text-center mt-4 pt-2">
+                    <button type="submit" class="op-submit-btn">Update Operator Details</button>
                 </div>
-                </div>
-                </div>
-              
+            </form>
           </div>
-          <div class="row mt-4">
-            <div class="form-group col-md-3">
-                <input
-                  type="submit"
-                  value="SUBMIT"
-                  class="btn btn-primary btn-block" style="margin-left: 25vw;"
-                />
-              </div>
-          </div>
-          </form>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <script>
-    document.getElementById("togglePassword").addEventListener("click", function() {
-        const pwdField = document.getElementById("pwd");
-        if (pwdField.type === "password") {
-            pwdField.type = "text";
-        } else {
-            pwdField.type = "password";
-        }
-    });
-  </script>
-
-  <script>
+<script>
     $(document).ready(function () {
       $("#back").click(function () {
         window.location.href = "/operator/manage_operator";
       });
+
+      // Password toggle
+      $("#togglePassword").click(function() {
+        const pwdField = $("#pwd");
+        const icon = $(this).find('i');
+        
+        if (pwdField.attr("type") === "password") {
+            pwdField.attr("type", "text");
+            $(this).html('<i data-feather="eye" style="width:16px;height:16px;"></i>');
+        } else {
+            pwdField.attr("type", "password");
+            $(this).html('<i data-feather="eye-off" style="width:16px;height:16px;"></i>');
+        }
+        feather.replace();
+      });
     });
-  </script>
+</script>

@@ -1,107 +1,105 @@
-<div class="container-fluid">
+<link href="/template/dist/css/shift-page.css" rel="stylesheet">
+
+<div class="shift-page-wrapper">
+  <div class="container-fluid">
     <div class="row">
-        <div class="card col-12">
-            <div class="card-body">
-                <div class="titleSec">
-                    <h2 class="text-dark"><i class="fa fa-arrow-circle-left" aria-hidden="true" id="back"
-                            style="cursor: pointer;">&nbsp;Shift Edit Details</i></h2>
+      <div class="col-12">
+        <div class="card shift-card">
+          <div class="card-body">
+            
+            <!-- HEADER -->
+            <div class="shift-header" style="margin-bottom:10px;">
+                <div class="shift-title-group">
+                    <div class="gst-icon-badge" style="background: linear-gradient(135deg, var(--green-500), var(--green-600)); width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-green);">
+                        <i data-feather="edit-3" style="color: white; width: 20px; height: 20px;"></i>
+                    </div>
+                    <span class="shift-back-btn" id="back_btn" title="Back to Shift" style="cursor:pointer;">
+                        <i data-feather="arrow-left"></i>
+                    </span>
+                    <h3 class="shift-edit-title">Edit Shift Details</h3>
                 </div>
-                <form action="/superadmin/save_shift" id="myForm" method="post">
-                    <div class="row mt-4">
-                        <div class="form-group col-6">
-                            <label for="cust_id" class="text-dark"><b>Customer Name:</b></label>
-                            <select name="cust_id" class="form-control" id="cust_id" disabled>
-                                <option value="">Select Customer Name</option>
-                                <% customer.forEach(dt => { %>
-                                    <option value="<%= dt.customer_id %>" <%= dt.customer_id == data[0].customer_id ? 'selected' : '' %>><%= dt.customer_name %></option>
-                                    <% }) %>
-                            </select>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                              <label for="shift_name" class="text-dark"><b>Shift Name</b></label>
-                              <input type="text" class="form-control" id="shift_name" name="shift_name" placeholder="Enter Shift Name...."
-                                value="<%= data[0].shift_name %>">
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <label for="frm_time" class="text-dark"><b>From Time</b></label>
-                              <input type="time" name="frm_time" id="frm_time" class="form-control" value="<%= data[0].f_time %>">
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <label for="to_time" class="text-dark"><b>To Time</b></label>
-                              <input type="time" name="to_time" id="to_time" class="form-control" value="<%= data[0].t_time %>">
-                            </div>
-                          </div>
-
-                        <div class="row mt-2">
-                            <input type="hidden" name="id" value="<%= id %>">
-                            <input type="hidden" name="cust_id" value="<%= customer_id %>">
-                            <div class="form-group col-md-6">
-                                <input type="submit" value="SUBMIT" id="submitBtn" class="btn btn-primary btn-block text-center"
-                                    style="margin-left: 25vw;border-radius: 5px;" disabled/>
-                            </div>
-                        </div>
-                        </div>
-                </form>
             </div>
+
+            <!-- FORM -->
+            <form action="/superadmin/save_shift" id="myForm" method="post">
+                <div class="row mt-4">
+                    <div class="col-md-6 shift-form-group">
+                        <label class="shift-label">Customer Name</label>
+                        <select name="cust_id_view" class="shift-select" id="cust_id" disabled style="background-color: var(--gray-100); cursor: not-allowed;">
+                            <option value="">Select Customer Name</option>
+                            <% customer.forEach(dt => { %>
+                                <option value="<%= dt.customer_id %>" <%= dt.customer_id == data[0].customer_id ? 'selected' : '' %>><%= dt.customer_name %></option>
+                                <% }) %>
+                        </select>
+                        <input type="hidden" name="cust_id" value="<%= data[0].customer_id %>">
+                    </div>
+
+                    <div class="col-md-6 shift-form-group">
+                        <label class="shift-label">Shift Name</label>
+                        <input type="text" class="shift-input" id="shift_name" name="shift_name" value="<%= data[0].shift_name %>" required placeholder="Name of the shift">
+                    </div>
+
+                    <div class="col-md-6 shift-form-group">
+                        <label class="shift-label">From Time</label>
+                        <input type="time" name="frm_time" id="frm_time" class="shift-input" value="<%= data[0].f_time %>" required>
+                    </div>
+
+                    <div class="col-md-6 shift-form-group">
+                        <label class="shift-label">To Time</label>
+                        <input type="time" name="to_time" id="to_time" class="shift-input" value="<%= data[0].t_time %>" required>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4 pt-2">
+                    <input type="hidden" name="id" value="<%= id %>">
+                    <button type="submit" id="submitBtn" class="shift-submit-btn" disabled>
+                        Update Shift Details
+                    </button>
+                </div>
+            </form>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <script>
     $(document).ready(function () {
-                    $("#back").click(function () {
-                        window.location.href = "/superadmin/shift";
-                    });
+        $("#back_btn").click(function () {
+            window.location.href = "/superadmin/shift";
+        });
+
+        // Convert DB time "HH:MM:SS" → "HH:MM"
+        function normalizeTime(t) {
+            if (!t) return "";
+            return t.substring(0, 5);  // keep HH:MM only
+        }
+
+        // Store normalized initial values
+        const initialValues = {
+            shift_name: $("#shift_name").val(),
+            frm_time: normalizeTime($("#frm_time").val()),
+            to_time: normalizeTime($("#to_time").val())
+        };
+
+        // Set inputs to normalized format if needed
+        $("#frm_time").val(initialValues.frm_time);
+        $("#to_time").val(initialValues.to_time);
+
+        // Check for changes to enable/disable submit button
+        function checkForChanges() {
+            let changed =
+                $("#shift_name").val() !== initialValues.shift_name ||
+                $("#frm_time").val() !== initialValues.frm_time ||
+                $("#to_time").val() !== initialValues.to_time;
+
+            $("#submitBtn").prop("disabled", !changed);
+        }
+
+        // Bind events
+        $("#shift_name").on("input", checkForChanges);
+        $("#frm_time").on("change", checkForChanges);
+        $("#to_time").on("change", checkForChanges);
     });
-</script>
-
-<script>
-$(document).ready(function () {
-
-    $("#back").click(function () {
-        window.location.href = "/shift/shift_details";
-    });
-
-    // Convert DB time "HH:MM:SS" → "HH:MM"
-    function normalizeTime(t) {
-        if (!t) return "";
-        return t.substring(0, 5);  // keep HH:MM only
-    }
-
-    // 1️⃣ Store normalized initial values
-    const initialValues = {
-        shift_name: $("#shift_name").val(),
-        frm_time: normalizeTime($("#frm_time").val()),
-        to_time: normalizeTime($("#to_time").val())
-    };
-
-    // FIX: Set inputs to normalized format also
-    $("#frm_time").val(initialValues.frm_time);
-    $("#to_time").val(initialValues.to_time);
-
-    console.log("Initial:", initialValues);
-
-    // 2️⃣ Check for changes
-    function checkForChanges() {
-
-        let changed =
-            $("#shift_name").val() !== initialValues.shift_name ||
-            $("#frm_time").val() !== initialValues.frm_time ||
-            $("#to_time").val() !== initialValues.to_time;
-
-        $("#submitBtn").prop("disabled", !changed);
-    }
-
-    // 3️⃣ Bind events
-    $("#shift_name").on("input", checkForChanges);
-    $("#frm_time").on("change", checkForChanges);
-    $("#to_time").on("change", checkForChanges);
-
-});
 </script>
