@@ -140,18 +140,20 @@ const fixed_rate_dtls_list = async (req, res) => {
             const dayWhere = `${baseWhere} AND a.night_day_flag = 'O'`;
             const nightWhere = `${baseWhere} AND a.night_day_flag = 'N'`;
             const customWhere = `${baseWhere} AND a.night_day_flag = 'C'`;
+            // const uptwodaysWhere = `${baseWhere} AND a.night_day_flag = 'UD'`;
 
             const [dayRates, nightRates, customRates] = await Promise.all([
                 db_Select(select, table_name, dayWhere, order),
                 db_Select(select, table_name, nightWhere, order),
-                db_Select(select, table_name, customWhere, order)
+                db_Select(select, table_name, customWhere, order),
+                // db_Select(select, table_name, uptwodaysWhere, order)
             ]);
 
             result = {
                 rates: dayRates,
                 night_rates: nightRates,
-                custom_rates: customRates
-
+                custom_rates: customRates,
+                // uptwodays_rates: uptwodaysRates
             };
         } else {
             // Fetch only regular rate details (night_day_flag = 'O')
@@ -160,7 +162,8 @@ const fixed_rate_dtls_list = async (req, res) => {
             result = {
                 rates: data_rate,
                 night_rates: {msg: []},
-                custom_rates: {msg: []}
+                custom_rates: {msg: []},
+                // uptwodays_rates: {msg: []}
             };
         }
 

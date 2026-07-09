@@ -38,8 +38,17 @@ const app = express(),
 
 
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+  req.on('aborted', () => {
+    console.warn('Request aborted:', req.method, req.originalUrl);
+  });
+  next();
+});
+
+app.use(express.json({ limit: '2mb' }));
+app.use(express.urlencoded({ extended: true, limit: '2mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use("views", express.static(path.join(__dirname, "views")));
 
@@ -146,6 +155,25 @@ app.get('*', function (req, res) {
   // res.send('what???', 404);
 });
 
+app.use((err, req, res, next) => {
+  logger.error(err);
+  if (res.headersSent) {
+    return next(err);
+  }
+
+  return res.status(500).json({
+    status: false,
+    message: 'Internal Server Error',
+  });
+});
+
+process.on('unhandledRejection', (err) => {
+  logger.error(err);
+});
+
+process.on('uncaughtException', (err) => {
+  logger.error(err);
+});
 
 app.listen(port, (err) => {
   if (err) {
