@@ -317,12 +317,10 @@
                         <label class="op-label">Device Type</label>
                         <input type="text" id="dev_type" name="dev_type" class="op-input" value="<%= user.user_data.device_type=='H' ? 'Handheld Device' : user.user_data.device_type=='M' ? 'Mobile Device' : user.user_data.device_type=='A' ? 'Amigos Blue Handheld Device' : '' %>" readonly style="background-color: var(--gray-100); cursor: not-allowed;"/>
                       </div> 
-                      <% if (user.user_data.dev_mod=='F') { %> 
                       <div class="form-group col-md-3 mb-2">
                         <label class="op-label">UPI ID</label>
                         <input type="text" id="upi_id" name="upi_id" class="op-input" value="<%= user.user_data.upi_id %>" style="background-color: var(--gray-100);"/>
                       </div>  
-                      <% }  %>      
                     </div>
 
                     <div class="row">
