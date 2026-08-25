@@ -31,9 +31,8 @@ const report_password = async (req, res) => {
       // console.log(page_data, "999");
       res.render("common/layouts/main", page_data);
     } catch (error) {
-      // console.log(error);
-      logger.error(err); // Log the error
-      res.redirect("/superadmin_login");
+      logger.error(error);
+      res.redirect("/login");
     }
   };
 
@@ -66,9 +65,8 @@ const report_password = async (req, res) => {
           // console.log(page_data,'ll');
           res.render("common/layouts/main",page_data);
         } catch (error) {
-          // console.log(error);
-          logger.error(err); // Log the error
-          res.redirect("/superadmin_login");
+          logger.error(error);
+          res.redirect("/login");
         }
   };
 

@@ -342,7 +342,7 @@ const superadmin_dashboard = async (req, res) => {
     } catch (err) {
         logger.error(err);
         req.flash('error', 'Unable to load dashboard data');
-        res.render('auth/superadmin_login');
+        res.redirect('/login');
     }
 }
 

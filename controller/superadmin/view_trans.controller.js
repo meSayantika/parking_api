@@ -16,9 +16,8 @@ const transaction = async (req, res) => {
       res.render("common/layouts/main", page_data);
       // console.log(page_data, "...");
     } catch (error) {
-      // console.log(error);
-      logger.error(err); // Log the error
-      res.redirect("/superadmin_login");
+      logger.error(error);
+      res.redirect("/login");
     }
   };
 

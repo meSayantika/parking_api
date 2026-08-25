@@ -37,9 +37,8 @@ const vehicle = async(req,res) =>{
         // console.log(data,'lolo');
         res.render("common/layouts/main",page_data);
       } catch (error) {
-        // console.log(error);
-        logger.error(err); // Log the error
-        res.redirect("/superadmin_login");
+        logger.error(error);
+        res.redirect("/login");
       }
 };
 
@@ -69,9 +68,8 @@ const vehicle_edit = async(req,res) =>{
       // console.log(page_data);
       res.render("common/layouts/main",page_data);
     } catch (error) {
-      // console.log(error);
-      logger.error(err); // Log the error
-      res.redirect("/superadmin_login");
+      logger.error(error);
+      res.redirect("/login");
     }
 };
 
