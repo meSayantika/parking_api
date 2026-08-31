@@ -252,149 +252,133 @@
 </div>
 
 <script>
-  console.log("Device Setting script starting...");
   $(document).ready(function () {
-    console.log("Document ready in Device Setting");
-    // We use window.onload to ensure Select2 and DataTables (which are loaded at the bottom of main.ejs) are ready
-    $(window).on('load', function () {
-      console.log("Window fully loaded - initializing libraries");
-      
-      // 1. Initialize Select2
-      if ($.fn.select2) {
-          $('.dev-select').select2({
-              placeholder: 'Select an option',
-              width: '100%'
-          });
-      }
+    // 1. Initialize Select2
+    if ($.fn.select2) {
+      $('.dev-select').select2({
+        placeholder: 'Select an option',
+        width: '100%'
+      });
+    }
 
-      // 2. Initialize DataTable
-      var table;
-      if ($.fn.DataTable) {
-          table = $('#example').DataTable({
-              "paging": true,
-              "lengthChange": true,
-              "searching": true,
-              "ordering": true,
-              "info": true,
-              "autoWidth": false,
-              "responsive": true,
-              "pageLength": 5,
-              "lengthMenu": [5, 10, 25, 50],
-              "language": {
-                  "paginate": {
-                      "previous": "<i data-feather='chevron-left' style='width:14px;height:14px;'></i>",
-                      "next": "<i data-feather='chevron-right' style='width:14px;height:14px;'></i>"
-                  }
-              }
-          });
+    // 2. Initialize DataTable
+    var table;
+    if ($.fn.DataTable) {
+      table = $('#example').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+        "pageLength": 10,
+        "lengthMenu": [5, 10, 25, 50],
+        "language": {
+          "paginate": {
+            "previous": "<i data-feather='chevron-left' style='width:14px;height:14px;'></i>",
+            "next": "<i data-feather='chevron-right' style='width:14px;height:14px;'></i>"
+          }
+        },
+        "drawCallback": function () {
+          if (typeof feather !== 'undefined') feather.replace();
+        }
+      });
+    }
 
-          // Re-replace icons on every draw
-          table.on('draw', function() {
-              if (typeof feather !== 'undefined') feather.replace();
-          });
-      }
+    // 3. Add Device Modal Logic
+    $("#myBtn").on('click', function (e) {
+      e.preventDefault();
+      var $btn = $(this);
+      var originalHtml = $btn.html();
 
-      // 3. Add Device Modal Logic
-      $("#myBtn").on('click', function (e) {
-        e.preventDefault();
-        var $btn = $(this);
-        var originalHtml = $btn.html();
-        
-        console.log("Add Device button clicked - checking limit");
-        $btn.html('<i class="fa fa-spinner fa-spin"></i> Checking...').prop('disabled', true);
+      $btn.html('<i class="fa fa-spinner fa-spin"></i> Checking...').prop('disabled', true);
 
-        $.ajax({
-          type: "GET",
-          url: "/device/device_id",
-          success: function (response) {
-            console.log("Limit check response:", response);
-            $btn.html(originalHtml).prop('disabled', false);
-            
-            var tot_row = (response.msg && response.msg.length > 0) ? parseInt(response.msg[0].tot_row) : 0;
-            var allowed = parseInt($('#no_device').val()) || 0;
-            
-            if(allowed <= tot_row){
-              alert(`Limit reached: You cannot add more than ${allowed} devices. (Current: ${tot_row})`);
-            } else {
-              console.log("Opening modal #myModal");
-              $("#myModal").modal('show');
-            }
-          },
-          error: function (err) {
-            console.error("Limit check error:", err);
-            $btn.html(originalHtml).prop('disabled', false);
+      $.ajax({
+        type: "GET",
+        url: "/device/device_id",
+        success: function (response) {
+          $btn.html(originalHtml).prop('disabled', false);
+
+          var tot_row = (response && response.msg && response.msg.length > 0 && response.msg[0].tot_row !== undefined) ? parseInt(response.msg[0].tot_row) : 0;
+          var allowedVal = $('#no_device').val();
+          var allowed = parseInt(allowedVal);
+
+          if (!isNaN(allowed) && allowed > 0 && tot_row >= allowed) {
+            alert(`Limit reached: You cannot add more than ${allowed} devices. (Current: ${tot_row})`);
+          } else {
             $("#myModal").modal('show');
           }
-        });
-      });
-
-      // 4. Filter Logic
-      $('#submitBtn').on('click', function (e) {
-        e.preventDefault();
-        console.log("Filter button clicked");
-        var dev_id = $('#dev_id').val();
-        
-        $.ajax({
-          type: "GET",
-          url: "/device/device_details",
-          data: { dev_id: dev_id },
-          success: function (response) {
-            console.log("Filter AJAX success:", response);
-            
-            if ($.fn.DataTable && $.fn.DataTable.isDataTable('#example')) {
-                var dTable = $('#example').DataTable();
-                dTable.clear();
-                if (response.suc > 0 && response.msg && response.msg.length > 0) {
-                  response.msg.forEach(function (item, index) {
-                    var actionBtn = "<a href='/device/edit_device_details?customer_id=" + item.customer_id + "&&dev_id=" + item.app_id + "' class='action-btn-edit' title='Edit Device'><i class='fa fa-edit' style='font-size:14px;'></i></a>";
-                    dTable.row.add([
-                      (index + 1),
-                      "<span style='font-weight: 600; color: var(--gray-800);'>" + item.app_id + "</span>",
-                      actionBtn
-                    ]);
-                  });
-                }
-                dTable.draw();
-            } else {
-              // Fallback for no DataTables
-              var tbody = $(".show_data tbody");
-              tbody.empty();
-              if (response.suc > 0 && response.msg && response.msg.length > 0) {
-                response.msg.forEach(function (item, index) {
-                  var row = "<tr><td>" + (index + 1) + "</td><td>" + item.app_id + "</td><td><a href='/device/edit_device_details?customer_id=" + item.customer_id + "&&dev_id=" + item.app_id + "' class='action-btn-edit'><i class='fa fa-edit'></i></a></td></tr>";
-                  tbody.append(row);
-                });
-              } else {
-                  tbody.append("<tr><td colspan='3' class='text-center'>No data found</td></tr>");
-              }
-            }
-            if (typeof feather !== 'undefined') feather.replace();
-          },
-          error: function (err) {
-            console.error("Filter AJAX error:", err);
-            alert("Error fetching device details. Please check console.");
-          }
-        });
-      });
-
-      // Auto-load all devices on page load (try after 500ms to be safe)
-      setTimeout(function() {
-          $('#submitBtn').trigger('click');
-      }, 500);
-
-      // Handle modal Select2 focus
-      $('#myModal').on('shown.bs.modal', function () {
-          if ($.fn.select2) {
-              $('.dev-select', this).select2({
-                  placeholder: 'Select an option',
-                  width: '100%',
-                  dropdownParent: $('#myModal')
-              });
-          }
+        },
+        error: function (err) {
+          console.error("Limit check error:", err);
+          $btn.html(originalHtml).prop('disabled', false);
+          $("#myModal").modal('show');
+        }
       });
     });
 
-    // Toggle Logics (don't depend on DataTables/Select2)
+    // 4. Filter Logic
+    $('#submitBtn').on('click', function (e) {
+      e.preventDefault();
+      var dev_id = $('#dev_id').val();
+
+      $.ajax({
+        type: "GET",
+        url: "/device/device_details",
+        data: { dev_id: dev_id },
+        success: function (response) {
+          if ($.fn.DataTable && $.fn.DataTable.isDataTable('#example')) {
+            var dTable = $('#example').DataTable();
+            dTable.clear();
+            if (response.suc > 0 && response.msg && response.msg.length > 0) {
+              response.msg.forEach(function (item, index) {
+                var actionBtn = "<a href='/device/edit_device_details?customer_id=" + item.customer_id + "&&dev_id=" + item.app_id + "' class='action-btn-edit' title='Edit Device'><i class='fa fa-edit' style='font-size:14px;'></i></a>";
+                dTable.row.add([
+                  (index + 1),
+                  "<span style='font-weight: 600; color: var(--gray-800);'>" + item.app_id + "</span>",
+                  actionBtn
+                ]);
+              });
+            }
+            dTable.draw();
+          } else {
+            // Fallback for no DataTables
+            var tbody = $(".show_data tbody");
+            tbody.empty();
+            if (response.suc > 0 && response.msg && response.msg.length > 0) {
+              response.msg.forEach(function (item, index) {
+                var row = "<tr><td>" + (index + 1) + "</td><td>" + item.app_id + "</td><td><a href='/device/edit_device_details?customer_id=" + item.customer_id + "&&dev_id=" + item.app_id + "' class='action-btn-edit'><i class='fa fa-edit'></i></a></td></tr>";
+                tbody.append(row);
+              });
+            } else {
+              tbody.append("<tr><td colspan='3' class='text-center'>No data found</td></tr>");
+            }
+          }
+          if (typeof feather !== 'undefined') feather.replace();
+        },
+        error: function (err) {
+          console.error("Filter AJAX error:", err);
+          alert("Error fetching device details. Please check console.");
+        }
+      });
+    });
+
+    // Auto-load all devices on page load
+    $('#submitBtn').trigger('click');
+
+    // Handle modal Select2 focus
+    $('#myModal').on('shown.bs.modal', function () {
+      if ($.fn.select2) {
+        $('.dev-select', this).select2({
+          placeholder: 'Select an option',
+          width: '100%',
+          dropdownParent: $('#myModal')
+        });
+      }
+    });
+
+    // Toggle Logics
     $('#grace_flag').on('change', function () {
       if ($(this).is(':checked')) {
         $('#hide_grace').show();
@@ -423,5 +407,9 @@
         $('#adv_pay_flag').closest('.dev-switch').removeClass('disabled-opacity');
       }
     });
+
+    if (typeof feather !== 'undefined') {
+      feather.replace();
+    }
   });
-</script>
+</script>
