@@ -27,6 +27,7 @@ const { vehicle_rateRouter } = require('./routes/Vehicle_rateRouter');
 const { SuperAdminRouter } = require('./routes/SuperAdminRouter');
 const logger = require('./model/LoggerModel');
 const { gstRouter } = require('./routes/gstRouter');
+const { archiveRouter } = require('./routes/ArchiveRouter');
 
 const app = express(),
   session = require('express-session'),
@@ -134,6 +135,8 @@ app.use('/vehicle', vehicleRouter)
 app.use('/rate', vehicle_rateRouter)
 
 app.use('/gst', gstRouter)
+
+app.use('/archive', archiveRouter)
 
 app.use('/superadmin', SuperAdminRouter)
 

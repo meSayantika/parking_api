@@ -1,56 +1,38 @@
 <header class="topbar" data-navbarbg="skin6">
     <nav class="navbar top-navbar navbar-expand-md">
         <div class="navbar-header" data-logobg="skin6">
-            <!-- NO BUTTON HERE AS REQUESTED -->
-
-            <!-- Logo Section -->
+            <!-- Full Mode Logo Section -->
             <div class="navbar-brand">
-                <a href="/">
+                <a href="/" class="d-flex align-items-center">
                     <b class="logo-icon">
                         <% if(user.user_data && user.user_data.seller_id=='2' && user.user_data.user_type !='C' ) { %>
                             <img src="/image/logo.png" alt="homepage" class="dark-logo siteLogo" />
-                            <% } else { %>
-                                <img src="/image/logo_sss.png" alt="homepage" class="dark-logo siteLogo"
-                                    style="height: auto;" />
-                                <% } %>
+                        <% } else { %>
+                            <img src="/image/logo_sss.png" alt="homepage" class="dark-logo siteLogo" />
+                        <% } %>
                     </b>
                 </a>
             </div>
 
-            <!-- Sidebar Toggle added back to Logo Section -->
-            <a class="nav-link sidebartoggler d-none d-md-block" href="javascript:void(0)" id="sidebarToggle"
-                style="margin-left: auto; padding-right: 20px;">
-                <i data-feather="menu" class="feather-icon text-dark"></i>
-            </a>
-
-            <!-- Logo for Mini-Sidebar Mode (Absolute Positioned) -->
-            <div class="logo-mini-mode">
-                <a href="/" class="py-0">
-                    <span class="logo-icon">
-                        <% if(user.user_data && user.user_data.seller_id=='2' && user.user_data.user_type !='C' ) { %>
-                            <img src="/image/logo.png" alt="homepage" class="topbar-logo-img" />
-                            <% } else { %>
-                                <img src="/image/logo_sss.png" alt="homepage" class="topbar-logo-img" />
-                                <% } %>
-                    </span>
-                </a>
-            </div>
-
-            <!-- Mobile Toggle -->
-            <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)"
-                id="mobileSidebarToggle" style="margin-left: auto;">
-                <i data-feather="menu" class="feather-icon text-dark"></i>
-            </a>
-
-            <!-- Mobile Topbar Toggler (Right) -->
-            <a class="topbartoggler d-block d-md-none waves-effect waves-light" href="javascript:void(0)"
-                data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
-                <i data-feather="more-vertical" class="feather-icon text-dark"></i>
+            <!-- Single Sidebar Toggle Button -->
+            <a class="nav-link sidebartoggler d-flex align-items-center justify-content-center" href="javascript:void(0)" id="sidebarToggle" title="Toggle Sidebar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1e293b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
             </a>
         </div>
 
         <div class="navbar-collapse collapse" id="navbarSupportedContent">
+            <!-- Mini-Sidebar Mode Logo (Visible on topbar in collapsed mode) -->
+            <div class="logo-mini-mode d-none">
+                <a href="/" class="d-flex align-items-center">
+                    <% if(user.user_data && user.user_data.seller_id=='2' && user.user_data.user_type !='C' ) { %>
+                        <img src="/image/logo.png" alt="homepage" class="topbar-logo-img" />
+                    <% } else { %>
+                        <img src="/image/logo_sss.png" alt="homepage" class="topbar-logo-img" />
+                    <% } %>
+                </a>
+            </div>
+
+            <!-- Center Welcome Workspace Badge -->
             <ul class="navbar-nav mx-auto d-none d-md-flex align-items-center">
                 <li class="nav-item">
                     <div class="d-flex align-items-center px-3 py-2"
@@ -68,8 +50,9 @@
                     </div>
                 </li>
             </ul>
+
+            <!-- Right Profile & Dropdown -->
             <ul class="navbar-nav float-right">
-                <!-- User Profile & Dropdown -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
@@ -144,21 +127,29 @@
             const isCollapsed = localStorage.getItem('sidebar-collapsed') === 'true';
             if (isCollapsed) {
                 body.classList.add('mini-sidebar');
-                if (wrapper) wrapper.setAttribute('data-sidebartype', 'mini-sidebar');
+                if (wrapper) {
+                    wrapper.setAttribute('data-sidebartype', 'mini-sidebar');
+                    wrapper.classList.add('mini-sidebar');
+                }
             } else {
                 body.classList.remove('mini-sidebar');
-                if (wrapper) wrapper.setAttribute('data-sidebartype', 'full');
+                if (wrapper) {
+                    wrapper.setAttribute('data-sidebartype', 'full');
+                    wrapper.classList.remove('mini-sidebar');
+                }
             }
         };
 
         loadSidebarState();
 
-        const toggleSidebar = function () {
-            body.classList.toggle('mini-sidebar');
-            const isCollapsed = body.classList.contains('mini-sidebar');
-            localStorage.setItem('sidebar-collapsed', isCollapsed);
+        const toggleSidebar = function (e) {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
+            const isCollapsed = !body.classList.contains('mini-sidebar');
+            body.classList.toggle('mini-sidebar', isCollapsed);
+            localStorage.setItem('sidebar-collapsed', isCollapsed ? 'true' : 'false');
             if (wrapper) {
                 wrapper.setAttribute('data-sidebartype', isCollapsed ? 'mini-sidebar' : 'full');
+                wrapper.classList.toggle('mini-sidebar', isCollapsed);
             }
         };
 
@@ -166,9 +157,23 @@
             sidebarToggle.addEventListener('click', toggleSidebar);
         }
 
-        const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
-        if (mobileSidebarToggle) {
-            mobileSidebarToggle.addEventListener('click', toggleSidebar);
-        }
+        // In collapsed mode: clicking Report section opens/closes floating flyout
+        $(document).on('click', '#sidebarnav > .sidebar-item > a.has-arrow', function (e) {
+            const isCollapsed = body.classList.contains('mini-sidebar') || (wrapper && wrapper.getAttribute('data-sidebartype') === 'mini-sidebar');
+            if (isCollapsed) {
+                e.preventDefault();
+                e.stopPropagation();
+                const parent = $(this).parent('.sidebar-item');
+                parent.siblings().removeClass('open');
+                parent.toggleClass('open');
+            }
+        });
+
+        // Close flyouts when clicking outside
+        $(document).on('click', function (e) {
+            if (!$(e.target).closest('#sidebarnav').length) {
+                $('#sidebarnav > .sidebar-item').removeClass('open');
+            }
+        });
     });
 </script>
