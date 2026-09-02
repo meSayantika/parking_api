@@ -252,15 +252,15 @@
                             <div class="row align-items-end" id="dateFilterSection" style="display: none;">
                                 <div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 op-form-group mb-0">
                                     <label class="op-label" for="frm_dt">From Date <span class="text-danger">*</span> <small class="text-muted" style="font-weight:500; font-size:0.75rem;">(Past months only)</small></label>
-                                    <input type="datetime-local" id="frm_dt" name="frm_dt" class="op-input">
+                                    <input type="date" id="frm_dt" name="frm_dt" class="op-input">
                                 </div>
                                 <div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 op-form-group mb-0">
                                     <label class="op-label" for="to_dt">To Date <span class="text-danger">*</span> <small class="text-muted" style="font-weight:500; font-size:0.75rem;">(Past months only)</small></label>
-                                    <input type="datetime-local" id="to_dt" name="to_dt" class="op-input">
+                                    <input type="date" id="to_dt" name="to_dt" class="op-input">
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap" style="white-space: nowrap; margin-top: 25px; gap: 10px;">
-                                        <button type="button" class="op-submit-btn btn-fetch" id="btnFetchBilled" style="padding: 10px 22px; white-space: nowrap;" disabled>
+                                        <button type="button" class="op-submit-btn btn-fetch" id="btnFetchBilled" style="padding: 10px 22px; white-space: nowrap;">
                                             <i data-feather="search" style="width:15px;height:15px;margin-right:6px;"></i> Fetch Records
                                         </button>
                                         <button type="button" class="op-add-btn btn-upload-archive" style="background: linear-gradient(135deg, #059669, #047857); padding: 10px 22px; white-space: nowrap; display: none;">
@@ -353,104 +353,34 @@
     var pageSize = 25;
     var searchQuery = '';
 
-    // Calculate maximum allowed datetime (last minute of previous month)
+    // Calculate maximum allowed date (last day of previous month)
     function getPreviousMonthEndMax() {
         var now = new Date();
-        var lastDayOfPrevMonth = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59);
+        var lastDayOfPrevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
         var pad = function (n) { return (n < 10 ? '0' : '') + n; };
         var yyyy = lastDayOfPrevMonth.getFullYear();
         var mm = pad(lastDayOfPrevMonth.getMonth() + 1);
         var dd = pad(lastDayOfPrevMonth.getDate());
-        var hh = pad(lastDayOfPrevMonth.getHours());
-        var min = pad(lastDayOfPrevMonth.getMinutes());
-        return yyyy + '-' + mm + '-' + dd + 'T' + hh + ':' + min;
-    }
-
-    // Validate From and To Date for Billed mode
-    function validateBilledDates() {
-        var frmVal = $('#frm_dt').val();
-        var toVal = $('#to_dt').val();
-        var now = new Date();
-        var startOfCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
-
-        var isFrmValid = false;
-        var isToValid = false;
-
-        if (frmVal) {
-            var frmDate = new Date(frmVal);
-            if (frmDate >= startOfCurrentMonth) {
-                $('#frm_dt').val('');
-                frmVal = '';
-                if (window.Swal) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Current Month Not Allowed',
-                        text: 'Archiving records from the current month is not permitted. Please select dates up to the previous month.',
-                        confirmButtonColor: '#059669'
-                    });
-                } else {
-                    alert('Archiving records from the current month is not permitted. Please select dates up to the previous month.');
-                }
-            } else {
-                isFrmValid = true;
-                $('#to_dt').attr('min', frmVal);
-            }
-        } else {
-            $('#to_dt').removeAttr('min');
-        }
-
-        if (toVal) {
-            var toDate = new Date(toVal);
-            if (toDate >= startOfCurrentMonth) {
-                $('#to_dt').val('');
-                toVal = '';
-                if (window.Swal) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Current Month Not Allowed',
-                        text: 'Archiving records from the current month is not permitted. Please select dates up to the previous month.',
-                        confirmButtonColor: '#059669'
-                    });
-                } else {
-                    alert('Archiving records from the current month is not permitted. Please select dates up to the previous month.');
-                }
-            } else if (frmVal && new Date(toVal) < new Date(frmVal)) {
-                $('#to_dt').val('');
-                toVal = '';
-                if (window.Swal) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Invalid Date Range',
-                        text: 'To Date cannot be earlier than From Date.',
-                        confirmButtonColor: '#059669'
-                    });
-                } else {
-                    alert('To Date cannot be earlier than From Date.');
-                }
-            } else {
-                isToValid = true;
-            }
-        }
-
-        if (isFrmValid && isToValid) {
-            $('#btnFetchBilled').prop('disabled', false);
-        } else {
-            $('#btnFetchBilled').prop('disabled', true);
-        }
+        return yyyy + '-' + mm + '-' + dd;
     }
 
     $(document).ready(function () {
         $('#resultDiv').hide();
         if (window.feather) { feather.replace(); }
 
-        // Set max datetime constraint on From and To Date (disallowing current month dates)
-        var maxAllowedDateTime = getPreviousMonthEndMax();
-        $('#frm_dt').attr('max', maxAllowedDateTime);
-        $('#to_dt').attr('max', maxAllowedDateTime);
+        // Disable current month and future dates in the datepicker (only past months selectable)
+        var maxAllowedDate = getPreviousMonthEndMax();
+        $('#frm_dt').attr('max', maxAllowedDate);
+        $('#to_dt').attr('max', maxAllowedDate);
 
-        // Listen for date input/change to validate and toggle Fetch Records button
-        $(document).on('change input blur', '#frm_dt, #to_dt', function () {
-            validateBilledDates();
+        // Update To Date min attribute when From Date changes
+        $(document).on('change', '#frm_dt', function () {
+            var frmVal = $(this).val();
+            if (frmVal) {
+                $('#to_dt').attr('min', frmVal);
+            } else {
+                $('#to_dt').removeAttr('min');
+            }
         });
 
         // Live Search Input (Filters by Receipt No, Machine No, Vehicle No, etc.)
@@ -477,7 +407,6 @@
                 $('#dateFilterSection').slideDown(200);
                 $('#statusBadgeText').text('Billed Mode: Select From Date & To Date (up to previous month) to enable Fetch Records');
                 $('#frm_dt, #to_dt').attr('required', 'required');
-                validateBilledDates();
             }
             $('#resultDiv').hide();
             $('.btn-upload-archive').hide();
@@ -486,9 +415,6 @@
 
         // Submit Search / Fetch on either button
         $(document).on('click', '.btn-fetch', function () {
-            if ($(this).is(':disabled')) {
-                return;
-            }
             var archiveType = $('input[name="archive_type"]:checked').val();
             var frm_dt = $('#frm_dt').val();
             var to_dt = $('#to_dt').val();
@@ -508,18 +434,32 @@
                     return;
                 }
 
-                var now = new Date();
-                var startOfCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
-                if (new Date(frm_dt) >= startOfCurrentMonth || new Date(to_dt) >= startOfCurrentMonth) {
+                var maxAllowedDate = getPreviousMonthEndMax();
+                if (frm_dt > maxAllowedDate || to_dt > maxAllowedDate) {
+                    var msg = 'Archiving records from the current month is not permitted. Please select dates up to the previous month (Max date allowed: ' + maxAllowedDate + ').';
                     if (window.Swal) {
                         Swal.fire({
                             icon: 'warning',
                             title: 'Current Month Not Allowed',
-                            text: 'Archiving records from the current month is not permitted. Please select dates up to the previous month.',
+                            text: msg,
                             confirmButtonColor: '#059669'
                         });
                     } else {
-                        alert('Archiving records from the current month is not permitted. Please select dates up to the previous month.');
+                        alert(msg);
+                    }
+                    return;
+                }
+
+                if (to_dt < frm_dt) {
+                    if (window.Swal) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Invalid Date Range',
+                            text: 'To Date cannot be earlier than From Date.',
+                            confirmButtonColor: '#059669'
+                        });
+                    } else {
+                        alert('To Date cannot be earlier than From Date.');
                     }
                     return;
                 }
@@ -638,7 +578,8 @@
                 $.ajax({
                     method: "POST",
                     url: endpoint,
-                    data: { receipt_nos: selectedList },
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({ receipt_nos: selectedList }),
                     dataType: "json",
                     beforeSend: function () {
                         if ($(".preloader").length) { $(".preloader").fadeIn(); }
