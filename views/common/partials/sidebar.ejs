@@ -117,27 +117,32 @@
                     Rate</span></a>
               </li>
 
+              <% 
+                const is_setting_active = (page_path && !page_path.includes('report') && (page_path.includes('shift') || page_path.includes('device') || page_path.includes('header') || page_path.includes('password') || page_path.includes('setting')));
+              %>
               <li
-                class="sidebar-item <%= (['shift_details', 'device_name', 'customer_name', 'password'].some(p => page_path && page_path.includes(p))) ? 'selected' : '' %>">
-                <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false"><i
+                class="sidebar-item sidebar-item-settings <%= is_setting_active ? 'selected' : '' %>">
+                <a class="sidebar-link has-arrow <%= is_setting_active ? 'active' : '' %>" href="javascript:void(0)"
+                  aria-expanded="<%= is_setting_active ? 'true' : 'false' %>"><i
                     data-feather="settings" class="feather-icon"></i><span class="hide-menu">Settings</span></a>
-                <ul aria-expanded="false" class="collapse first-level base-level-line">
-                  <li class="sidebar-item <%= (page_path && page_path.includes('shift_details')) ? 'active' : '' %>">
+                <ul aria-expanded="<%= is_setting_active ? 'true' : 'false' %>"
+                  class="collapse first-level base-level-line <%= is_setting_active ? 'show' : '' %>">
+                  <li class="sidebar-item">
                     <a href="/shift/shift_details"
-                      class="sidebar-link <%= (page_path && page_path.includes('shift_details')) ? 'active' : '' %>"><span
+                      class="sidebar-link <%= (page_path && !page_path.includes('report') && page_path.includes('shift')) ? 'active' : '' %>"><span
                         class="hide-menu">Shift Setting</span></a>
                   </li>
-                  <li class="sidebar-item <%= (page_path && page_path.includes('device_name')) ? 'active' : '' %>">
+                  <li class="sidebar-item">
                     <a href="/device/device_name"
-                      class="sidebar-link <%= (page_path && page_path.includes('device_name')) ? 'active' : '' %>"><span
+                      class="sidebar-link <%= (page_path && !page_path.includes('report') && (page_path.includes('device_setting') || page_path.includes('device_name') || page_path.includes('device'))) ? 'active' : '' %>"><span
                         class="hide-menu">Device Setting</span></a>
                   </li>
-                  <li class="sidebar-item <%= (page_path && page_path.includes('customer_name')) ? 'active' : '' %>">
+                  <li class="sidebar-item">
                     <a href="/header/customer_name"
-                      class="sidebar-link <%= (page_path && page_path.includes('customer_name')) ? 'active' : '' %>"><span
+                      class="sidebar-link <%= (page_path && (page_path.includes('header_footer') || page_path.includes('customer_name') || page_path.includes('header'))) ? 'active' : '' %>"><span
                         class="hide-menu">Header Footer</span></a>
                   </li>
-                  <li class="sidebar-item <%= (page_path && page_path.includes('password')) ? 'active' : '' %>">
+                  <li class="sidebar-item">
                     <a href="/password"
                       class="sidebar-link <%= (page_path && page_path.includes('password')) ? 'active' : '' %>"><span
                         class="hide-menu">Report Password</span></a>
@@ -161,49 +166,6 @@
                       data-feather="home" class="feather-icon text-dark"></i><span
                       class="hide-menu text-dark">Dashboard</span></a>
                 </li>
-
-                <!-- <li class="nav-small-cap">
-                  <span class="hide-menu text-dark">Reports</span>
-                </li> -->
-                <!-- <li class="sidebar-item <%= (page_path && page_path.includes('report')) ? 'selected' : '' %>">
-                  <a class="sidebar-link has-arrow <%= (page_path && page_path.includes('report')) ? 'active' : '' %>" href="javascript:void(0)" aria-expanded="<%= (page_path && page_path.includes('report')) ? 'true' : 'false' %>"><i
-                      data-feather="file-text" class="feather-icon text-dark"></i><span class="hide-menu text-dark">Reports</span></a>
-                  <ul aria-expanded="<%= (page_path && page_path.includes('report')) ? 'true' : 'false' %>" class="collapse first-level base-level-line <%= (page_path && page_path.includes('report')) ? 'in' : '' %>">
-                    <li class="sidebar-item">
-                      <a href="/report/unbilled_report" class="sidebar-link <%= (page_path && page_path.includes('unbilled_report')) ? 'active' : '' %>"><span class="hide-menu text-dark">Unbilled Report</span></a>
-                    </li>
-                    <li class="sidebar-item">
-                      <a href="/report/details_report_new" class="sidebar-link <%= (page_path && page_path.includes('detail_report_new')) ? 'active' : '' %>"><span class="hide-menu text-dark">Detail Report</span></a>
-                    </li>
-                    <li class="sidebar-item">
-                      <a href="/report/veh_wise_repo_new" class="sidebar-link <%= (page_path && page_path.includes('veh_wise_repo_new')) ? 'active' : '' %>"><span class="hide-menu text-dark">Vehicle Wise</span></a>
-                    </li>
-                    <li class="sidebar-item">
-                      <a href="/report/dev_wise_repo_new" class="sidebar-link <%= (page_path && page_path.includes('dev_wise_repo_new')) ? 'active' : '' %>"><span class="hide-menu text-dark">Device Wise</span></a>
-                    </li>
-                    <li class="sidebar-item">
-                      <a href="/report/operator_wise_repo_new" class="sidebar-link <%= (page_path && page_path.includes('operator_wise_repo_new')) ? 'active' : '' %>"><span class="hide-menu text-dark">Operator Wise</span></a>
-                    </li>
-                    <li class="sidebar-item">
-                      <a href="/report/combine_repo_new" class="sidebar-link <%= (page_path && page_path.includes('combine_report_new')) ? 'active' : '' %>"><span class="hide-menu text-dark">Combine Report (Vehicle)</span></a>
-                    </li>
-                    <li class="sidebar-item">
-                      <a href="/report/combine_repo_dev_new" class="sidebar-link <%= (page_path && page_path.includes('combine_report_dev_new')) ? 'active' : '' %>"><span class="hide-menu text-dark">Combine Report (Device)</span></a>
-                    </li>
-                    <li class="sidebar-item">
-                      <a href="/report/usr_wise_repo_new" class="sidebar-link <%= (page_path && page_path.includes('usr_wise_repo_new')) ? 'active' : '' %>"><span class="hide-menu text-dark">User Wise</span></a>
-                    </li>
-                    <li class="sidebar-item">
-                      <a href="/report/shift_wise_repo" class="sidebar-link <%= (page_path && page_path.includes('shift_report_new')) ? 'active' : '' %>"><span class="hide-menu text-dark">Shiftwise</span></a>
-                    </li>
-                  </ul>
-                </li> -->
-
-                <!-- <li class="sidebar-item <%= (page_path && page_path.includes('project_dashboard')) ? 'selected' : '' %>">
-                  <a class="sidebar-link sidebar-link" href="/superadmin/project_dashboard" aria-expanded="false"><i
-                      data-feather="grid" class="feather-icon text-dark"></i><span
-                      class="hide-menu text-dark">Project Dashboard</span></a>
-                </li> -->
 
                 <li class="sidebar-item <%= (page_path && page_path.includes('location')) ? 'selected' : '' %>">
                   <a class="sidebar-link sidebar-link" href="/superadmin/location" aria-expanded="false"><i
@@ -248,31 +210,34 @@
                       Rate</span></a>
                 </li>
 
+                <% 
+                  const is_super_setting_active = (page_path && !page_path.includes('report') && (page_path.includes('device_setting') || page_path.includes('report_pass') || page_path.includes('report_password') || page_path.includes('shift') || page_path.includes('header_footer')));
+                %>
                 <li
-                  class="sidebar-item <%= (['device_setting', 'report_pass', 'shift', 'header_footer'].some(p => page_path.includes(p))) ? 'selected' : '' %>">
-                  <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false"><i
+                  class="sidebar-item sidebar-item-settings <%= is_super_setting_active ? 'selected' : '' %>">
+                  <a class="sidebar-link has-arrow <%= is_super_setting_active ? 'active' : '' %>" href="javascript:void(0)"
+                    aria-expanded="<%= is_super_setting_active ? 'true' : 'false' %>"><i
                       data-feather="settings" class="feather-icon text-dark"></i><span
                       class="hide-menu text-dark">Settings</span></a>
-                  <ul aria-expanded="false" class="collapse first-level base-level-line">
-                    <li
-                      class="sidebar-item <%= (page_path && page_path.includes('device_setting')) ? 'selected' : '' %>">
-                      <a class="sidebar-link sidebar-link" href="/superadmin/device_setting" aria-expanded="false"><i
+                  <ul aria-expanded="<%= is_super_setting_active ? 'true' : 'false' %>"
+                    class="collapse first-level base-level-line <%= is_super_setting_active ? 'show' : '' %>">
+                    <li class="sidebar-item">
+                      <a class="sidebar-link <%= (page_path && page_path.includes('device_setting')) ? 'active' : '' %>" href="/superadmin/device_setting" aria-expanded="false"><i
                           data-feather="slack" class="feather-icon text-dark"></i><span
                           class="hide-menu text-dark">Device Setting</span></a>
                     </li>
-                    <li class="sidebar-item <%= (page_path && page_path.includes('report_pass')) ? 'selected' : '' %>">
-                      <a class="sidebar-link sidebar-link" href="/superadmin/report_pass" aria-expanded="false"><i
-                          data-feather="key" class="feather-icon text-dark"></i><span class="hide-menu text-dark">Report
-                          Password</span></a>
+                    <li class="sidebar-item">
+                      <a class="sidebar-link <%= (page_path && (page_path.includes('report_pass') || page_path.includes('report_password'))) ? 'active' : '' %>" href="/superadmin/report_pass" aria-expanded="false"><i
+                          data-feather="key" class="feather-icon text-dark"></i><span
+                          class="hide-menu text-dark">Report Password</span></a>
                     </li>
-                    <li class="sidebar-item <%= (page_path && page_path.includes('shift')) ? 'selected' : '' %>">
-                      <a class="sidebar-link sidebar-link" href="/superadmin/shift" aria-expanded="false"><i
+                    <li class="sidebar-item">
+                      <a class="sidebar-link <%= (page_path && !page_path.includes('report') && page_path.includes('shift')) ? 'active' : '' %>" href="/superadmin/shift" aria-expanded="false"><i
                           data-feather="corner-up-right" class="feather-icon text-dark"></i><span
                           class="hide-menu text-dark">Shift</span></a>
                     </li>
-                    <li
-                      class="sidebar-item <%= (page_path && page_path.includes('header_footer')) ? 'selected' : '' %>">
-                      <a class="sidebar-link sidebar-link" href="/superadmin/header_footer" aria-expanded="false"><i
+                    <li class="sidebar-item">
+                      <a class="sidebar-link <%= (page_path && page_path.includes('header_footer')) ? 'active' : '' %>" href="/superadmin/header_footer" aria-expanded="false"><i
                           data-feather="activity" class="feather-icon text-dark"></i><span
                           class="hide-menu text-dark">Header & Footer</span></a>
                     </li>

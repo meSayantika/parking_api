@@ -330,6 +330,14 @@
         margin: 0 !important;
     }
 
+    /* Settings Section Floating Flyout (Aligned upwards so it doesn't overflow bottom) */
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar #sidebarnav > .sidebar-item.sidebar-item-settings > ul.first-level,
+    body.mini-sidebar .left-sidebar #sidebarnav > .sidebar-item.sidebar-item-settings > ul.first-level,
+    #main-wrapper[data-layout="vertical"][data-sidebartype="mini-sidebar"] .left-sidebar #sidebarnav > .sidebar-item.sidebar-item-settings > ul.first-level {
+        top: auto !important;
+        bottom: 0 !important;
+    }
+
     /* Invisible hover bridge */
     #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar #sidebarnav > .sidebar-item > ul.first-level::before,
     body.mini-sidebar .left-sidebar #sidebarnav > .sidebar-item > ul.first-level::before {
@@ -340,6 +348,13 @@
         width: 20px !important;
         height: 100% !important;
         background: transparent !important;
+    }
+
+    #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar #sidebarnav > .sidebar-item.sidebar-item-settings > ul.first-level::before,
+    body.mini-sidebar .left-sidebar #sidebarnav > .sidebar-item.sidebar-item-settings > ul.first-level::before {
+        top: auto !important;
+        bottom: 0 !important;
+        height: 100% !important;
     }
 
     /* Reveal flyout on hovering parent or open class */
