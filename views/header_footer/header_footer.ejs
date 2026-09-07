@@ -18,7 +18,7 @@
                   <span class="hf-count-badge"><%= data.msg.length %> total</span>
                 <% } %>
               </div>
-              <button type="button" class="hf-add-btn" id="myBtn">
+              <button type="button" class="hf-add-btn" id="myBtn" data-toggle="modal" data-target="#myModal">
                 <i data-feather="plus"></i> Add Header/Footer
               </button>
             </div>
@@ -212,10 +212,7 @@
       }
     });
 
-    // 3. Modal logic
-    $("#myBtn").click(function () {
-      $("#myModal").modal('show');
-    });
+    // 3. Modal logic removed as it's handled by data attributes
 
     // 4. Hide add button if record exists
     var customer_id = $('#cust_id').val();
