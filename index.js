@@ -14,6 +14,7 @@ const { Api: v10Api } = require('./routes/V10/Api.routes');
 const { Api: v11Api } = require('./routes/V11/Api.routes');
 const { Api: v12Api } = require('./routes/V12/Api.routes');
 const { Api: v13Api } = require('./routes/V13/Api.routes');
+const { Api: v14Api } = require('./routes/V14/Api.routes');
 
 const { Customer } = require('./routes/Customer.routes');
 const { reportRouter } = require('./routes/ReportsRouter');
@@ -117,6 +118,7 @@ app.use('/v10/api', v10Api);
 app.use('/v11/api', v11Api);
 app.use('/v12/api', v12Api);
 app.use('/v13/api', v13Api);
+app.use('/v14/api', v14Api);
 
 app.use('/', Customer);
 
