@@ -65,7 +65,7 @@ const edit_device = async (req, res) => {
   var data = req.query;
   // console.log(data);
   var custId = req.session.user.user_data.customer_id;
-  let select = "a.app_id,a.customer_id,a.device_type,a.dev_mod,a.report_flag,a.total_collection,a.adv_pay,a.adv_value,a.grace_period_flag,a.grace_value,a.redirection_flag,a.gst_flag,a.pay_mode_flag,a.qr_code_flag,a.day_wise_rate,a.default_pay_mode,b.customer_id,b.customer_name,b.dev_mod",
+  let select = "a.app_id,a.customer_id,a.device_type,a.dev_mod,a.report_flag,a.total_collection,a.adv_pay,a.adv_value,a.grace_period_flag,a.grace_value,a.redirection_flag,a.gst_flag,a.pay_mode_flag,a.qr_code_flag,a.day_wise_rate,a.default_pay_mode,a.manual_car_in,b.customer_id,b.customer_name,b.dev_mod",
     table_name = "md_setting a, md_customer b",
     whr = `a.customer_id = b.customer_id AND a.customer_id=${custId} AND a.app_id='${data.dev_id}'`;
   const resData = await db_Select(select, table_name, whr, null);
@@ -100,6 +100,7 @@ const save_edit_device = async (req, res) => {
       qr_code_flag: Joi.optional(),
       day_wise_rate: Joi.optional(),
       default_payment_mode: Joi.optional(),
+      manual_car_in: Joi.optional(),
 
     });
     const { error, value } = schema.validate(req.body, { abortEarly: false });
@@ -128,7 +129,7 @@ const save_edit_device = async (req, res) => {
         value.grace_flag == "Y" ? "Y" : "N"
       }',grace_value=${
         value.grace_value != "" ? `'00:${value.grace_value}:00'` : 0
-      },redirection_flag='${ value.redirect_flag == "Y" ? "Y" : "N"}',gst_flag='${ value.gst_flag == "Y" ? "Y" : "N"}',pay_mode_flag='${ value.pay_mode_flag == "Y" ? "Y" : "N"}',qr_code_flag='${ value.qr_code_flag == "Y" ? "Y" : "N"}',day_wise_rate='${ value.day_wise_rate == "Y" ? "Y" : "N"}',default_pay_mode=${defaultPayMode ? `'${defaultPayMode}'` : null},modified_by='${custId}',updated_at='${datetime}'`,
+      },redirection_flag='${ value.redirect_flag == "Y" ? "Y" : "N"}',gst_flag='${ value.gst_flag == "Y" ? "Y" : "N"}',pay_mode_flag='${ value.pay_mode_flag == "Y" ? "Y" : "N"}',qr_code_flag='${ value.qr_code_flag == "Y" ? "Y" : "N"}',day_wise_rate='${ value.day_wise_rate == "Y" ? "Y" : "N"}',default_pay_mode=${defaultPayMode ? `'${defaultPayMode}'` : null},manual_car_in='${ value.manual_car_in == "Y" ? "Y" : "N"}',modified_by='${custId}',updated_at='${datetime}'`,
       where = `customer_id='${custId}' AND app_id='${value.app_id}'`;
     let res_dt2 = await db_Insert("md_setting", fields, null, where, 1);
     // console.log(res_dt2);
@@ -189,6 +190,7 @@ const save_add_device = async (req, res) => {
       qr_code_flag: Joi.optional(),
       day_wise_rate: Joi.optional(),
       default_payment_mode: Joi.optional(),
+      manual_car_in: Joi.optional(),
     });
     const { error, value } = schema.validate(req.body, { abortEarly: false });
     console.log(value);
@@ -210,7 +212,7 @@ const save_add_device = async (req, res) => {
 
     // console.log(value);
     let fields =
-        "(customer_id,app_id,device_type,dev_mod,report_flag,total_collection,adv_pay,adv_value,grace_period_flag,grace_value,redirection_flag,gst_flag,pay_mode_flag,qr_code_flag,day_wise_rate,default_pay_mode,created_at)",
+        "(customer_id,app_id,device_type,dev_mod,report_flag,total_collection,adv_pay,adv_value,grace_period_flag,grace_value,redirection_flag,gst_flag,pay_mode_flag,qr_code_flag,day_wise_rate,default_pay_mode,manual_car_in,created_at)",
       values = `('${custId}','${value.app_id}','${
         value.dev_type
       }','${
@@ -232,7 +234,9 @@ const save_add_device = async (req, res) => {
         value.qr_code_flag && value.qr_code_flag == "Y" ? "Y" : "N"
       }','${
         value.day_wise_rate && value.day_wise_rate == "Y" ? "Y" : "N"
-      }',${defaultPayMode ? `'${defaultPayMode}'` : null},
+      }',${defaultPayMode ? `'${defaultPayMode}'` : null},'${
+        value.manual_car_in && value.manual_car_in == "Y" ? "Y" : "N"
+      }',
       '${datetime}')`;
     let res_dt = await db_Insert("md_setting", fields, values, null, 0);
 

@@ -427,6 +427,8 @@ const manual_car_in_out = async (req, res) => {
             paymode: Joi.required(),
             date_time_in: Joi.required(),
             date_time_out: Joi.required(),
+            device_id: Joi.required(),
+            receipt_number: Joi.required(),
         });
         const { error, value } = schema.validate(req.body, { abortEarly: false });
         console.log(value, 'manual car in out value');
@@ -439,10 +441,10 @@ const manual_car_in_out = async (req, res) => {
         }
 
         const userData = req.user;
-        let device_id = userData.device_id;
+        // let device_id = userData.device_id;
         let customer_id = userData.customer_id;
 
-        let where = `customer_id=${customer_id} AND app_id='${device_id}'`;
+        let where = `customer_id=${customer_id} AND app_id='${value.device_id}'`;
         const md_setting = await db_Select('*', 'md_setting', where, null);
         let dev_mod = 'D';
         let parking_entry_type = '1'
@@ -451,31 +453,31 @@ const manual_car_in_out = async (req, res) => {
             parking_entry_type = md_setting.msg[0].parking_entry_type;
         }
 
-        let receipt_number = new Date().getTime();
+        // let receipt_number = new Date().getTime();
 
         let date_time_in = dateFormat(value.date_time_in, "yyyy-mm-dd HH:MM:ss");
         let date_time_out = dateFormat(value.date_time_out, "yyyy-mm-dd HH:MM:ss");
         let created_at = dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss");
 
         let vehicle_in_fields = `(user_id_in, vehicle_id, customer_id, device_id, vehicle_no, date_time_in, oprn_mode, receipt_type, receipt_no, created_at, car_out_flag)`;
-        let vehicle_in_values = `(${userData.id}, ${value.vehicle_id}, ${customer_id}, '${device_id}', '${value.vehicle_no}', '${date_time_in}', '${dev_mod}', '${parking_entry_type}', ${receipt_number}, '${created_at}', 'Y')`;
+        let vehicle_in_values = `(${userData.id}, ${value.vehicle_id}, ${customer_id}, '${value.device_id}', '${value.vehicle_no}', '${date_time_in}', '${dev_mod}', '${parking_entry_type}', ${value.receipt_number}, '${created_at}', 'Y')`;
 
         let td_vehicle_in = await db_Insert("td_vehicle_in", vehicle_in_fields, vehicle_in_values, null, 0);
 
         if (td_vehicle_in.suc == 1) {
             let receipt_fields = `(receipt_no, user_id, base_amt, advance_amt, cgst, sgst, igst, paid_amt, gst_flag, trans_flag, pay_mode, created_at)`;
-            let receipt_values = `(${receipt_number}, ${userData.id}, ${value.base_amt}, 0, ${value.cgst}, ${value.sgst}, ${value.igst}, ${value.paid_amt}, '${value.gst_flag}', 'P', '${value.paymode}', '${created_at}')`;
+            let receipt_values = `(${value.receipt_number}, ${userData.id}, ${value.base_amt}, 0, ${value.cgst}, ${value.sgst}, ${value.igst}, ${value.paid_amt}, '${value.gst_flag}', 'P', '${value.paymode}', '${created_at}')`;
 
             let receipt = await db_Insert("td_receipt", receipt_fields, receipt_values, null, 0);
 
             if (receipt.suc == 1) {
                 let outpass_fields = `(user_id, device_id, date_time_out, receipt_no, created_at, updated_at)`;
-                let outpass_values = `(${userData.id}, '${device_id}', '${date_time_out}', '${receipt_number}', '${created_at}', '${created_at}')`;
+                let outpass_values = `(${userData.id}, '${value.device_id}', '${date_time_out}', '${value.receipt_number}', '${created_at}', '${created_at}')`;
 
                 let vehicle_outpass = await db_Insert("td_vehicle_out", outpass_fields, outpass_values, null, 0);
 
                 if (vehicle_outpass.suc == 1) {
-                    res.json(sendOkResponce({ td_vehicle_in, receipt, vehicle_outpass, receipt_number }, null));
+                    res.json(sendOkResponce({ td_vehicle_in, receipt, vehicle_outpass, receipt_number: value.receipt_number }, null));
                 } else {
                     res.json(sendErrorResponce(null, { message: 'Failed to insert outpass' }));
                 }

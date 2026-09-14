@@ -137,6 +137,16 @@
                         </div>
                     </div>
 
+                    <div class="col-md-3 dev-form-group">
+                        <div class="switch-container">
+                            <label class="dev-label">Manual Car In Flag</label>
+                            <label class="dev-switch">
+                                <input type="checkbox" value="Y" id="manual_car_in" name="manual_car_in" <%=(data.manual_car_in=='Y' )?'checked':''%>>
+                                <span class="dev-slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+
                     <% if (user.user_data.dev_mod == 'D') { %>
                     <div class="col-md-3 dev-form-group">
                         <div class="switch-container">
@@ -262,7 +272,7 @@
         const fieldList = [
             "dev_type", "gst_flag", "report_flag", "tot_col", "redirect_flag",
             "grace_flag", "grace_value", "adv_pay_flag", "adv_value",
-            "pay_mode_flag", "qr_code_flag", "day_wise_rate", "default_payment_mode"
+            "pay_mode_flag", "qr_code_flag", "day_wise_rate", "default_payment_mode", "manual_car_in"
         ];
 
         const validFields = fieldList.filter(id => $("#" + id).length > 0);

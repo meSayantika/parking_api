@@ -1,10 +1,34 @@
 <link href="/template/dist/css/device_setting.css" rel="stylesheet">
 <style>
   /* Direct fallback styles for premium look */
-  .dev-page-wrapper { background: #f3f4f6 !important; padding: 20px !important; min-height: 100vh; }
-  .dev-card { border-radius: 12px !important; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1) !important; border: none !important; background: #fff !important; }
-  .dev-header { border-bottom: 1px solid #e5e7eb !important; padding-bottom: 15px !important; margin-bottom: 20px !important; }
-  .dev-add-btn { background: linear-gradient(135deg, #10b981, #059669) !important; color: #fff !important; border: none !important; padding: 10px 20px !important; border-radius: 8px !important; font-weight: 600 !important; cursor: pointer !important; }
+  .dev-page-wrapper {
+    background: #f3f4f6 !important;
+    padding: 20px !important;
+    min-height: 100vh;
+  }
+
+  .dev-card {
+    border-radius: 12px !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+    border: none !important;
+    background: #fff !important;
+  }
+
+  .dev-header {
+    border-bottom: 1px solid #e5e7eb !important;
+    padding-bottom: 15px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .dev-add-btn {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    color: #fff !important;
+    border: none !important;
+    padding: 10px 20px !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+  }
 </style>
 
 <div class="dev-page-wrapper">
@@ -84,7 +108,8 @@
     <div class="modal-content">
       <!-- Modal Header -->
       <div class="modal-header">
-        <h4 class="modal-title"><i data-feather="plus-circle" style="width:20px;height:20px;"></i><b> Add Device</b></h4>
+        <h4 class="modal-title"><i data-feather="plus-circle" style="width:20px;height:20px;"></i><b> Add Device</b>
+        </h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
 
@@ -93,9 +118,12 @@
         <form action="/device/add_save_device" method="post" id="myForm">
           <div class="row mb-3">
             <div class="col-12">
-              <div class="dev-info-badge" style="background: var(--primary-light); color: var(--primary); padding: 8px 15px; border-radius: 8px; display: inline-flex; align-items: center; font-weight: 600;">
+              <div class="dev-info-badge"
+                style="background: var(--primary-light); color: var(--primary); padding: 8px 15px; border-radius: 8px; display: inline-flex; align-items: center; font-weight: 600;">
                 <i data-feather="info" style="width:16px; height:16px; margin-right:8px;"></i>
-                No. of Device Allowed: <span class="ml-2 badge badge-primary"><%= user.user_data.no_device %></span>
+                No. of Device Allowed: <span class="ml-2 badge badge-primary">
+                  <%= user.user_data.no_device %>
+                </span>
                 <input type="hidden" id="no_device" value="<%= user.user_data.no_device %>">
               </div>
             </div>
@@ -206,38 +234,48 @@
               </div>
             </div>
 
-            <% if (user.user_data.dev_mod == 'D') { %>
             <div class="col-md-3 dev-form-group">
               <div class="switch-container">
-                <label class="dev-label">QR Code Flag</label>
+                <label class="dev-label">Manual Car In Flag</label>
                 <label class="dev-switch">
-                  <input type="checkbox" name="qr_code_flag" id="qr_code_flag" value="Y">
+                  <input type="checkbox" name="manual_car_in" id="manual_car_in" value="Y">
                   <span class="dev-slider round"></span>
                 </label>
               </div>
             </div>
 
-            <div class="col-md-3 dev-form-group">
-              <div class="switch-container">
-                <label class="dev-label">Day wise Vehicle Rate</label>
-                <label class="dev-switch">
-                  <input type="checkbox" name="day_wise_rate" id="day_wise_rate" value="Y">
-                  <span class="dev-slider round"></span>
-                </label>
+            <% if (user.user_data.dev_mod=='D' ) { %>
+              <div class="col-md-3 dev-form-group">
+                <div class="switch-container">
+                  <label class="dev-label">QR Code Flag</label>
+                  <label class="dev-switch">
+                    <input type="checkbox" name="qr_code_flag" id="qr_code_flag" value="Y">
+                    <span class="dev-slider round"></span>
+                  </label>
+                </div>
               </div>
-            </div>
-            <% } %>   
 
-            <% if (user.user_data.dev_mod == 'F') { %>
-            <div class="col-md-3 dev-form-group">
-              <label for="default_payment_mode" class="dev-label">Default Payment Mode</label>
-              <select name="default_payment_mode" class="dev-select" id="default_payment_mode">
-                <option value="">Select Payment Mode</option>
-                <option value="C">CASH</option>
-                <option value="U">UPI</option>
-              </select>
-            </div>
-            <% } %>  
+              <div class="col-md-3 dev-form-group">
+                <div class="switch-container">
+                  <label class="dev-label">Day wise Vehicle Rate</label>
+                  <label class="dev-switch">
+                    <input type="checkbox" name="day_wise_rate" id="day_wise_rate" value="Y">
+                    <span class="dev-slider round"></span>
+                  </label>
+                </div>
+              </div>
+              <% } %>
+
+                <% if (user.user_data.dev_mod=='F' ) { %>
+                  <div class="col-md-3 dev-form-group">
+                    <label for="default_payment_mode" class="dev-label">Default Payment Mode</label>
+                    <select name="default_payment_mode" class="dev-select" id="default_payment_mode">
+                      <option value="">Select Payment Mode</option>
+                      <option value="C">CASH</option>
+                      <option value="U">UPI</option>
+                    </select>
+                  </div>
+                  <% } %>
 
           </div>
           <div class="row mt-3">
