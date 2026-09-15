@@ -128,6 +128,7 @@ const save_device = async (req, res) => {
       qr_code_flag: Joi.optional(),
       day_wise_rate: Joi.optional(),
       default_payment_mode: Joi.optional(),
+      manual_car_in: Joi.optional(),
     });
     const { error, value } = schema.validate(req.body, { abortEarly: false });
     console.log(value, "+++");
@@ -163,8 +164,8 @@ const save_device = async (req, res) => {
               value.gst_flag == "Y" ? "Y" : "N"
             }',pay_mode_flag='${ 
               value.pay_mode_flag == "Y" ? "Y" : "N"}',qr_code_flag='${ 
-              value.qr_code_flag == "Y" ? "Y" : "N"}' ${value.dev_mode == 'D' ? `,day_wise_rate='${value.day_wise_rate == 'Y' ? 'Y' : 'N'}'` : ''},default_pay_mode = ${defaultPayMode ? `'${defaultPayMode}'` : null},modified_by='${user_name}',updated_at='${datetime}'`
-          : "(app_id,customer_id,device_type,dev_mod,report_flag,total_collection,adv_pay,adv_value,grace_period_flag,grace_value,redirection_flag,gst_flag,pay_mode_flag,qr_code_flag,day_wise_rate,default_pay_mode,created_by,created_at)",
+              value.qr_code_flag == "Y" ? "Y" : "N"}' ${value.dev_mode == 'D' ? `,day_wise_rate='${value.day_wise_rate == 'Y' ? 'Y' : 'N'}'` : ''},default_pay_mode = ${defaultPayMode ? `'${defaultPayMode}'` : null},manual_car_in='${value.manual_car_in == "Y" ? "Y" : "N"}',modified_by='${user_name}',updated_at='${datetime}'`
+          : "(app_id,customer_id,device_type,dev_mod,report_flag,total_collection,adv_pay,adv_value,grace_period_flag,grace_value,redirection_flag,gst_flag,pay_mode_flag,qr_code_flag,day_wise_rate,default_pay_mode,manual_car_in,created_by,created_at)",
       values = `('${value.app_id}','${value.cust_id}','${value.dev_type}','${
         value.dev_mode
       }','${value.report_flag == "Y" ? "Y" : "N"}','${
@@ -181,7 +182,7 @@ const save_device = async (req, res) => {
         value.pay_mode_flag && value.pay_mode_flag == "Y" ? "Y" : "N"
       }','${
         value.qr_code_flag && value.qr_code_flag == "Y" ? "Y" : "N"
-      }' ${value.dev_mode == 'D' ? `, '${value.day_wise_rate == 'Y' ? 'Y' : 'N'}'` : ''},${defaultPayMode ? `'${defaultPayMode}'` : null},'${user_name}','${datetime}')`;
+      }' ${value.dev_mode == 'D' ? `, '${value.day_wise_rate == 'Y' ? 'Y' : 'N'}'` : ''},${defaultPayMode ? `'${defaultPayMode}'` : null},'${value.manual_car_in == "Y" ? "Y" : "N"}','${user_name}','${datetime}')`;
     // let res_dt = await db_Insert(
     //   "md_setting",
     //   fields,
@@ -200,7 +201,7 @@ const save_device = async (req, res) => {
       "md_setting",
       fields,
       values,
-      value.id > 0 ? `customer_id = ${value.cust_id}` : null,
+      value.id > 0 ? `setting_id=${value.id} AND customer_id = '${value.cust_id}'` : null,
       value.id > 0 ? 1 : 0
     );
 
