@@ -250,6 +250,13 @@
                       Transactions</span></a>
                 </li>
 
+                <li
+                  class="sidebar-item <%= (page_path && (page_path.includes('archive') || page_path.includes('upload'))) ? 'selected' : '' %>">
+                  <a class="sidebar-link sidebar-link <%= (page_path && (page_path.includes('archive') || page_path.includes('upload'))) ? 'active' : '' %>"
+                    href="/superadmin/upload_to_archive" aria-expanded="false"><i data-feather="archive"
+                      class="feather-icon text-dark"></i><span class="hide-menu text-dark">Upload to Archive</span></a>
+                </li>
+
                 <li class="sidebar-item">
                   <a class="sidebar-link sidebar-link" href="/superadmin_logout" aria-expanded="false"><i
                       data-feather="log-out" class="feather-icon text-dark"></i><span
